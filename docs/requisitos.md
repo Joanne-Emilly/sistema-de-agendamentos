@@ -68,5 +68,4 @@ Necessidades e funcionalidades:
 - Garantir que os recursos sejam utilizados de maneira organizada.
 
 5. Resultado Esperado
-
 Espera-se que o sistema facilite o processo de agendamento escolar, reduza conflitos de horários, melhore o controle dos espaços e equipamentos e torne a organização das atividades escolares mais prática e eficiente.
