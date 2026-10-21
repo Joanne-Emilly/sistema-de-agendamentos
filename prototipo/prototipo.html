@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sistema de Agendamento Escolar da Escola Municipal" />
+    <title>Sistema de Agendamento Escolar</title>
+    <link rel="stylesheet" href="prototipo.css" />
+</head>
+
+<body>
+    <svg class="svg-sprite" aria-hidden="true">
+        <defs>
+            <symbol id="i-book" viewBox="0 0 24 24">
+                <path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22.5z" />
+                <path d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5a3.5 3.5 0 0 1 3.5 3.5z" />
+            </symbol>
+            <symbol id="i-bell" viewBox="0 0 24 24">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+            </symbol>
+            <symbol id="i-chevron" viewBox="0 0 24 24">
+                <path d="m8 10 4 4 4-4" />
+            </symbol>
+            <symbol id="i-home" viewBox="0 0 24 24">
+                <path d="m3 11 9-8 9 8M5 10v11h14V10M9 21v-7h6v7" />
+            </symbol>
+            <symbol id="i-calendar" viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <path d="M16 3v4M8 3v4M3 10h18" />
+            </symbol>
+            <symbol id="i-search" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-4-4" />
+            </symbol>
+            <symbol id="i-plus" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 8v8M8 12h8" />
+            </symbol>
+            <symbol id="i-building" viewBox="0 0 24 24">
+                <path d="M4 21h16M6 21V9h5v12M13 21V3h5v18M8 12h1M8 16h1M15 7h1M15 11h1M15 15h1" />
+            </symbol>
+            <symbol id="i-chart" viewBox="0 0 24 24">
+                <path d="M4 20V10M10 20V4M16 20v-7M22 20H2M3 8l6-5 6 6 6-7" />
+            </symbol>
+            <symbol id="i-settings" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                    d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" />
+            </symbol>
+            <symbol id="i-logout" viewBox="0 0 24 24">
+                <path d="m10 17 5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5" />
+            </symbol>
+            <symbol id="i-monitor" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+            </symbol>
+            <symbol id="i-flask" viewBox="0 0 24 24">
+                <path d="M9 3h6M10 3v6L4 19a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3L14 9V3M7 16h10" />
+            </symbol>
+            <symbol id="i-users" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" />
+            </symbol>
+            <symbol id="i-bulb" viewBox="0 0 24 24">
+                <path
+                    d="M9 18h6M10 22h4M8.5 15.5A7 7 0 1 1 15.5 15.5c-.9.7-1.3 1.4-1.5 2.5h-4c-.2-1.1-.6-1.8-1.5-2.5Z" />
+            </symbol>
+            <symbol id="i-menu" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+            </symbol>
+            <symbol id="i-close" viewBox="0 0 24 24">
+                <path d="m6 6 12 12M18 6 6 18" />
+            </symbol>
+            <symbol id="i-arrow" viewBox="0 0 24 24">
+                <path d="M5 12h14m-5-5 5 5-5 5" />
+            </symbol>
+        </defs>
+    </svg>
+
+    <header class="app-header">
+        <div class="brand">
+            <button class="mobile-menu" type="button" aria-label="Abrir menu" aria-controls="sidebar-navigation"
+                aria-expanded="false"><svg>
+                    <use href="#i-menu" />
+                </svg></button>
+            <svg class="brand-icon">
+                <use href="#i-book" />
+            </svg>
+            <div><strong>Sistema de Agendamento Escolar</strong><span>Escola Municipal</span></div>
+        </div>
+        <div class="header-actions">
+            <button class="notification-button" type="button" aria-label="Notificações: uma nova"><svg>
+                    <use href="#i-bell" />
+                </svg><span></span></button>
+            <button class="profile-button" type="button" aria-expanded="false" aria-controls="profile-menu">
+                <span class="avatar" aria-hidden="true">MS</span>
+                <span class="profile-copy"><strong>Maria Silva</strong><small>Professora(a)</small></span>
+                <svg>
+                    <use href="#i-chevron" />
+                </svg>
+            </button>
+            <div class="profile-menu" id="profile-menu" hidden><button type="button">Meu perfil</button><button
+                    type="button">Preferências</button><button type="button">Sair</button></div>
+        </div>
+    </header>
+
+    <nav class="sidebar-navigation" id="sidebar-navigation" aria-label="Navegação principal">
+        <button class="sidebar-close" type="button" aria-label="Fechar menu"><svg>
+                <use href="#i-close" />
+            </svg></button>
+        <div class="sidebar-list">
+            <button class="sidebar-item sidebar-item-active" type="button"><svg>
+                    <use href="#i-home" />
+                </svg><span>Início</span></button>
+            <button class="sidebar-item" type="button"><svg>
+                    <use href="#i-calendar" />
+                </svg><span>Meus Agendamentos</span></button>
+            <button class="sidebar-item" type="button"><svg>
+                    <use href="#i-search" />
+                </svg><span>Consultar Disponibilidade</span></button>
+            <button class="sidebar-item" type="button"><svg>
+                    <use href="#i-plus" />
+                </svg><span>Novo Agendamento</span></button>
+            <button class="sidebar-item" type="button"><svg>
+                    <use href="#i-building" />
+                </svg><span>Espaços</span></button>
+            <button class="sidebar-item" type="button"><svg>
+                    <use href="#i-chart" />
+                </svg><span>Relatórios</span></button>
+            <button class="sidebar-item" type="button"><svg>
+                    <use href="#i-settings" />
+                </svg><span>Configurações</span></button>
+        </div>
+        <button class="sidebar-item sidebar-logout" type="button"><svg>
+                <use href="#i-logout" />
+            </svg><span>Sair</span></button>
+    </nav>
+    <button class="nav-backdrop" type="button" aria-label="Fechar menu" hidden></button>
+
+    <main class="main-content" id="main-content">
+        <section class="welcome-section">
+            <h1>Olá, Maria!</h1>
+            <h2>Bem-vindo(a) ao sistema de agendamento da escola.</h2>
+            <p>Aqui você pode reservar laboratórios, biblioteca e outros espaços da escola de forma simples e rápida.
+            </p>
+        </section>
+
+        <section class="spaces-grid" aria-label="Espaços escolares">
+            <article class="space-card space-card-green">
+                <div class="space-icon icon-green"><svg>
+                        <use href="#i-monitor" />
+                    </svg></div>
+                <div class="space-card-content">
+                    <h2>Laboratório de Informática</h2>
+                    <p><svg>
+                            <use href="#i-users" />
+                        </svg>Capacidade: 30 pessoas</p><span class="availability"><i></i>Disponível</span>
+                </div>
+                <button class="primary-button space-button" type="button" data-space="Laboratório de Informática">VER
+                    HORÁRIOS</button>
+            </article>
+            <article class="space-card space-card-purple">
+                <div class="space-icon icon-purple"><svg>
+                        <use href="#i-flask" />
+                    </svg></div>
+                <div class="space-card-content">
+                    <h2>Laboratório de Biologia</h2>
+                    <p><svg>
+                            <use href="#i-users" />
+                        </svg>Capacidade: 20 pessoas</p><span class="availability"><i></i>Disponível</span>
+                </div>
+                <button class="primary-button space-button" type="button" data-space="Laboratório de Biologia">VER
+                    HORÁRIOS</button>
+            </article>
+            <article class="space-card space-card-blue">
+                <div class="space-icon icon-blue"><svg>
+                        <use href="#i-book" />
+                    </svg></div>
+                <div class="space-card-content">
+                    <h2>Biblioteca</h2>
+                    <p><svg>
+                            <use href="#i-users" />
+                        </svg>Capacidade: 40 pessoas</p><span class="availability"><i></i>Disponível</span>
+                </div>
+                <button class="primary-button space-button" type="button" data-space="Biblioteca">VER HORÁRIOS</button>
+            </article>
+        </section>
+
+        <section class="booking-section">
+            <section class="panel booking-panel" aria-labelledby="booking-title">
+                <div class="panel-heading"><svg>
+                        <use href="#i-calendar" />
+                    </svg>
+                    <div>
+                        <h2 id="booking-title">Novo Agendamento</h2>
+                        <p>Preencha os dados abaixo para solicitar um agendamento.</p>
+                    </div>
+                </div>
+                <form class="booking-form" id="booking-form">
+                    <div class="form-field"><label for="space">Espaço <span>*</span></label><select id="space"
+                            name="space" required>
+                            <option value="" selected disabled>Selecione o espaço</option>
+                            <option>Laboratório de Informática</option>
+                            <option>Laboratório de Biologia</option>
+                            <option>Biblioteca</option>
+                        </select></div>
+                    <div class="form-field"><label for="date">Data <span>*</span></label><input id="date" name="date"
+                            type="date" required /></div>
+                    <div class="form-field"><label for="time">Horário <span>*</span></label><select id="time"
+                            name="time" required>
+                            <option value="" selected disabled>Selecione o horário</option>
+                            <option>08:00 às 10:00</option>
+                            <option>10:00 às 12:00</option>
+                            <option>13:00 às 15:00</option>
+                            <option>14:00 às 16:00</option>
+                        </select></div>
+                    <div class="form-field"><label for="purpose">Finalidade/Turma <span>*</span></label><input
+                            id="purpose" name="purpose" placeholder="Ex: Aula, Reunião, Evento..." required /></div>
+                    <div class="form-field"><label for="responsible">Responsável <span>*</span></label><input
+                            id="responsible" name="responsible" placeholder="Nome do(a) responsável" required /></div>
+                    <button class="primary-button booking-submit-button" type="submit">SOLICITAR AGENDAMENTO</button>
+                    <p class="form-message" role="status" hidden></p>
+                </form>
+                <aside class="tip-alert"><svg>
+                        <use href="#i-bulb" />
+                    </svg>
+                    <div><strong>Dica</strong>
+                        <p>Antes de solicitar um agendamento, verifique a disponibilidade do espaço e o horário desejado
+                            para evitar conflitos.</p>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="panel reservations-panel" aria-labelledby="reservations-title">
+                <div class="reservations-heading">
+                    <div class="panel-heading"><svg>
+                            <use href="#i-calendar" />
+                        </svg>
+                        <h2 id="reservations-title">Próximas Reservas</h2>
+                    </div><button class="text-button" type="button">Ver todas <svg>
+                            <use href="#i-arrow" />
+                        </svg></button>
+                </div>
+                <div class="table-scroll">
+                    <table class="reservations-table">
+                        <thead>
+                            <tr>
+                                <th>ESPAÇO</th>
+                                <th>DATA</th>
+                                <th>HORÁRIO</th>
+                                <th>RESPONSÁVEL</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="table-space icon-green"><svg>
+                                            <use href="#i-monitor" />
+                                        </svg>
+                                        <div><strong>Laboratório de Informática</strong><small>Turma 1º ano - Aula de
+                                                Programação</small></div>
+                                    </div>
+                                </td>
+                                <td data-label="Data">16/04/2025</td>
+                                <td data-label="Horário">08:00 às 10:00</td>
+                                <td data-label="Responsável">Prof. Carlos Souza</td>
+                                <td data-label="Status"><span class="status-badge status-confirmado">Confirmado</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="table-space icon-purple"><svg>
+                                            <use href="#i-flask" />
+                                        </svg>
+                                        <div><strong>Laboratório de Biologia</strong><small>Turma 2º ano -
+                                                Experimentos</small></div>
+                                    </div>
+                                </td>
+                                <td data-label="Data">16/04/2025</td>
+                                <td data-label="Horário">10:00 às 12:00</td>
+                                <td data-label="Responsável">Profª. Ana Paula</td>
+                                <td data-label="Status"><span class="status-badge status-pendente">Pendente</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="table-space icon-green"><svg>
+                                            <use href="#i-book" />
+                                        </svg>
+                                        <div><strong>Biblioteca</strong><small>Estudo Orientado</small></div>
+                                    </div>
+                                </td>
+                                <td data-label="Data">17/04/2025</td>
+                                <td data-label="Horário">14:00 às 16:00</td>
+                                <td data-label="Responsável">Prof. Marcos Lima</td>
+                                <td data-label="Status"><span class="status-badge status-confirmado">Confirmado</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="table-space icon-green"><svg>
+                                            <use href="#i-monitor" />
+                                        </svg>
+                                        <div><strong>Laboratório de Informática</strong><small>Turma 3º ano -
+                                                Pesquisa</small></div>
+                                    </div>
+                                </td>
+                                <td data-label="Data">18/04/2025</td>
+                                <td data-label="Horário">08:00 às 10:00</td>
+                                <td data-label="Responsável">Profª. Juliana Costa</td>
+                                <td data-label="Status"><span class="status-badge status-cancelado">Cancelado</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="table-space icon-purple"><svg>
+                                            <use href="#i-flask" />
+                                        </svg>
+                                        <div><strong>Laboratório de Biologia</strong><small>Turma 2º ano - Aula
+                                                Prática</small></div>
+                                    </div>
+                                </td>
+                                <td data-label="Data">21/04/2025</td>
+                                <td data-label="Horário">13:00 às 15:00</td>
+                                <td data-label="Responsável">Prof. Roberto Alves</td>
+                                <td data-label="Status"><span class="status-badge status-confirmado">Confirmado</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div class="modal-layer" id="schedule-modal" hidden>
+        <section class="schedule-modal" role="dialog" aria-modal="true" aria-labelledby="schedule-title">
+            <button class="modal-close" type="button" aria-label="Fechar"><svg>
+                    <use href="#i-close" />
+                </svg></button>
+            <span class="modal-icon"><svg>
+                    <use href="#i-calendar" />
+                </svg></span>
+            <h2 id="schedule-title">Horários disponíveis</h2>
+            <p class="modal-space-name"></p>
+            <div class="time-options"><button type="button">08:00 às 10:00</button><button type="button">10:00 às
+                    12:00</button><button type="button">14:00 às 16:00</button></div>
+            <button class="primary-button modal-dismiss" type="button">FECHAR</button>
+        </section>
+    </div>
+    <script type="module" src="prototipo.js"></script>
+</body>
+
+</html>
