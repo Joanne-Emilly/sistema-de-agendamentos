@@ -1327,3 +1327,204 @@ textarea:focus-visible {
     width: 100%;
   }
 }
+/* ========================================
+   ETAPA 7 — LISTA DE AGENDAMENTOS
+======================================== */
+
+.secaoAgendamentos {
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 32px;
+  scroll-margin-top: 24px;
+}
+
+.secaoAgendamentos .cabecalhoSecao {
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.contadorAgendamentos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: var(--corFundoDica);
+  color: var(--corPrimariaEscura);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.listaAgendamentos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.estadoVazio {
+  padding: 32px 20px;
+  border: 1px dashed var(--corBorda);
+  border-radius: var(--raioCard);
+  background-color: var(--corFundoCard);
+  text-align: center;
+}
+
+.estadoVazio h3 {
+  margin-bottom: 8px;
+  color: var(--corTextoPrincipal);
+  font-size: 16px;
+}
+
+.estadoVazio p {
+  color: var(--corTextoSecundario);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.cardAgendamento {
+  padding: 22px;
+  border: 1px solid var(--corBorda);
+  border-left: 4px solid var(--corPrimaria);
+  border-radius: var(--raioCard);
+  background-color: var(--corFundoCard);
+  box-shadow: var(--sombraCard);
+}
+
+.cabecalhoAgendamento {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.tituloAgendamento {
+  margin-bottom: 5px;
+  color: var(--corTextoPrincipal);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.identificadorAgendamento {
+  color: var(--corTextoSecundario);
+  font-size: 11px;
+}
+
+.statusAgendamento {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.statusPendente {
+  background-color: var(--corPendenteFundo);
+  color: #164D83;
+}
+
+.statusCancelado {
+  background-color: var(--corCanceladoFundo);
+  color: #8D174B;
+}
+
+.detalhesAgendamento {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+.detalheAgendamento {
+  min-width: 0;
+}
+
+.rotuloDetalhe {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--corTextoSecundario);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.valorDetalhe {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--corTextoPrincipal);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.finalidadeAgendamento {
+  grid-column: 1 / -1;
+}
+
+.acoesAgendamento {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--corBorda);
+}
+
+.botaoCancelarAgendamento {
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 1px solid #D92D79;
+  border-radius: var(--raioBotao);
+  background-color: #FFFFFF;
+  color: #B42363;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botaoCancelarAgendamento:hover {
+  background-color: var(--corCanceladoFundo);
+}
+
+.botaoCancelarAgendamento:focus-visible {
+  outline: 2px solid var(--corPrimaria);
+  outline-offset: 3px;
+}
+
+.avisoCancelamento {
+  margin-top: 16px;
+  color: var(--corTextoSecundario);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .cardAgendamento {
+    padding: 17px;
+  }
+
+  .detalhesAgendamento {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .finalidadeAgendamento {
+    grid-column: auto;
+  }
+
+  .cabecalhoAgendamento {
+    flex-direction: column;
+  }
+
+  .acoesAgendamento {
+    justify-content: stretch;
+  }
+
+  .botaoCancelarAgendamento {
+    width: 100%;
+  }
+}
