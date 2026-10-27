@@ -586,3 +586,159 @@ textarea:focus-visible {
         gap: 6px;
     }
 }
+
+/* ============================================
+   MENU LATERAL — NAVEGAÇÃO PRINCIPAL
+============================================ */
+
+.menuLateral {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    width: var(--larguraMenuLateral);
+    min-height: calc(100vh - var(--alturaCabecalho));
+    padding: 20px 15px;
+
+    background-color: var(--corPrimariaEscura);
+    color: var(--corTextoBranco);
+}
+
+/* Lista de navegação */
+
+.navegacaoPrincipal {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Links do menu */
+
+.itemNavegacao {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    width: 100%;
+    min-height: 51px;
+    padding: 12px;
+
+    border-radius: var(--raioBotao);
+
+    background-color: transparent;
+    color: var(--corTextoBranco);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+/* Ícones */
+
+.iconeNavegacao {
+    display: block;
+    flex-shrink: 0;
+
+    width: 25px;
+    height: 25px;
+}
+
+/* Efeito ao passar o cursor */
+
+.itemNavegacao:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--corTextoBranco);
+}
+
+/* Página selecionada */
+
+.itemNavegacao.ativo {
+    background-color: var(--corPrimariaDestaque);
+    color: var(--corTextoBranco);
+
+    font-weight: 600;
+}
+
+.itemNavegacao.ativo:hover {
+    background-color: var(--corPrimariaHover);
+}
+
+/* Foco pelo teclado */
+
+.itemNavegacao:focus-visible {
+    outline: 2px solid var(--corTextoBranco);
+    outline-offset: -3px;
+}
+
+/* Área do botão Sair */
+
+.areaSaida {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.itemSair {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 0;
+
+    padding-top: 20px;
+}
+
+.itemSair:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================
+   RESPONSIVIDADE DO MENU LATERAL
+============================================ */
+
+@media (max-width: 600px) {
+    .menuLateral {
+        width: 100%;
+        min-height: auto;
+        padding: 12px;
+
+        overflow-x: auto;
+    }
+
+    .navegacaoPrincipal {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .itemNavegacao {
+        gap: 8px;
+        min-height: 44px;
+        padding: 10px 8px;
+
+        font-size: 12px;
+    }
+
+    .iconeNavegacao {
+        width: 20px;
+        height: 20px;
+    }
+
+    .areaSaida {
+        margin-top: 12px;
+        padding-top: 8px;
+    }
+
+    .itemSair {
+        min-height: 42px;
+        padding-top: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .navegacaoPrincipal {
+        grid-template-columns: 1fr;
+    }
+}

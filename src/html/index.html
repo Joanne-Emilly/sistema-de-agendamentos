@@ -14,10 +14,10 @@
         <header class="cabecalhoPrincipal">
             <div class="identidadeSistema">
                 <a href="index.html" class="marcaSistema" aria-label="Página inicial do sistema">
-                    <span class="simboloSistema" aria-hidden="true">AE</span>
+                    <span class="simboloSistema" aria-hidden="true">NF</span>
                     <span class="informacoesSistema">
-                        <span class="nomeSistema">Agendamento Escolar</span>
-                        <span class="descricaoSistema">Gestão de espaços escolares</span>
+                        <span class="nomeSistema">SISTEMA DE AGENDAMENTO DE ESPAÇOS ESCOLARES</span>
+                        <span class="nomeEscola">CETI DR.NORONHA FILHO</span>
                     </span>
                 </a>
             </div>
@@ -27,11 +27,11 @@
                 </button>
                 <div class="perfilUsuario">
                     <div class="avatarUsuario" aria-hidden="true">
-                        U
+                        ADM
                     </div>
                     <div class="informacoesUsuario">
-                        <span class="nomeUsuario">Usuário</span>
-                        <span class="tipoUsuario">Professor(a)</span>
+                        <span class="nomeUsuario">Admnistrador</span>
+                        <span class="tipoUsuario">Responsável pelo Agendamento</span>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,89 @@
         <div class="estruturaPrincipal">
 
             <aside class="menuLateral">
-                <!-- O menu lateral será implementado posteriormente. -->
+                <nav class="navegacaoPrincipal">
+
+                    <a href="index.html" class="itemNavegacao ativo" aria-current="page">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 10.5 12 3l9 7.5"></path>
+                            <path d="M5.5 9.5V21h13V9.5"></path>
+                            <path d="M9 21v-7h6v7"></path>
+                        </svg>
+                        <span>Início</span>
+                    </a>
+
+                    <a href="#meusAgendamentos" class="itemNavegacao">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                            <path d="M16 3v4M8 3v4M3 10h18"></path>
+                        </svg>
+                        <span>Meus Agendamentos</span>
+                    </a>
+
+                    <a href="#consultarDisponibilidade" class="itemNavegacao">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                            <path d="m16 16 5 5"></path>
+                        </svg>
+                        <span>Consultar Disponibilidade</span>
+                    </a>
+
+                    <a href="#novoAgendamento" class="itemNavegacao">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 8v8M8 12h8"></path>
+                        </svg>
+                        <span>Novo Agendamento</span>
+                    </a>
+
+                    <a href="#espacosEscolares" class="itemNavegacao">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="9" width="7" height="12" rx="1"></rect>
+                            <rect x="14" y="3" width="7" height="18" rx="1"></rect>
+                            <path d="M5.5 12h2M5.5 15h2M5.5 18h2M16.5 6h2M16.5 10h2M16.5 14h2M16.5 18h2"></path>
+                        </svg>
+                        <span>Espaços</span>
+                    </a>
+
+                    <a href="#relatorios" class="itemNavegacao">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 21V12l5 3 5-8 4 4 4-7"></path>
+                            <path d="M3 21h18"></path>
+                            <path d="M7 21v-3M12 21v-5M17 21v-3"></path>
+                        </svg>
+                        <span>Relatórios</span>
+                    </a>
+
+                    <a href="#configuracoes" class="itemNavegacao">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path
+                                d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.8 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.8-1l-1.7.6-1.4-2.4 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a8 8 0 0 1 1.8-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.8 1l1.7-.6 1.4 2.4-1.4 1.1a8 8 0 0 1 0 2Z"
+                                transform="translate(-1 -1) scale(1.08)"></path>
+                        </svg>
+                        <span>Configurações</span>
+                    </a>
+
+                </nav>
+
+                <div class="areaSaida">
+                    <a href="#sair" class="itemNavegacao itemSair">
+                        <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M10 17l5-5-5-5"></path>
+                            <path d="M15 12H3"></path>
+                            <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"></path>
+                        </svg>
+                        <span>Sair</span>
+                    </a>
+                </div>
             </aside>
 
             <main class="areaPrincipal">
