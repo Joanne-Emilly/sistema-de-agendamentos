@@ -6,7 +6,7 @@
     <meta name="description" content="Sistema de Agendamento de Espaços Escolares da Escola Dr. Noronha Filho.">
     <link rel="stylesheet" href="/src/css/styles.css">
     <script src="/src/script/script.js" defer></script>
-    <title>Agendamento de Espaços Escolares</title>
+    <title>Sistema de Agendamento de Espaços Escolares</title>
 </head>
 
 <body>
@@ -79,6 +79,8 @@
                         </svg>
                         <span>Novo Agendamento</span>
                     </a>
+                  
+
 
                     <a href="#espacosEscolares" class="itemNavegacao">
                         <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -128,20 +130,102 @@
 
             <main class="areaPrincipal">
 
-                <section class="secaoBoasVindas" aria-labelledby="tituloBoasVindas">
+              <section id="inicio" class="paginaAtiva">
 
-                    <p class="saudacaoUsuario">Bem-vindo(a) ao sistema!</p>
+    <div class="cabecalhoInicio">
+        <p class="textoBoasVindas">Bem-vindo(a) ao sistema!</p>
 
-                    <h1 class="tituloBoasVindas" id="tituloBoasVindas">
-                        Agendamento de Espaços Escolares
-                    </h1>
+        <h1>Sistema de Agendamento de Espaços Escolares</h1>
 
-                    <p class="descricaoBoasVindas">
-                        Organize suas atividades escolares reservando os espaços
-                        disponíveis de maneira simples e eficiente.
-                    </p>
+        <p>
+            Acompanhe os agendamentos e organize a utilização
+            dos espaços escolares.
+        </p>
+    </div>
 
-                </section>
+    <div class="painelAgendaInicio">
+
+        <div class="cabecalhoPainelInicio">
+            <div>
+                <h2>Agenda Diária</h2>
+                <p>Confira os agendamentos programados para o dia.</p>
+            </div>
+
+            <button
+                type="button"
+                class="botaoNovoAgendamentoInicio"
+                onclick="mostrarPagina('novoAgendamento')"
+            >
+                + Novo Agendamento
+            </button>
+        </div>
+
+        <form id="formularioAgendaDiaria" class="filtrosAgendaInicio">
+
+            <div class="campoFiltroAgenda">
+                <label for="dataAgendaDiaria">Data</label>
+                <input
+                    type="date"
+                    id="dataAgendaDiaria"
+                    required
+                >
+            </div>
+
+            <div class="campoFiltroAgenda">
+                <label for="espacoAgendaDiaria">Espaço escolar</label>
+
+                <select id="espacoAgendaDiaria">
+                    <option value="todos">Todos os espaços</option>
+                    <option value="Laboratório de Informática">
+                        Laboratório de Informática
+                    </option>
+                    <option value="Laboratório de Biologia">
+                        Laboratório de Biologia
+                    </option>
+                    <option value="Biblioteca">
+                        Biblioteca
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="botaoFiltrarAgenda">
+                Consultar agenda
+            </button>
+
+        </form>
+
+        <div class="resumoAgendaInicio">
+
+            <article class="cardResumoInicio">
+                <span>Agendamentos do dia</span>
+                <strong id="totalAgendamentosAgenda">0</strong>
+            </article>
+
+            <article class="cardResumoInicio">
+                <span>Espaços ocupados</span>
+                <strong id="totalEspacosOcupadosAgenda">0 de 3</strong>
+            </article>
+
+            <article class="cardResumoInicio">
+                <span>Data selecionada</span>
+                <strong id="dataSelecionadaAgenda">--/--/----</strong>
+            </article>
+
+        </div>
+
+        <div class="cabecalhoLinhaTempoInicio">
+            <h3 id="tituloLinhaTempoAgenda">
+                Programação de todos os espaços
+            </h3>
+        </div>
+
+        <div id="linhaTempoAgenda" class="linhaTempoAgenda">
+            <!-- A agenda será preenchida pelo JavaScript. -->
+        </div>
+
+    </div>
+
+</section>
 
                 <section class="secaoEspacos" id="espacosEscolares" aria-labelledby="tituloEspacos">
 
@@ -405,6 +489,96 @@
 
                 </section>
 
+                <section class="secaoAgendaDiaria" id="agendaDiaria" aria-labelledby="tituloAgendaDiaria">
+                    <div class="cabecalhoSecao">
+                        <div class="informacoesSecao">
+                            <h2 class="tituloSecao" id="tituloAgendaDiaria">
+                                Agenda Diária
+                            </h2>
+
+                            <p class="descricaoSecao">
+                                Visualize os agendamentos do dia e acompanhe os horários
+                                reservados nos espaços escolares.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FILTROS DA AGENDA -->
+                    <div class="cardFiltrosAgenda">
+                        <form id="formularioAgendaDiaria">
+                            <div class="gradeFiltrosAgenda">
+
+                                <div class="campoFormulario">
+                                    <label for="dataAgendaDiaria">Data da agenda</label>
+
+                                    <input type="date" id="dataAgendaDiaria" name="dataAgendaDiaria" required>
+                                </div>
+
+                                <div class="campoFormulario">
+                                    <label for="espacoAgendaDiaria">Espaço escolar</label>
+
+                                    <select id="espacoAgendaDiaria" name="espacoAgendaDiaria">
+                                        <option value="todos">Todos os espaços</option>
+                                        <option value="Laboratório de Informática">
+                                            Laboratório de Informática
+                                        </option>
+                                        <option value="Laboratório de Biologia">
+                                            Laboratório de Biologia
+                                        </option>
+                                        <option value="Biblioteca">Biblioteca</option>
+                                    </select>
+                                </div>
+
+                                <div class="campoAgendaAcao">
+                                    <button type="submit" class="botaoFormulario botaoConsultar">
+                                        Visualizar agenda
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- RESUMO DO DIA -->
+                    <div class="resumoAgendaDiaria" id="resumoAgendaDiaria">
+                        <div class="itemResumoAgenda">
+                            <span class="rotuloResumoAgenda">Data selecionada</span>
+                            <strong id="dataSelecionadaAgenda">--/--/----</strong>
+                        </div>
+
+                        <div class="itemResumoAgenda">
+                            <span class="rotuloResumoAgenda">Agendamentos</span>
+                            <strong id="totalAgendamentosAgenda">0</strong>
+                        </div>
+
+                        <div class="itemResumoAgenda">
+                            <span class="rotuloResumoAgenda">Espaços ocupados</span>
+                            <strong id="totalEspacosOcupadosAgenda">0 de 3</strong>
+                        </div>
+                    </div>
+
+                    <!-- LINHA DO TEMPO -->
+                    <div class="cardAgendaDiaria">
+                        <div class="cabecalhoAgendaDiaria">
+                            <div>
+                                <h3 id="tituloLinhaTempoAgenda">Programação do dia</h3>
+
+                                <p>
+                                    Os agendamentos são apresentados em ordem de horário.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="linhaTempoAgenda" class="linhaTempoAgenda" aria-live="polite" aria-atomic="false">
+                            <div class="estadoAgendaVazia">
+                                <h4>Carregando agenda...</h4>
+                                <p>Os agendamentos do dia serão exibidos aqui.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FIM DA AGENDA VISUAL POR DIA -->
                 <!-- Seção de agendamentos cadastrados -->
                 <section class="secaoAgendamentos" id="meusAgendamentos" aria-labelledby="tituloMeusAgendamentos">
 
@@ -436,6 +610,7 @@
                     </div>
 
                 </section>
+
                 <!-- Seção de consulta de disponibilidade -->
                 <section class="secaoConsultaDisponibilidade" id="consultarDisponibilidade"
                     aria-labelledby="tituloConsultaDisponibilidade">
@@ -502,6 +677,54 @@
                             </div>
                         </div>
 
+                    </div>
+                </section>
+
+                <!-- PÁGINA DE RELATÓRIOS -->
+                <section id="relatorios" aria-labelledby="tituloRelatorios">
+                    <div class="cabecalhoSecao">
+                        <div class="informacoesSecao">
+                            <h1 class="tituloSecao" id="tituloRelatorios">
+                                Relatórios
+                            </h1>
+
+                            <p class="descricaoSecao">
+                                Consulte informações sobre os agendamentos dos espaços escolares.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cardConsultaDisponibilidade">
+                        <h2>Relatórios de agendamentos</h2>
+
+                        <p>
+                            Esta área será utilizada para apresentar indicadores,
+                            históricos e estatísticas de utilização dos espaços escolares.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- PÁGINA DE CONFIGURAÇÕES -->
+                <section id="configuracoes" aria-labelledby="tituloConfiguracoes">
+                    <div class="cabecalhoSecao">
+                        <div class="informacoesSecao">
+                            <h1 class="tituloSecao" id="tituloConfiguracoes">
+                                Configurações
+                            </h1>
+
+                            <p class="descricaoSecao">
+                                Gerencie as preferências do sistema de agendamento escolar.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cardConsultaDisponibilidade">
+                        <h2>Preferências do sistema</h2>
+
+                        <p>
+                            Esta área poderá receber futuramente configurações de horários,
+                            espaços escolares e outras preferências da aplicação.
+                        </p>
                     </div>
                 </section>
             </main>

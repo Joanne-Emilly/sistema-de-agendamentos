@@ -1838,3 +1838,587 @@ textarea:focus-visible {
     width: 100%;
   }
 }
+/* ========================================
+   AGENDA VISUAL POR DIA
+======================================== */
+
+.secaoAgendaDiaria {
+  margin-top: 32px;
+  scroll-margin-top: 24px;
+}
+
+/* Filtros */
+
+.cardFiltrosAgenda {
+  padding: 24px;
+  margin-top: 20px;
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCard);
+  box-shadow: var(--sombraCard);
+}
+
+.gradeFiltrosAgenda {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(220px, 1.4fr) auto;
+  align-items: end;
+  gap: 20px;
+}
+
+.campoAgendaAcao {
+  display: flex;
+  align-items: end;
+}
+
+.campoAgendaAcao .botaoFormulario {
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+/* Resumo diário */
+
+.resumoAgendaDiaria {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.itemResumoAgenda {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCard);
+  box-shadow: var(--sombraCard);
+}
+
+.rotuloResumoAgenda {
+  color: var(--corTextoSecundario);
+  font-size: 0.875rem;
+}
+
+.itemResumoAgenda strong {
+  color: var(--corTextoPrincipal);
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+/* Cartão principal da agenda */
+
+.cardAgendaDiaria {
+  padding: 24px;
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCard);
+  box-shadow: var(--sombraCard);
+}
+
+.cabecalhoAgendaDiaria {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--corBorda);
+}
+
+.cabecalhoAgendaDiaria h3 {
+  margin: 0 0 8px;
+  color: var(--corTextoPrincipal);
+  font-size: 1.2rem;
+}
+
+.cabecalhoAgendaDiaria p {
+  margin: 0;
+  color: var(--corTextoSecundario);
+  line-height: 1.5;
+}
+
+/* Linha do tempo */
+
+.linhaTempoAgenda {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+}
+
+.itemLinhaTempo {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 20px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--corBorda);
+}
+
+.itemLinhaTempo:last-child {
+  border-bottom: none;
+}
+
+.horarioLinhaTempo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.horarioInicioAgenda {
+  color: var(--corTextoPrincipal);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.horarioFimAgenda {
+  color: var(--corTextoSecundario);
+  font-size: 0.875rem;
+}
+
+.conteudoLinhaTempo {
+  min-width: 0;
+  padding: 18px;
+  background-color: var(--corFundoPrincipal);
+  border-left: 5px solid var(--corPrimaria);
+  border-radius: var(--raioCard);
+}
+
+.conteudoLinhaTempo.laboratorioInformatica {
+  border-left-color: var(--corLaboratorioInformatica);
+}
+
+.conteudoLinhaTempo.laboratorioBiologia {
+  border-left-color: var(--corLaboratorioBiologia);
+}
+
+.conteudoLinhaTempo.biblioteca {
+  border-left-color: var(--corBiblioteca);
+}
+
+.cabecalhoCartaoAgenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.nomeEspacoAgenda {
+  margin: 0;
+  color: var(--corTextoPrincipal);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.horarioCompletoAgenda {
+  display: inline-block;
+  padding: 6px 10px;
+  color: var(--corTextoPrincipal);
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioBotao);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.detalhesCartaoAgenda {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+
+.detalheCartaoAgenda {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.rotuloDetalheAgenda {
+  color: var(--corTextoSecundario);
+  font-size: 0.8rem;
+}
+
+.valorDetalheAgenda {
+  color: var(--corTextoPrincipal);
+  font-size: 0.925rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.finalidadeCartaoAgenda {
+  grid-column: 1 / -1;
+}
+
+/* Status dos agendamentos */
+
+.statusAgenda {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.statusAgenda.pendente {
+  color: var(--corTextoPrincipal);
+  background-color: var(--corPendenteFundo);
+}
+
+.statusAgenda.cancelado {
+  color: var(--corTextoPrincipal);
+  background-color: var(--corCanceladoFundo);
+}
+
+/* Botão de atalho para reservar */
+
+.acaoCartaoAgenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.botaoUsarAgenda {
+  padding: 10px 14px;
+  color: var(--corTextoBranco);
+  background-color: var(--corPrimaria);
+  border: none;
+  border-radius: var(--raioBotao);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.botaoUsarAgenda:hover {
+  background-color: var(--corPrimariaHover);
+}
+
+.botaoUsarAgenda:focus-visible {
+  outline: 3px solid var(--corBordaFoco);
+  outline-offset: 3px;
+}
+
+/* Estados vazios */
+
+.estadoAgendaVazia {
+  padding: 42px 20px;
+  text-align: center;
+}
+
+.estadoAgendaVazia h4 {
+  margin: 0 0 10px;
+  color: var(--corTextoPrincipal);
+  font-size: 1.05rem;
+}
+
+.estadoAgendaVazia p {
+  margin: 0;
+  color: var(--corTextoSecundario);
+  line-height: 1.6;
+}
+
+.mensagemAvisoAgenda {
+  margin-top: 18px;
+  padding: 14px 16px;
+  color: var(--corTextoPrincipal);
+  background-color: var(--corFundoDica);
+  border-radius: var(--raioCard);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Acessibilidade */
+
+.secaoAgendaDiaria button:focus-visible,
+.secaoAgendaDiaria input:focus-visible,
+.secaoAgendaDiaria select:focus-visible {
+  outline: 3px solid var(--corBordaFoco);
+  outline-offset: 3px;
+}
+
+/* Responsividade */
+
+@media (max-width: 900px) {
+  .gradeFiltrosAgenda {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .campoAgendaAcao {
+    grid-column: 1 / -1;
+  }
+
+  .campoAgendaAcao .botaoFormulario {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .cardFiltrosAgenda,
+  .cardAgendaDiaria {
+    padding: 16px;
+  }
+
+  .gradeFiltrosAgenda {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .campoAgendaAcao {
+    grid-column: auto;
+  }
+
+  .resumoAgendaDiaria {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .itemResumoAgenda {
+    padding: 16px;
+  }
+
+  .itemLinhaTempo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 18px 0;
+  }
+
+  .horarioLinhaTempo {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .detalhesCartaoAgenda {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .finalidadeCartaoAgenda {
+    grid-column: auto;
+  }
+
+  .cabecalhoCartaoAgenda {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* ========================================
+   NAVEGAÇÃO ENTRE PÁGINAS
+======================================== */
+
+/* Esconde as seções que não estão ativas. */
+.areaPrincipal > section {
+  display: none;
+}
+
+/* Exibe somente a seção selecionada. */
+.areaPrincipal > section.paginaAtiva {
+  display: block;
+  animation: aparecerPagina 0.2s ease-in-out;
+}
+
+/* Animação discreta durante a navegação. */
+@keyframes aparecerPagina {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Indica a opção selecionada no menu lateral. */
+.menuLateral a.ativo {
+  background-color: var(--corPrimariaDestaque);
+  color: var(--corTextoBranco);
+  font-weight: 600;
+}
+
+/* Mantém a navegação acessível pelo teclado. */
+.menuLateral a:focus-visible {
+  outline: 2px solid var(--corTextoBranco);
+  outline-offset: 3px;
+}
+
+.statusAgendamento.statusConfirmado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.statusAgendamento.statusCancelado {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.statusAgenda.confirmado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* ========================================
+   PAINEL INICIAL
+======================================== */
+
+.cabecalhoInicio {
+    margin-bottom: 28px;
+}
+
+.textoBoasVindas {
+    color: #198754;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.cabecalhoInicio h1 {
+    color: #173b65;
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.cabecalhoInicio > p:last-child {
+    color: #718096;
+    line-height: 1.6;
+}
+
+.painelAgendaInicio {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.cabecalhoPainelInicio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.cabecalhoPainelInicio h2 {
+    color: #173b65;
+    font-size: 23px;
+    margin-bottom: 6px;
+}
+
+.cabecalhoPainelInicio p {
+    color: #718096;
+    margin: 0;
+}
+
+.botaoNovoAgendamentoInicio,
+.botaoFiltrarAgenda {
+    border: none;
+    border-radius: 7px;
+    background-color: #198754;
+    color: #ffffff;
+    padding: 12px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.botaoNovoAgendamentoInicio:hover,
+.botaoFiltrarAgenda:hover {
+    background-color: #146c43;
+}
+
+.filtrosAgendaInicio {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: end;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.campoFiltroAgenda {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campoFiltroAgenda label {
+    color: #173b65;
+    font-weight: 600;
+}
+
+.campoFiltroAgenda input,
+.campoFiltroAgenda select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #d5dce5;
+    border-radius: 7px;
+    background-color: #ffffff;
+    color: #263746;
+}
+
+.resumoAgendaInicio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.cardResumoInicio {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid #e3e9ef;
+    border-radius: 10px;
+    background-color: #f8fafc;
+}
+
+.cardResumoInicio span {
+    color: #718096;
+    font-size: 14px;
+}
+
+.cardResumoInicio strong {
+    color: #173b65;
+    font-size: 24px;
+}
+
+.cabecalhoLinhaTempoInicio {
+    border-bottom: 1px solid #e3e9ef;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+}
+
+.cabecalhoLinhaTempoInicio h3 {
+    color: #173b65;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .cabecalhoPainelInicio {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .filtrosAgendaInicio {
+        grid-template-columns: 1fr;
+    }
+
+    .resumoAgendaInicio {
+        grid-template-columns: 1fr;
+    }
+
+    .botaoNovoAgendamentoInicio,
+    .botaoFiltrarAgenda {
+        width: 100%;
+    }
+
+    .painelAgendaInicio {
+        padding: 16px;
+    }
+
+    .cabecalhoInicio h1 {
+        font-size: 25px;
+    }
+}
