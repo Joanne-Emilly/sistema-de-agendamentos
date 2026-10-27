@@ -436,6 +436,74 @@
                     </div>
 
                 </section>
+                <!-- Seção de consulta de disponibilidade -->
+                <section class="secaoConsultaDisponibilidade" id="consultarDisponibilidade"
+                    aria-labelledby="tituloConsultaDisponibilidade">
+                    <div class="cabecalhoSecao">
+                        <div class="informacoesSecao">
+                            <h2 class="tituloSecao" id="tituloConsultaDisponibilidade">
+                                Consultar Disponibilidade
+                            </h2>
+
+                            <p class="descricaoSecao">
+                                Selecione um espaço e uma data para consultar os horários reservados.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cardConsultaDisponibilidade">
+
+                        <form id="formularioConsultaDisponibilidade">
+                            <div class="gradeConsulta">
+
+                                <div class="campoFormulario">
+                                    <label for="filtroEspaco">
+                                        Espaço escolar
+                                    </label>
+
+                                    <select id="filtroEspaco" name="filtroEspaco" required>
+                                        <option value="">Selecione um espaço</option>
+                                        <option value="Laboratório de Informática">
+                                            Laboratório de Informática
+                                        </option>
+                                        <option value="Laboratório de Biologia">
+                                            Laboratório de Biologia
+                                        </option>
+                                        <option value="Biblioteca">
+                                            Biblioteca
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="campoFormulario">
+                                    <label for="filtroData">
+                                        Data desejada
+                                    </label>
+
+                                    <input type="date" id="filtroData" name="filtroData" required>
+                                </div>
+
+                                <div class="campoConsultaAcao">
+                                    <button type="submit" class="botaoFormulario botaoConsultar">
+                                        Consultar horários
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <div id="resultadoDisponibilidade" class="resultadoDisponibilidade" aria-live="polite"
+                            aria-atomic="true">
+                            <div class="estadoConsultaInicial">
+                                <h3>Consulte os horários disponíveis</h3>
+                                <p>
+                                    Escolha o espaço e a data para visualizar as reservas registradas.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
             </main>
         </div>
 

@@ -1425,12 +1425,12 @@ textarea:focus-visible {
 
 .statusPendente {
   background-color: var(--corPendenteFundo);
-  color: #164D83;
+  color: #164d83;
 }
 
 .statusCancelado {
   background-color: var(--corCanceladoFundo);
-  color: #8D174B;
+  color: #8d174b;
 }
 
 .detalhesAgendamento {
@@ -1476,10 +1476,10 @@ textarea:focus-visible {
 .botaoCancelarAgendamento {
   min-height: 36px;
   padding: 8px 13px;
-  border: 1px solid #D92D79;
+  border: 1px solid #d92d79;
   border-radius: var(--raioBotao);
-  background-color: #FFFFFF;
-  color: #B42363;
+  background-color: #ffffff;
+  color: #b42363;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
@@ -1553,7 +1553,7 @@ textarea:focus-visible {
   padding: 8px 13px;
   border: 1px solid var(--corPrimaria);
   border-radius: var(--raioBotao);
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: var(--corPrimaria);
   font-family: inherit;
   font-size: 12px;
@@ -1585,6 +1585,256 @@ textarea:focus-visible {
 
   .botaoEditarAgendamento,
   .botaoCancelarAgendamento {
+    width: 100%;
+  }
+}
+/* ========================================
+   ETAPA 9 — CONSULTA DE DISPONIBILIDADE
+======================================== */
+
+.secaoConsultaDisponibilidade {
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 32px;
+  scroll-margin-top: 24px;
+}
+
+.cardConsultaDisponibilidade {
+  padding: 26px;
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCard);
+  background-color: var(--corFundoCard);
+  box-shadow: var(--sombraCard);
+}
+
+.gradeConsulta {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 20px;
+}
+
+.campoConsultaAcao {
+  display: flex;
+  align-items: flex-end;
+}
+
+.botaoConsultar {
+  min-height: 44px;
+  background-color: var(--corPrimaria);
+  color: var(--corTextoBranco);
+  white-space: nowrap;
+}
+
+.botaoConsultar:hover {
+  background-color: var(--corPrimariaHover);
+}
+
+.resultadoDisponibilidade {
+  margin-top: 26px;
+}
+
+.estadoConsultaInicial,
+.estadoConsultaVazio {
+  padding: 26px 20px;
+  border: 1px dashed var(--corBorda);
+  border-radius: var(--raioCard);
+  background-color: var(--corFundoPrincipal);
+  text-align: center;
+}
+
+.estadoConsultaInicial h3,
+.estadoConsultaVazio h3 {
+  margin-bottom: 8px;
+  color: var(--corTextoPrincipal);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.estadoConsultaInicial p,
+.estadoConsultaVazio p {
+  color: var(--corTextoSecundario);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.cabecalhoResultadoDisponibilidade {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.tituloResultadoDisponibilidade {
+  margin-bottom: 5px;
+  color: var(--corTextoPrincipal);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.subtituloResultadoDisponibilidade {
+  color: var(--corTextoSecundario);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.contadorResultadoDisponibilidade {
+  padding: 6px 10px;
+  border-radius: 20px;
+  background-color: var(--corFundoDica);
+  color: var(--corPrimariaEscura);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.listaHorariosOcupados {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemHorarioOcupado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid var(--corBorda);
+  border-left: 4px solid var(--corPendente);
+  border-radius: var(--raioCard);
+  background-color: #ffffff;
+}
+
+.informacoesHorario {
+  min-width: 0;
+}
+
+.horarioReserva {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--corTextoPrincipal);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.responsavelReserva {
+  display: block;
+  color: var(--corTextoSecundario);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.statusHorario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background-color: var(--corPendenteFundo);
+  color: #164d83;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.mensagemSemReservas {
+  padding: 20px;
+  border: 1px solid #a8ddb8;
+  border-radius: var(--raioCard);
+  background-color: var(--corFundoDica);
+}
+
+.mensagemSemReservas h3 {
+  margin-bottom: 8px;
+  color: var(--corPrimariaEscura);
+  font-size: 15px;
+}
+
+.mensagemSemReservas p {
+  color: var(--corTextoPrincipal);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.avisoDisponibilidade {
+  margin-top: 18px;
+  color: var(--corTextoSecundario);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.acoesResultadoDisponibilidade {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.botaoUsarEspaco {
+  min-height: 40px;
+  padding: 10px 16px;
+  border: 1px solid var(--corPrimaria);
+  border-radius: var(--raioBotao);
+  background-color: #ffffff;
+  color: var(--corPrimaria);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botaoUsarEspaco:hover {
+  background-color: var(--corFundoDica);
+}
+
+.botaoUsarEspaco:focus-visible {
+  outline: 2px solid var(--corPrimaria);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .gradeConsulta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .campoConsultaAcao {
+    grid-column: 1 / -1;
+  }
+
+  .botaoConsultar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .cardConsultaDisponibilidade {
+    padding: 18px;
+  }
+
+  .gradeConsulta {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .campoConsultaAcao {
+    grid-column: auto;
+  }
+
+  .itemHorarioOcupado {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .acoesResultadoDisponibilidade {
+    justify-content: stretch;
+  }
+
+  .botaoUsarEspaco {
     width: 100%;
   }
 }

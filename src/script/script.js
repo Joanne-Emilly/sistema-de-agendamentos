@@ -31,6 +31,22 @@ const textoBotaoEnviar = document.querySelector("#textoBotaoEnviar");
 
 let agendamentoEmEdicao = null;
 // ========================================
+// ETAPA 9 — ELEMENTOS DA CONSULTA
+// ========================================
+
+const formularioConsultaDisponibilidade = document.querySelector(
+    "#formularioConsultaDisponibilidade"
+);
+
+const filtroEspaco = document.querySelector("#filtroEspaco");
+
+const filtroData = document.querySelector("#filtroData");
+
+const resultadoDisponibilidade = document.querySelector(
+    "#resultadoDisponibilidade"
+);
+
+// ========================================
 // ARMAZENAMENTO
 // ========================================
 
@@ -631,8 +647,273 @@ botaoCancelarEdicao.addEventListener("click", () => {
     encerrarEdicao();
 });
 // ========================================
+// ETAPA 9 — CONSULTA DE DISPONIBILIDADE
+// ========================================
+
+// Define a data atual como valor inicial do filtro.
+function inicializarConsultaDisponibilidade() {
+    filtroData.value = obterDataLocalAtual();
+}
+
+// Formata o título da consulta.
+function formatarDataConsulta(data) {
+    const [ano, mes, dia] = data.split("-");
+
+    return `${dia}/${mes}/${ano}`;
+}
+
+// Exibe o estado inicial da consulta.
+function exibirEstadoInicialConsulta() {
+    resultadoDisponibilidade.replaceChildren();
+
+    const estado = criarElemento("div", "estadoConsultaInicial");
+
+    estado.appendChild(
+        criarElemento(
+            "h3",
+            "",
+            "Consulte os horários disponíveis"
+        )
+    );
+
+    estado.appendChild(
+        criarElemento(
+            "p",
+            "",
+            "Escolha o espaço e a data para visualizar as reservas registradas."
+        )
+    );
+
+    resultadoDisponibilidade.appendChild(estado);
+}
+
+// Exibe uma mensagem quando não existem reservas ativas
+// para o espaço e a data selecionados.
+function exibirConsultaSemReservas(espaco, data) {
+    resultadoDisponibilidade.replaceChildren();
+
+    const mensagem = criarElemento("div", "mensagemSemReservas");
+
+    mensagem.appendChild(
+        criarElemento(
+            "h3",
+            "",
+            "Nenhuma reserva ativa encontrada"
+        )
+    );
+
+    mensagem.appendChild(
+        criarElemento(
+            "p",
+            "",
+            `Não foram encontradas reservas ativas para ${espaco} em ${formatarDataConsulta(data)}.`
+        )
+    );
+
+    resultadoDisponibilidade.appendChild(mensagem);
+
+    resultadoDisponibilidade.appendChild(
+        criarElemento(
+            "p",
+            "avisoDisponibilidade",
+            "A ausência de registros não garante a disponibilidade real do espaço. Esta consulta considera apenas os dados armazenados neste navegador."
+        )
+    );
+
+    adicionarBotaoUsarEspaco(espaco, data);
+}
+
+// Adiciona um atalho para preencher o formulário de reserva.
+function adicionarBotaoUsarEspaco(espaco, data) {
+    const acoes = criarElemento("div", "acoesResultadoDisponibilidade");
+
+    const botao = criarElemento(
+        "button",
+        "botaoUsarEspaco",
+        "Solicitar agendamento neste espaço"
+    );
+
+    botao.type = "button";
+
+    botao.addEventListener("click", () => {
+        formularioAgendamento.elements.espacoEscolar.value = espaco;
+
+        campoDataAgendamento.value = data;
+
+        secaoAgendamento.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        formularioAgendamento.elements.professorResponsavel.focus();
+    });
+
+    acoes.appendChild(botao);
+    resultadoDisponibilidade.appendChild(acoes);
+}
+
+// Exibe as reservas ativas do espaço e da data selecionados.
+function consultarDisponibilidade(espaco, data) {
+    resultadoDisponibilidade.replaceChildren();
+
+    if (!espaco || !data) {
+        exibirEstadoInicialConsulta();
+        return;
+    }
+
+    const agendamentos = obterAgendamentos();
+
+    const reservasEncontradas = agendamentos
+        .filter((agendamento) => {
+            return (
+                agendamento.espacoEscolar === espaco &&
+                agendamento.dataAgendamento === data &&
+                agendamento.status !== "cancelado"
+            );
+        })
+        .sort((a, b) => {
+            return a.horarioInicio.localeCompare(b.horarioInicio);
+        });
+
+    if (reservasEncontradas.length === 0) {
+        exibirConsultaSemReservas(espaco, data);
+        return;
+    }
+
+    // Cabeçalho dos resultados.
+    const cabecalho = criarElemento(
+        "div",
+        "cabecalhoResultadoDisponibilidade"
+    );
+
+    const informacoes = criarElemento("div");
+
+    informacoes.appendChild(
+        criarElemento(
+            "h3",
+            "tituloResultadoDisponibilidade",
+            espaco
+        )
+    );
+
+    informacoes.appendChild(
+        criarElemento(
+            "p",
+            "subtituloResultadoDisponibilidade",
+            `Reservas registradas para ${formatarDataConsulta(data)}`
+        )
+    );
+
+    const contador = criarElemento(
+        "span",
+        "contadorResultadoDisponibilidade",
+        reservasEncontradas.length === 1
+            ? "1 reserva"
+            : `${reservasEncontradas.length} reservas`
+    );
+
+    cabecalho.append(informacoes, contador);
+
+    resultadoDisponibilidade.appendChild(cabecalho);
+
+    // Lista dos horários ocupados.
+    const lista = criarElemento("div", "listaHorariosOcupados");
+
+    reservasEncontradas.forEach((reserva) => {
+        const item = criarElemento("article", "itemHorarioOcupado");
+
+        const informacoesHorario = criarElemento(
+            "div",
+            "informacoesHorario"
+        );
+
+        informacoesHorario.appendChild(
+            criarElemento(
+                "span",
+                "horarioReserva",
+                `${reserva.horarioInicio} às ${reserva.horarioFim}`
+            )
+        );
+
+        informacoesHorario.appendChild(
+            criarElemento(
+                "span",
+                "responsavelReserva",
+                `Professor(a): ${reserva.professorResponsavel}`
+            )
+        );
+
+        informacoesHorario.appendChild(
+            criarElemento(
+                "span",
+                "responsavelReserva",
+                `Turma: ${reserva.turma}`
+            )
+        );
+
+        const status = criarElemento(
+            "span",
+            "statusHorario",
+            reserva.status === "pendente" ? "Pendente" : reserva.status
+        );
+
+        item.append(informacoesHorario, status);
+        lista.appendChild(item);
+    });
+
+    resultadoDisponibilidade.appendChild(lista);
+
+    resultadoDisponibilidade.appendChild(
+        criarElemento(
+            "p",
+            "avisoDisponibilidade",
+            "Os horários exibidos correspondem às reservas ativas registradas neste navegador. Reservas pendentes também aparecem na consulta."
+        )
+    );
+
+    adicionarBotaoUsarEspaco(espaco, data);
+}
+
+// Executa a consulta ao enviar o formulário.
+formularioConsultaDisponibilidade.addEventListener(
+    "submit",
+    (evento) => {
+        evento.preventDefault();
+
+        if (!formularioConsultaDisponibilidade.reportValidity()) {
+            return;
+        }
+
+        consultarDisponibilidade(
+            filtroEspaco.value,
+            filtroData.value
+        );
+    }
+);
+
+// Atualiza os resultados quando os filtros são alterados,
+// caso o usuário já tenha feito uma consulta.
+filtroEspaco.addEventListener("change", () => {
+    if (filtroEspaco.value && filtroData.value) {
+        consultarDisponibilidade(
+            filtroEspaco.value,
+            filtroData.value
+        );
+    }
+});
+
+filtroData.addEventListener("change", () => {
+    if (filtroEspaco.value && filtroData.value) {
+        consultarDisponibilidade(
+            filtroEspaco.value,
+            filtroData.value
+        );
+    }
+});
+// ========================================
 // INICIALIZAÇÃO
 // ========================================
 
 definirDataMinima();
 renderizarAgendamentos();
+inicializarConsultaDisponibilidade();
