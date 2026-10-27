@@ -277,6 +277,131 @@
 
                 </section>
 
+                <!-- Seção de Novo Agendamento -->
+                <section class="secaoAgendamento" id="novoAgendamento" aria-labelledby="tituloNovoAgendamento">
+
+                    <div class="cabecalhoSecao">
+                        <div class="informacoesSecao">
+                            <h2 class="tituloSecao" id="tituloNovoAgendamento">
+                                Novo Agendamento
+                            </h2>
+
+                            <p class="descricaoSecao">
+                                Preencha os dados abaixo para solicitar a reserva de um espaço escolar.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cardFormulario">
+                        <form id="formularioAgendamento">
+
+                            <div class="gradeFormulario">
+
+                                <!-- Professor responsável -->
+                                <div class="campoFormulario campoCompleto">
+                                    <label for="professorResponsavel">
+                                        Professor(a) responsável
+                                    </label>
+
+                                    <input type="text" id="professorResponsavel" name="professorResponsavel"
+                                        placeholder="Digite o nome do professor(a)" autocomplete="name" required>
+                                </div>
+
+                                <!-- Turma -->
+                                <div class="campoFormulario">
+                                    <label for="turma">
+                                        Turma
+                                    </label>
+
+                                    <input type="text" id="turma" name="turma" placeholder="Ex.: 1º Ano A" required>
+                                </div>
+
+                                <!-- Espaço escolar -->
+                                <div class="campoFormulario">
+                                    <label for="espacoEscolar">
+                                        Espaço escolar
+                                    </label>
+
+                                    <select id="espacoEscolar" name="espacoEscolar" required>
+                                        <option value="">Selecione um espaço</option>
+                                        <option value="Laboratório de Informática">
+                                            Laboratório de Informática
+                                        </option>
+                                        <option value="Laboratório de Biologia">
+                                            Laboratório de Biologia
+                                        </option>
+                                        <option value="Biblioteca">
+                                            Biblioteca
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Data -->
+                                <div class="campoFormulario">
+                                    <label for="dataAgendamento">
+                                        Data da reserva
+                                    </label>
+
+                                    <input type="date" id="dataAgendamento" name="dataAgendamento" required>
+                                </div>
+
+                                <!-- Horário de início -->
+                                <div class="campoFormulario">
+                                    <label for="horarioInicio">
+                                        Horário de início
+                                    </label>
+
+                                    <input type="time" id="horarioInicio" name="horarioInicio" required>
+                                </div>
+
+                                <!-- Horário de término -->
+                                <div class="campoFormulario">
+                                    <label for="horarioFim">
+                                        Horário de término
+                                    </label>
+
+                                    <input type="time" id="horarioFim" name="horarioFim" required>
+                                </div>
+
+                                <!-- Finalidade -->
+                                <div class="campoFormulario campoCompleto">
+                                    <label for="finalidade">
+                                        Finalidade da reserva
+                                    </label>
+
+                                    <textarea id="finalidade" name="finalidade" rows="4"
+                                        placeholder="Descreva a atividade que será realizada no espaço..."
+                                        required></textarea>
+
+                                    <small class="textoAjuda">
+                                        Informe brevemente o objetivo da utilização do espaço.
+                                    </small>
+                                </div>
+
+                            </div>
+
+                            <!-- Mensagem de retorno -->
+                            <div id="mensagemFormulario" class="mensagemFormulario" role="status" aria-live="polite"
+                                hidden></div>
+
+                            <!-- Ações do formulário -->
+                            <div class="acoesFormulario">
+
+                                <button type="reset" class="botaoFormulario botaoLimpar">
+                                    Limpar formulário
+                                </button>
+
+                                <button type="submit" class="botaoFormulario botaoEnviar">
+                                    Solicitar agendamento
+                                </button>
+
+                            </div>
+
+                        </form>
+                    </div>
+
+                </section>
+
             </main>
         </div>
 

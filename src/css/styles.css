@@ -3,114 +3,108 @@
    Folha de estilos principal
 ============================================ */
 
-
 /* ============================================
    1. PALETA DE CORES DO PROTÓTIPO
 ============================================ */
 
 :root {
-    /* Identidade visual institucional */
-    --corPrimaria: #218443;
-    --corPrimariaEscura: #18743B;
-    --corPrimariaDestaque: #329B55;
-    --corPrimariaHover: #176D36;
+  /* Identidade visual institucional */
+  --corPrimaria: #218443;
+  --corPrimariaEscura: #18743b;
+  --corPrimariaDestaque: #329b55;
+  --corPrimariaHover: #176d36;
 
-    /* Fundos */
-    --corFundoPrincipal: #F5F9FD;
-    --corFundoCard: #FFFFFF;
-    --corFundoDica: #EAF7F0;
+  /* Fundos */
+  --corFundoPrincipal: #f5f9fd;
+  --corFundoCard: #ffffff;
+  --corFundoDica: #eaf7f0;
 
-    /* Textos */
-    --corTextoPrincipal: #16345C;
-    --corTextoSecundario: #6B83A5;
-    --corTextoBranco: #FFFFFF;
+  /* Textos */
+  --corTextoPrincipal: #16345c;
+  --corTextoSecundario: #6b83a5;
+  --corTextoBranco: #ffffff;
 
-    /* Bordas e divisórias */
-    --corBorda: #DCE7F2;
-    --corBordaFoco: #218443;
+  /* Bordas e divisórias */
+  --corBorda: #dce7f2;
+  --corBordaFoco: #218443;
 
-    /* Identificação dos espaços */
-    --corLaboratorioInformatica: #159B50;
-    --corLaboratorioBiologia: #8A43BD;
-    --corBiblioteca: #1685E8;
+  /* Identificação dos espaços */
+  --corLaboratorioInformatica: #159b50;
+  --corLaboratorioBiologia: #8a43bd;
+  --corBiblioteca: #1685e8;
 
-    /* Disponibilidade */
-    --corDisponivel: #159B50;
-    --corDisponivelFundo: #C7F5D8;
+  /* Disponibilidade */
+  --corDisponivel: #159b50;
+  --corDisponivelFundo: #c7f5d8;
 
-    /* Status dos agendamentos */
-    --corPendente: #1685E8;
-    --corPendenteFundo: #B9E0FF;
+  /* Status dos agendamentos */
+  --corPendente: #1685e8;
+  --corPendenteFundo: #b9e0ff;
 
-    --corCancelado: #D92D79;
-    --corCanceladoFundo: #FFC5E0;
+  --corCancelado: #d92d79;
+  --corCanceladoFundo: #ffc5e0;
 
-    /* Elementos auxiliares */
-    --corNotificacao: #F044A0;
-    --corSombra: rgba(22, 52, 92, 0.06);
+  /* Elementos auxiliares */
+  --corNotificacao: #f044a0;
+  --corSombra: rgba(22, 52, 92, 0.06);
 
-    /* Dimensões e formas */
-    --alturaCabecalho: 76px;
-    --larguraMenuLateral: 255px;
+  /* Dimensões e formas */
+  --alturaCabecalho: 76px;
+  --larguraMenuLateral: 255px;
 
-    --raioCard: 6px;
-    --raioBotao: 5px;
-    --raioCampo: 5px;
+  --raioCard: 6px;
+  --raioBotao: 5px;
+  --raioCampo: 5px;
 
-    /* Sombras */
-    --sombraCard: 0 2px 6px var(--corSombra);
+  /* Sombras */
+  --sombraCard: 0 2px 6px var(--corSombra);
 }
-
 
 /* ============================================
    2. RESET E CONFIGURAÇÕES GERAIS
 ============================================ */
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-    min-height: 100%;
-    scroll-behavior: smooth;
+  min-height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-    min-height: 100vh;
+  min-height: 100vh;
 
-    background-color: var(--corFundoPrincipal);
-    color: var(--corTextoPrincipal);
+  background-color: var(--corFundoPrincipal);
+  color: var(--corTextoPrincipal);
 
-    font-family:
-        Inter,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
 
-    font-size: 14px;
-    line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 button,
 input,
 select,
 textarea {
-    font: inherit;
+  font: inherit;
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 a {
-    color: inherit;
+  color: inherit;
 }
 
 img,
 svg {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 button:focus-visible,
@@ -118,189 +112,184 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-    outline: 3px solid #82C7AA;
-    outline-offset: 3px;
+  outline: 3px solid #82c7aa;
+  outline-offset: 3px;
 }
-
 
 /* ============================================
    3. ESTRUTURA GERAL DA APLICAÇÃO
 ============================================ */
 
 .aplicacao {
-    min-height: 100vh;
-    width: 100%;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .estruturaPrincipal {
-    display: flex;
-    align-items: stretch;
+  display: flex;
+  align-items: stretch;
 
-    min-height: calc(100vh - var(--alturaCabecalho));
+  min-height: calc(100vh - var(--alturaCabecalho));
 }
-
 
 /* ============================================
    4. CABEÇALHO PRINCIPAL
 ============================================ */
 
 .cabecalhoPrincipal {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
 
-    width: 100%;
-    min-height: var(--alturaCabecalho);
-    padding: 12px 28px;
+  width: 100%;
+  min-height: var(--alturaCabecalho);
+  padding: 12px 28px;
 
-    background-color: var(--corPrimaria);
-    color: var(--corTextoBranco);
+  background-color: var(--corPrimaria);
+  color: var(--corTextoBranco);
 }
-
 
 /* Identidade do sistema */
 
 .identidadeSistema {
-    display: flex;
-    align-items: center;
-    min-width: 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .marcaSistema {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-    color: var(--corTextoBranco);
-    text-decoration: none;
+  color: var(--corTextoBranco);
+  text-decoration: none;
 }
 
 .simboloSistema {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
-    width: 44px;
-    height: 44px;
+  width: 44px;
+  height: 44px;
 
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 10px;
 
-    background-color: transparent;
-    color: var(--corTextoBranco);
+  background-color: transparent;
+  color: var(--corTextoBranco);
 
-    font-size: 16px;
-    font-weight: 700;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .informacoesSistema {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .nomeSistema {
-    color: var(--corTextoBranco);
+  color: var(--corTextoBranco);
 
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.3;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .descricaoSistema {
-    color: var(--corTextoBranco);
+  color: var(--corTextoBranco);
 
-    font-size: 13px;
-    line-height: 1.4;
-    opacity: 0.9;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.9;
 }
 
 /* Ações do cabeçalho */
 
 .acoesCabecalho {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 /* Botão de notificações */
 
 .botaoNotificacoes {
-    position: relative;
+  position: relative;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
-    width: 42px;
-    height: 42px;
-    padding: 0;
+  width: 42px;
+  height: 42px;
+  padding: 0;
 
-    border: none;
-    border-radius: 10px;
+  border: none;
+  border-radius: 10px;
 
-    background-color: transparent;
-    color: var(--corTextoBranco);
+  background-color: transparent;
+  color: var(--corTextoBranco);
 
-    font-size: 20px;
+  font-size: 20px;
 
-    transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .botaoNotificacoes:hover {
-    background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.12);
 }
-
 
 /* Perfil do usuário */
 
 .perfilUsuario {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .avatarUsuario {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
-    width: 42px;
-    height: 42px;
+  width: 42px;
+  height: 42px;
 
-    border-radius: 50%;
+  border-radius: 50%;
 
-    background-color: var(--corFundoCard);
-    color: var(--corTextoPrincipal);
+  background-color: var(--corFundoCard);
+  color: var(--corTextoPrincipal);
 
-    font-size: 16px;
-    font-weight: 700;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .informacoesUsuario {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .nomeUsuario {
-    color: var(--corTextoBranco);
+  color: var(--corTextoBranco);
 
-    font-size: 14px;
-    font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .tipoUsuario {
-    color: var(--corTextoBranco);
+  color: var(--corTextoBranco);
 
-    font-size: 12px;
-    opacity: 0.9;
+  font-size: 12px;
+  opacity: 0.9;
 }
-
 
 /* ============================================
    5. MENU LATERAL
@@ -308,32 +297,30 @@ textarea:focus-visible {
 ============================================ */
 
 .menuLateral {
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 
-    width: var(--larguraMenuLateral);
-    min-height: calc(100vh - var(--alturaCabecalho));
-    padding: 20px 15px;
+  width: var(--larguraMenuLateral);
+  min-height: calc(100vh - var(--alturaCabecalho));
+  padding: 20px 15px;
 
-    background-color: var(--corPrimariaEscura);
-    color: var(--corTextoBranco);
+  background-color: var(--corPrimariaEscura);
+  color: var(--corTextoBranco);
 }
-
 
 /* ============================================
    6. ÁREA PRINCIPAL
 ============================================ */
 
 .areaPrincipal {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 
-    padding: 28px 32px;
+  padding: 28px 32px;
 
-    background-color: var(--corFundoPrincipal);
+  background-color: var(--corFundoPrincipal);
 }
-
 
 /* ============================================
    7. CARDS
@@ -341,250 +328,244 @@ textarea:focus-visible {
 ============================================ */
 
 .card {
-    min-width: 0;
-    padding: 20px;
+  min-width: 0;
+  padding: 20px;
 
-    background-color: var(--corFundoCard);
-    border: 1px solid var(--corBorda);
-    border-radius: var(--raioCard);
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCard);
 
-    box-shadow: var(--sombraCard);
+  box-shadow: var(--sombraCard);
 }
-
 
 /* ============================================
    8. BOTÕES
 ============================================ */
 
 .botaoPrimario {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-    min-height: 40px;
-    padding: 10px 18px;
+  min-height: 40px;
+  padding: 10px 18px;
 
-    border: none;
-    border-radius: var(--raioBotao);
+  border: none;
+  border-radius: var(--raioBotao);
 
-    background-color: var(--corPrimaria);
-    color: var(--corTextoBranco);
+  background-color: var(--corPrimaria);
+  color: var(--corTextoBranco);
 
-    font-weight: 600;
-    text-align: center;
+  font-weight: 600;
+  text-align: center;
 
-    transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .botaoPrimario:hover {
-    background-color: var(--corPrimariaHover);
+  background-color: var(--corPrimariaHover);
 }
 
 .botaoSecundario {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    min-height: 40px;
-    padding: 10px 18px;
+  min-height: 40px;
+  padding: 10px 18px;
 
-    border: 1px solid var(--corBorda);
-    border-radius: var(--raioBotao);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioBotao);
 
-    background-color: var(--corFundoCard);
-    color: var(--corTextoPrincipal);
+  background-color: var(--corFundoCard);
+  color: var(--corTextoPrincipal);
 
-    font-weight: 600;
-    text-align: center;
+  font-weight: 600;
+  text-align: center;
 }
 
 .botaoSecundario:hover {
-    background-color: var(--corFundoPrincipal);
+  background-color: var(--corFundoPrincipal);
 }
-
 
 /* ============================================
    9. CAMPOS DE FORMULÁRIO
 ============================================ */
 
 .campoFormulario {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .campoFormulario label {
-    color: var(--corTextoPrincipal);
+  color: var(--corTextoPrincipal);
 
-    font-size: 13px;
-    font-weight: 600;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .campoFormulario input,
 .campoFormulario select,
 .campoFormulario textarea {
-    width: 100%;
-    min-height: 42px;
-    padding: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px;
 
-    border: 1px solid var(--corBorda);
-    border-radius: var(--raioCampo);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCampo);
 
-    background-color: var(--corFundoCard);
-    color: var(--corTextoPrincipal);
+  background-color: var(--corFundoCard);
+  color: var(--corTextoPrincipal);
 }
 
 .campoFormulario input::placeholder,
 .campoFormulario textarea::placeholder {
-    color: var(--corTextoSecundario);
+  color: var(--corTextoSecundario);
 }
 
 .campoFormulario input:focus,
 .campoFormulario select:focus,
 .campoFormulario textarea:focus {
-    border-color: var(--corBordaFoco);
+  border-color: var(--corBordaFoco);
 }
-
 
 /* ============================================
    10. TEXTOS AUXILIARES
 ============================================ */
 
 .textoSecundario {
-    color: var(--corTextoSecundario);
+  color: var(--corTextoSecundario);
 }
 
 .tituloSecao {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 
-    color: var(--corTextoPrincipal);
+  color: var(--corTextoPrincipal);
 
-    font-size: 20px;
-    font-weight: 700;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .descricaoSecao {
-    color: var(--corTextoSecundario);
-    font-size: 14px;
+  color: var(--corTextoSecundario);
+  font-size: 14px;
 }
-
 
 /* ============================================
    11. RESPONSIVIDADE
 ============================================ */
 
 @media (max-width: 900px) {
-    :root {
-        --larguraMenuLateral: 210px;
-    }
+  :root {
+    --larguraMenuLateral: 210px;
+  }
 
-    .cabecalhoPrincipal {
-        padding-right: 20px;
-        padding-left: 20px;
-    }
+  .cabecalhoPrincipal {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
 
-    .areaPrincipal {
-        padding: 24px 20px;
-    }
+  .areaPrincipal {
+    padding: 24px 20px;
+  }
 
-    .acoesCabecalho {
-        gap: 14px;
-    }
+  .acoesCabecalho {
+    gap: 14px;
+  }
 }
-
 
 @media (max-width: 600px) {
-    :root {
-        --alturaCabecalho: 72px;
-        --larguraMenuLateral: 100%;
-    }
+  :root {
+    --alturaCabecalho: 72px;
+    --larguraMenuLateral: 100%;
+  }
 
-    .cabecalhoPrincipal {
-        gap: 12px;
-        padding: 12px 16px;
-    }
+  .cabecalhoPrincipal {
+    gap: 12px;
+    padding: 12px 16px;
+  }
 
-    .marcaSistema {
-        gap: 8px;
-    }
+  .marcaSistema {
+    gap: 8px;
+  }
 
-    .simboloSistema {
-        width: 38px;
-        height: 38px;
+  .simboloSistema {
+    width: 38px;
+    height: 38px;
 
-        font-size: 14px;
-    }
+    font-size: 14px;
+  }
 
-    .nomeSistema {
-        font-size: 15px;
-    }
+  .nomeSistema {
+    font-size: 15px;
+  }
 
-    .descricaoSistema {
-        font-size: 11px;
-    }
+  .descricaoSistema {
+    font-size: 11px;
+  }
 
-    .acoesCabecalho {
-        gap: 10px;
-    }
+  .acoesCabecalho {
+    gap: 10px;
+  }
 
-    .botaoNotificacoes {
-        width: 36px;
-        height: 36px;
+  .botaoNotificacoes {
+    width: 36px;
+    height: 36px;
 
-        font-size: 18px;
-    }
+    font-size: 18px;
+  }
 
-    .avatarUsuario {
-        width: 36px;
-        height: 36px;
-    }
+  .avatarUsuario {
+    width: 36px;
+    height: 36px;
+  }
 
-    .informacoesUsuario {
-        display: none;
-    }
+  .informacoesUsuario {
+    display: none;
+  }
 
-    .estruturaPrincipal {
-        flex-direction: column;
-    }
+  .estruturaPrincipal {
+    flex-direction: column;
+  }
 
-    .menuLateral {
-        width: 100%;
-        min-height: auto;
-    }
+  .menuLateral {
+    width: 100%;
+    min-height: auto;
+  }
 
-    .areaPrincipal {
-        padding: 20px 16px;
-    }
+  .areaPrincipal {
+    padding: 20px 16px;
+  }
 
-    .card {
-        padding: 16px;
-    }
+  .card {
+    padding: 16px;
+  }
 }
 
-
 @media (max-width: 380px) {
-    .cabecalhoPrincipal {
-        padding-right: 10px;
-        padding-left: 10px;
-    }
+  .cabecalhoPrincipal {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
 
-    .simboloSistema {
-        width: 34px;
-        height: 34px;
-    }
+  .simboloSistema {
+    width: 34px;
+    height: 34px;
+  }
 
-    .nomeSistema {
-        font-size: 13px;
-    }
+  .nomeSistema {
+    font-size: 13px;
+  }
 
-    .descricaoSistema {
-        font-size: 10px;
-    }
+  .descricaoSistema {
+    font-size: 10px;
+  }
 
-    .acoesCabecalho {
-        gap: 6px;
-    }
+  .acoesCabecalho {
+    gap: 6px;
+  }
 }
 
 /* ============================================
@@ -592,106 +573,106 @@ textarea:focus-visible {
 ============================================ */
 
 .menuLateral {
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 
-    width: var(--larguraMenuLateral);
-    min-height: calc(100vh - var(--alturaCabecalho));
-    padding: 20px 15px;
+  width: var(--larguraMenuLateral);
+  min-height: calc(100vh - var(--alturaCabecalho));
+  padding: 20px 15px;
 
-    background-color: var(--corPrimariaEscura);
-    color: var(--corTextoBranco);
+  background-color: var(--corPrimariaEscura);
+  color: var(--corTextoBranco);
 }
 
 /* Lista de navegação */
 
 .navegacaoPrincipal {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 /* Links do menu */
 
 .itemNavegacao {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
-    width: 100%;
-    min-height: 51px;
-    padding: 12px;
+  width: 100%;
+  min-height: 51px;
+  padding: 12px;
 
-    border-radius: var(--raioBotao);
+  border-radius: var(--raioBotao);
 
-    background-color: transparent;
-    color: var(--corTextoBranco);
+  background-color: transparent;
+  color: var(--corTextoBranco);
 
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.4;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
 
-    text-decoration: none;
+  text-decoration: none;
 
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* Ícones */
 
 .iconeNavegacao {
-    display: block;
-    flex-shrink: 0;
+  display: block;
+  flex-shrink: 0;
 
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
 }
 
 /* Efeito ao passar o cursor */
 
 .itemNavegacao:hover {
-    background-color: rgba(255, 255, 255, 0.12);
-    color: var(--corTextoBranco);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--corTextoBranco);
 }
 
 /* Página selecionada */
 
 .itemNavegacao.ativo {
-    background-color: var(--corPrimariaDestaque);
-    color: var(--corTextoBranco);
+  background-color: var(--corPrimariaDestaque);
+  color: var(--corTextoBranco);
 
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .itemNavegacao.ativo:hover {
-    background-color: var(--corPrimariaHover);
+  background-color: var(--corPrimariaHover);
 }
 
 /* Foco pelo teclado */
 
 .itemNavegacao:focus-visible {
-    outline: 2px solid var(--corTextoBranco);
-    outline-offset: -3px;
+  outline: 2px solid var(--corTextoBranco);
+  outline-offset: -3px;
 }
 
 /* Área do botão Sair */
 
 .areaSaida {
-    margin-top: auto;
-    padding-top: 20px;
+  margin-top: auto;
+  padding-top: 20px;
 }
 
 .itemSair {
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0;
 
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .itemSair:hover {
-    background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 /* ============================================
@@ -699,48 +680,48 @@ textarea:focus-visible {
 ============================================ */
 
 @media (max-width: 600px) {
-    .menuLateral {
-        width: 100%;
-        min-height: auto;
-        padding: 12px;
+  .menuLateral {
+    width: 100%;
+    min-height: auto;
+    padding: 12px;
 
-        overflow-x: auto;
-    }
+    overflow-x: auto;
+  }
 
-    .navegacaoPrincipal {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 6px;
-    }
+  .navegacaoPrincipal {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
 
-    .itemNavegacao {
-        gap: 8px;
-        min-height: 44px;
-        padding: 10px 8px;
+  .itemNavegacao {
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 8px;
 
-        font-size: 12px;
-    }
+    font-size: 12px;
+  }
 
-    .iconeNavegacao {
-        width: 20px;
-        height: 20px;
-    }
+  .iconeNavegacao {
+    width: 20px;
+    height: 20px;
+  }
 
-    .areaSaida {
-        margin-top: 12px;
-        padding-top: 8px;
-    }
+  .areaSaida {
+    margin-top: 12px;
+    padding-top: 8px;
+  }
 
-    .itemSair {
-        min-height: 42px;
-        padding-top: 10px;
-    }
+  .itemSair {
+    min-height: 42px;
+    padding-top: 10px;
+  }
 }
 
 @media (max-width: 360px) {
-    .navegacaoPrincipal {
-        grid-template-columns: 1fr;
-    }
+  .navegacaoPrincipal {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ============================================
@@ -748,11 +729,11 @@ textarea:focus-visible {
 ============================================ */
 
 .areaPrincipal {
-    flex: 1;
-    min-width: 0;
-    padding: 32px;
+  flex: 1;
+  min-width: 0;
+  padding: 32px;
 
-    background-color: var(--corFundoPrincipal);
+  background-color: var(--corFundoPrincipal);
 }
 
 /* ============================================
@@ -760,35 +741,35 @@ textarea:focus-visible {
 ============================================ */
 
 .secaoBoasVindas {
-    margin-bottom: 36px;
+  margin-bottom: 36px;
 }
 
 .saudacaoUsuario {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 
-    color: var(--corPrimaria);
+  color: var(--corPrimaria);
 
-    font-size: 15px;
-    font-weight: 600;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .tituloBoasVindas {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 
-    color: var(--corTextoPrincipal);
+  color: var(--corTextoPrincipal);
 
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.3;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .descricaoBoasVindas {
-    max-width: 720px;
+  max-width: 720px;
 
-    color: var(--corTextoSecundario);
+  color: var(--corTextoSecundario);
 
-    font-size: 15px;
-    line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 /* ============================================
@@ -796,53 +777,53 @@ textarea:focus-visible {
 ============================================ */
 
 .secaoEspacos {
-    width: 100%;
-    margin-bottom: 32px;
+  width: 100%;
+  margin-bottom: 32px;
 }
 
 .cabecalhoSecao {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .informacoesSecao {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .tituloSecao {
-    margin: 0;
+  margin: 0;
 
-    color: var(--corTextoPrincipal);
+  color: var(--corTextoPrincipal);
 
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.4;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .descricaoSecao {
-    margin: 0;
+  margin: 0;
 
-    color: var(--corTextoSecundario);
+  color: var(--corTextoSecundario);
 
-    font-size: 14px;
-    line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 /* Área reservada para os cards */
 
 .listaEspacos {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
 
-    width: 100%;
-    align-items: stretch;
+  width: 100%;
+  align-items: stretch;
 }
 
 /* ============================================
@@ -850,49 +831,49 @@ textarea:focus-visible {
 ============================================ */
 
 @media (max-width: 1100px) {
-    .areaPrincipal {
-        padding: 28px 24px;
-    }
+  .areaPrincipal {
+    padding: 28px 24px;
+  }
 
-    .listaEspacos {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-    }
+  .listaEspacos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 
-    .tituloBoasVindas {
-        font-size: 25px;
-    }
+  .tituloBoasVindas {
+    font-size: 25px;
+  }
 }
 
 @media (max-width: 600px) {
-    .areaPrincipal {
-        padding: 24px 16px;
-    }
+  .areaPrincipal {
+    padding: 24px 16px;
+  }
 
-    .secaoBoasVindas {
-        margin-bottom: 28px;
-    }
+  .secaoBoasVindas {
+    margin-bottom: 28px;
+  }
 
-    .tituloBoasVindas {
-        font-size: 22px;
-    }
+  .tituloBoasVindas {
+    font-size: 22px;
+  }
 
-    .descricaoBoasVindas {
-        font-size: 14px;
-    }
+  .descricaoBoasVindas {
+    font-size: 14px;
+  }
 
-    .cabecalhoSecao {
-        margin-bottom: 16px;
-    }
+  .cabecalhoSecao {
+    margin-bottom: 16px;
+  }
 
-    .tituloSecao {
-        font-size: 18px;
-    }
+  .tituloSecao {
+    font-size: 18px;
+  }
 
-    .listaEspacos {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
+  .listaEspacos {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 /* ========================================
    ETAPA 5 — CARDS DOS ESPAÇOS ESCOLARES
@@ -909,7 +890,9 @@ textarea:focus-visible {
   border-top: 4px solid var(--corPrimaria);
   border-radius: var(--raioCard);
   box-shadow: var(--sombraCard);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .cardEspaco:hover {
@@ -1015,7 +998,9 @@ textarea:focus-visible {
   font-size: 12px;
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .botaoConsultarEspaco:hover {
@@ -1035,7 +1020,7 @@ textarea:focus-visible {
 }
 
 .laboratorioInformatica .iconeEspaco {
-  background-color: #E8F7EE;
+  background-color: #e8f7ee;
   color: var(--corLaboratorioInformatica);
 }
 
@@ -1058,7 +1043,7 @@ textarea:focus-visible {
 }
 
 .laboratorioBiologia .iconeEspaco {
-  background-color: #F3EAF9;
+  background-color: #f3eaf9;
   color: var(--corLaboratorioBiologia);
 }
 
@@ -1081,7 +1066,7 @@ textarea:focus-visible {
 }
 
 .biblioteca .iconeEspaco {
-  background-color: #E8F3FD;
+  background-color: #e8f3fd;
   color: var(--corBiblioteca);
 }
 
@@ -1123,5 +1108,222 @@ textarea:focus-visible {
 
   .rodapeCardEspaco {
     margin-top: 20px;
+  }
+}
+/* ========================================
+   ETAPA 6 — FORMULÁRIO DE AGENDAMENTO
+======================================== */
+
+.secaoAgendamento {
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 32px;
+  scroll-margin-top: 24px;
+}
+
+.secaoAgendamento .cabecalhoSecao {
+  margin-bottom: 20px;
+}
+
+.cardFormulario {
+  width: 100%;
+  padding: 28px;
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCard);
+  box-shadow: var(--sombraCard);
+}
+
+.gradeFormulario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 24px;
+}
+
+.campoFormulario {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 9px;
+}
+
+.campoCompleto {
+  grid-column: 1 / -1;
+}
+
+.campoFormulario label {
+  color: var(--corTextoPrincipal);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.campoFormulario input,
+.campoFormulario select,
+.campoFormulario textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCampo);
+  background-color: #ffffff;
+  color: var(--corTextoPrincipal);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.campoFormulario input::placeholder,
+.campoFormulario textarea::placeholder {
+  color: #8999ad;
+}
+
+.campoFormulario select {
+  cursor: pointer;
+}
+
+.campoFormulario textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.campoFormulario input:focus,
+.campoFormulario select:focus,
+.campoFormulario textarea:focus {
+  outline: none;
+  border-color: var(--corBordaFoco);
+  box-shadow: 0 0 0 3px rgba(33, 132, 67, 0.12);
+}
+
+.campoFormulario input:disabled,
+.campoFormulario select:disabled,
+.campoFormulario textarea:disabled {
+  background-color: var(--corFundoPrincipal);
+  cursor: not-allowed;
+}
+
+.textoAjuda {
+  color: var(--corTextoSecundario);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.acoesFormulario {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--corBorda);
+}
+
+.botaoFormulario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+  padding: 11px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--raioBotao);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.botaoFormulario:focus-visible {
+  outline: 2px solid var(--corPrimaria);
+  outline-offset: 3px;
+}
+
+.botaoLimpar {
+  border-color: var(--corBorda);
+  background-color: #ffffff;
+  color: var(--corTextoSecundario);
+}
+
+.botaoLimpar:hover {
+  border-color: var(--corTextoSecundario);
+  background-color: var(--corFundoPrincipal);
+}
+
+.botaoEnviar {
+  background-color: var(--corPrimaria);
+  color: var(--corTextoBranco);
+}
+
+.botaoEnviar:hover {
+  background-color: var(--corPrimariaHover);
+}
+
+.mensagemFormulario {
+  margin-top: 22px;
+  padding: 13px 15px;
+  border: 1px solid var(--corBorda);
+  border-radius: var(--raioCampo);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mensagemFormulario.sucesso {
+  border-color: #a8ddb8;
+  background-color: #eaf7f0;
+  color: #176d36;
+}
+
+.mensagemFormulario.erro {
+  border-color: #f2b8b5;
+  background-color: #fff0ef;
+  color: #a52620;
+}
+
+/* Responsividade do formulário */
+
+@media (max-width: 900px) {
+  .cardFormulario {
+    padding: 24px;
+  }
+
+  .gradeFormulario {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .secaoAgendamento {
+    margin-top: 32px;
+  }
+
+  .cardFormulario {
+    padding: 18px;
+  }
+
+  .gradeFormulario {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .campoCompleto {
+    grid-column: auto;
+  }
+
+  .acoesFormulario {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .botaoFormulario {
+    width: 100%;
   }
 }
