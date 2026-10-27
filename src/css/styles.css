@@ -1528,3 +1528,63 @@ textarea:focus-visible {
     width: 100%;
   }
 }
+/* ========================================
+   ETAPA 8 — MODO DE EDIÇÃO
+======================================== */
+
+.secaoAgendamento.emEdicao .cardFormulario {
+  border-top: 4px solid var(--corPrimaria);
+}
+
+.secaoAgendamento.emEdicao .cabecalhoSecao::after {
+  content: "Editando agendamento";
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background-color: var(--corFundoDica);
+  color: var(--corPrimariaEscura);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.botaoEditarAgendamento {
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 1px solid var(--corPrimaria);
+  border-radius: var(--raioBotao);
+  background-color: #FFFFFF;
+  color: var(--corPrimaria);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botaoEditarAgendamento:hover {
+  background-color: var(--corFundoDica);
+}
+
+.botaoEditarAgendamento:focus-visible {
+  outline: 2px solid var(--corPrimaria);
+  outline-offset: 3px;
+}
+
+.acoesAgendamento {
+  flex-wrap: wrap;
+}
+
+.botaoFormulario[hidden] {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .acoesAgendamento {
+    flex-direction: column;
+  }
+
+  .botaoEditarAgendamento,
+  .botaoCancelarAgendamento {
+    width: 100%;
+  }
+}
