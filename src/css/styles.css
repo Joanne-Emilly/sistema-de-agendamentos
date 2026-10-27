@@ -742,3 +742,155 @@ textarea:focus-visible {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================
+   ÁREA PRINCIPAL — CONTEÚDO
+============================================ */
+
+.areaPrincipal {
+    flex: 1;
+    min-width: 0;
+    padding: 32px;
+
+    background-color: var(--corFundoPrincipal);
+}
+
+/* ============================================
+   SEÇÃO DE BOAS-VINDAS
+============================================ */
+
+.secaoBoasVindas {
+    margin-bottom: 36px;
+}
+
+.saudacaoUsuario {
+    margin-bottom: 8px;
+
+    color: var(--corPrimaria);
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.tituloBoasVindas {
+    margin-bottom: 12px;
+
+    color: var(--corTextoPrincipal);
+
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.descricaoBoasVindas {
+    max-width: 720px;
+
+    color: var(--corTextoSecundario);
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* ============================================
+   SEÇÃO DE ESPAÇOS ESCOLARES
+============================================ */
+
+.secaoEspacos {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.cabecalhoSecao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+.informacoesSecao {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tituloSecao {
+    margin: 0;
+
+    color: var(--corTextoPrincipal);
+
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.descricaoSecao {
+    margin: 0;
+
+    color: var(--corTextoSecundario);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Área reservada para os cards */
+
+.listaEspacos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+
+    width: 100%;
+    align-items: stretch;
+}
+
+/* ============================================
+   RESPONSIVIDADE DA ÁREA PRINCIPAL
+============================================ */
+
+@media (max-width: 1100px) {
+    .areaPrincipal {
+        padding: 28px 24px;
+    }
+
+    .listaEspacos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .tituloBoasVindas {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    .areaPrincipal {
+        padding: 24px 16px;
+    }
+
+    .secaoBoasVindas {
+        margin-bottom: 28px;
+    }
+
+    .tituloBoasVindas {
+        font-size: 22px;
+    }
+
+    .descricaoBoasVindas {
+        font-size: 14px;
+    }
+
+    .cabecalhoSecao {
+        margin-bottom: 16px;
+    }
+
+    .tituloSecao {
+        font-size: 18px;
+    }
+
+    .listaEspacos {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+}
