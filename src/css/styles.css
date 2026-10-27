@@ -894,3 +894,234 @@ textarea:focus-visible {
         gap: 14px;
     }
 }
+/* ========================================
+   ETAPA 5 — CARDS DOS ESPAÇOS ESCOLARES
+======================================== */
+
+.cardEspaco {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 270px;
+  padding: 22px;
+  background-color: var(--corFundoCard);
+  border: 1px solid var(--corBorda);
+  border-top: 4px solid var(--corPrimaria);
+  border-radius: var(--raioCard);
+  box-shadow: var(--sombraCard);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cardEspaco:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px var(--corSombra);
+}
+
+.cabecalhoCardEspaco {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.iconeEspaco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background-color: var(--corFundoDica);
+  color: var(--corPrimaria);
+}
+
+.iconeEspaco svg {
+  display: block;
+  width: 27px;
+  height: 27px;
+}
+
+.etiquetaEspaco {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background-color: var(--corFundoPrincipal);
+  color: var(--corTextoSecundario);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.conteudoCardEspaco {
+  flex: 1;
+}
+
+.nomeEspaco {
+  margin-bottom: 10px;
+  color: var(--corTextoPrincipal);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.descricaoEspaco {
+  color: var(--corTextoSecundario);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.rodapeCardEspaco {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--corBorda);
+}
+
+.indicadorEspaco {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--corTextoSecundario);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.pontoIndicador {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--corPrimaria);
+}
+
+.botaoConsultarEspaco {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 9px 12px;
+  border: 1px solid var(--corPrimaria);
+  border-radius: var(--raioBotao);
+  background-color: transparent;
+  color: var(--corPrimaria);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.botaoConsultarEspaco:hover {
+  background-color: var(--corPrimaria);
+  color: var(--corTextoBranco);
+}
+
+.botaoConsultarEspaco:focus-visible {
+  outline: 2px solid var(--corPrimaria);
+  outline-offset: 3px;
+}
+
+/* Cores específicas de cada espaço */
+
+.laboratorioInformatica {
+  border-top-color: var(--corLaboratorioInformatica);
+}
+
+.laboratorioInformatica .iconeEspaco {
+  background-color: #E8F7EE;
+  color: var(--corLaboratorioInformatica);
+}
+
+.laboratorioInformatica .pontoIndicador {
+  background-color: var(--corLaboratorioInformatica);
+}
+
+.laboratorioInformatica .botaoConsultarEspaco {
+  border-color: var(--corLaboratorioInformatica);
+  color: var(--corLaboratorioInformatica);
+}
+
+.laboratorioInformatica .botaoConsultarEspaco:hover {
+  background-color: var(--corLaboratorioInformatica);
+  color: var(--corTextoBranco);
+}
+
+.laboratorioBiologia {
+  border-top-color: var(--corLaboratorioBiologia);
+}
+
+.laboratorioBiologia .iconeEspaco {
+  background-color: #F3EAF9;
+  color: var(--corLaboratorioBiologia);
+}
+
+.laboratorioBiologia .pontoIndicador {
+  background-color: var(--corLaboratorioBiologia);
+}
+
+.laboratorioBiologia .botaoConsultarEspaco {
+  border-color: var(--corLaboratorioBiologia);
+  color: var(--corLaboratorioBiologia);
+}
+
+.laboratorioBiologia .botaoConsultarEspaco:hover {
+  background-color: var(--corLaboratorioBiologia);
+  color: var(--corTextoBranco);
+}
+
+.biblioteca {
+  border-top-color: var(--corBiblioteca);
+}
+
+.biblioteca .iconeEspaco {
+  background-color: #E8F3FD;
+  color: var(--corBiblioteca);
+}
+
+.biblioteca .pontoIndicador {
+  background-color: var(--corBiblioteca);
+}
+
+.biblioteca .botaoConsultarEspaco {
+  border-color: var(--corBiblioteca);
+  color: var(--corBiblioteca);
+}
+
+.biblioteca .botaoConsultarEspaco:hover {
+  background-color: var(--corBiblioteca);
+  color: var(--corTextoBranco);
+}
+
+/* Ajustes para telas menores */
+
+@media (max-width: 1100px) {
+  .cardEspaco {
+    padding: 18px;
+  }
+
+  .nomeEspaco {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cardEspaco {
+    min-height: 240px;
+    padding: 18px;
+  }
+
+  .cabecalhoCardEspaco {
+    margin-bottom: 18px;
+  }
+
+  .rodapeCardEspaco {
+    margin-top: 20px;
+  }
+}
