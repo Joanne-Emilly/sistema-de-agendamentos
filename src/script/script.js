@@ -1364,6 +1364,494 @@ function inicializarNavegacao() {
 }
 
 // ========================================
+// TAREFA 118 - RELATÓRIOS E EXPORTAÇÃO
+// ========================================
+
+const formularioRelatorios = document.querySelector("#formularioRelatorios");
+
+const relatorioDataInicial = document.querySelector("#relatorioDataInicial");
+const relatorioDataFinal = document.querySelector("#relatorioDataFinal");
+const relatorioEspaco = document.querySelector("#relatorioEspaco");
+const relatorioProfessor = document.querySelector("#relatorioProfessor");
+const relatorioSituacao = document.querySelector("#relatorioSituacao");
+
+const relatorioTotal = document.querySelector("#relatorioTotal");
+const relatorioConfirmados = document.querySelector("#relatorioConfirmados");
+const relatorioCancelados = document.querySelector("#relatorioCancelados");
+const relatorioEspacos = document.querySelector("#relatorioEspacos");
+
+const corpoTabelaRelatorios = document.querySelector("#corpoTabelaRelatorios");
+
+const mensagemQuantidadeRelatorios = document.querySelector(
+  "#mensagemQuantidadeRelatorios",
+);
+
+const botaoLimparFiltrosRelatorios = document.querySelector(
+  "#botaoLimparFiltrosRelatorios",
+);
+
+const botaoExportarExcel = document.querySelector("#botaoExportarExcel");
+const botaoExportarCSV = document.querySelector("#botaoExportarCSV");
+const botaoImprimirRelatorio = document.querySelector(
+  "#botaoImprimirRelatorio",
+);
+
+let agendamentosFiltradosRelatorios = [];
+
+// ========================================
+// NORMALIZAÇÃO DOS DADOS
+// ========================================
+
+function obterSituacaoRelatorio(agendamento) {
+  const situacao = String(agendamento.status || "confirmado")
+    .trim()
+    .toLowerCase();
+
+  if (situacao === "cancelado") {
+    return "cancelado";
+  }
+
+  if (situacao === "confirmado") {
+    return "confirmado";
+  }
+
+  return situacao || "confirmado";
+}
+
+function obterProfessorRelatorio(agendamento) {
+  return (
+    agendamento.professorResponsavel ||
+    agendamento.professor ||
+    agendamento.nomeProfessor ||
+    agendamento.responsavel ||
+    ""
+  );
+}
+
+function obterTurmaRelatorio(agendamento) {
+  return agendamento.turma || agendamento.nomeTurma || "";
+}
+
+function obterTextoSituacaoRelatorio(situacao) {
+  const situacoes = {
+    confirmado: "Confirmado",
+    cancelado: "Cancelado",
+    pendente: "Pendente",
+  };
+
+  return situacoes[situacao] || situacao;
+}
+
+function formatarDataRelatorio(data) {
+  if (!data) {
+    return "—";
+  }
+
+  const partes = data.split("-");
+
+  if (partes.length !== 3) {
+    return data;
+  }
+
+  return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+// ========================================
+// FILTRAGEM DOS AGENDAMENTOS
+// ========================================
+
+function filtrarAgendamentosRelatorios() {
+  const dataInicial = relatorioDataInicial.value;
+  const dataFinal = relatorioDataFinal.value;
+
+  const espacoSelecionado = relatorioEspaco.value;
+
+  const professorDigitado = relatorioProfessor.value
+    .trim()
+    .toLocaleLowerCase("pt-BR");
+
+  const situacaoSelecionada = relatorioSituacao.value;
+
+  if (dataInicial && dataFinal && dataInicial > dataFinal) {
+    alert("A data inicial não pode ser posterior à data final.");
+    relatorioDataInicial.focus();
+    return null;
+  }
+
+  const todosAgendamentos = obterAgendamentos();
+
+  return todosAgendamentos
+    .filter((agendamento) => {
+      const data = agendamento.dataAgendamento || "";
+
+      const espaco = agendamento.espacoEscolar || "";
+
+      const professor =
+        obterProfessorRelatorio(agendamento).toLocaleLowerCase("pt-BR");
+
+      const situacao = obterSituacaoRelatorio(agendamento);
+
+      const correspondeDataInicial = !dataInicial || data >= dataInicial;
+
+      const correspondeDataFinal = !dataFinal || data <= dataFinal;
+
+      const correspondeEspaco =
+        !espacoSelecionado || espaco === espacoSelecionado;
+
+      const correspondeProfessor =
+        !professorDigitado || professor.includes(professorDigitado);
+
+      const correspondeSituacao =
+        !situacaoSelecionada || situacao === situacaoSelecionada;
+
+      return (
+        correspondeDataInicial &&
+        correspondeDataFinal &&
+        correspondeEspaco &&
+        correspondeProfessor &&
+        correspondeSituacao
+      );
+    })
+    .sort((a, b) => {
+      const comparacaoData = String(a.dataAgendamento || "").localeCompare(
+        String(b.dataAgendamento || ""),
+      );
+
+      if (comparacaoData !== 0) {
+        return comparacaoData;
+      }
+
+      return String(a.horarioInicio || "").localeCompare(
+        String(b.horarioInicio || ""),
+      );
+    });
+}
+
+// ========================================
+// RENDERIZAÇÃO DA TABELA
+// ========================================
+
+function criarCelulaRelatorio(texto) {
+  const celula = document.createElement("td");
+
+  celula.textContent =
+    texto === null || texto === undefined || texto === "" ? "—" : String(texto);
+
+  return celula;
+}
+
+function criarCelulaSituacaoRelatorio(situacao) {
+  const celula = document.createElement("td");
+
+  const etiqueta = document.createElement("span");
+
+  etiqueta.classList.add("statusRelatorio");
+
+  if (situacao === "confirmado") {
+    etiqueta.classList.add("statusRelatorioConfirmado");
+  } else if (situacao === "cancelado") {
+    etiqueta.classList.add("statusRelatorioCancelado");
+  } else {
+    etiqueta.classList.add("statusRelatorioOutro");
+  }
+
+  etiqueta.textContent = obterTextoSituacaoRelatorio(situacao);
+
+  celula.appendChild(etiqueta);
+
+  return celula;
+}
+
+function renderizarTabelaRelatorios(agendamentos) {
+  const fragmento = document.createDocumentFragment();
+
+  if (agendamentos.length === 0) {
+    const linha = document.createElement("tr");
+    const celula = document.createElement("td");
+
+    celula.colSpan = 8;
+    celula.className = "mensagemTabelaVazia";
+    celula.textContent =
+      "Nenhum agendamento encontrado para os filtros selecionados.";
+
+    linha.appendChild(celula);
+    fragmento.appendChild(linha);
+
+    corpoTabelaRelatorios.replaceChildren(fragmento);
+
+    return;
+  }
+
+  agendamentos.forEach((agendamento) => {
+    const linha = document.createElement("tr");
+
+    linha.appendChild(
+      criarCelulaRelatorio(obterProfessorRelatorio(agendamento)),
+    );
+
+    linha.appendChild(criarCelulaRelatorio(obterTurmaRelatorio(agendamento)));
+
+    linha.appendChild(criarCelulaRelatorio(agendamento.espacoEscolar));
+
+    linha.appendChild(
+      criarCelulaRelatorio(formatarDataRelatorio(agendamento.dataAgendamento)),
+    );
+
+    linha.appendChild(criarCelulaRelatorio(agendamento.horarioInicio));
+
+    linha.appendChild(criarCelulaRelatorio(agendamento.horarioFim));
+
+    linha.appendChild(criarCelulaRelatorio(agendamento.finalidade));
+
+    linha.appendChild(
+      criarCelulaSituacaoRelatorio(obterSituacaoRelatorio(agendamento)),
+    );
+
+    fragmento.appendChild(linha);
+  });
+
+  corpoTabelaRelatorios.replaceChildren(fragmento);
+}
+
+// ========================================
+// ATUALIZAÇÃO DOS INDICADORES
+// ========================================
+
+function atualizarIndicadoresRelatorios(agendamentos) {
+  const totalConfirmados = agendamentos.filter(
+    (agendamento) => obterSituacaoRelatorio(agendamento) === "confirmado",
+  ).length;
+
+  const totalCancelados = agendamentos.filter(
+    (agendamento) => obterSituacaoRelatorio(agendamento) === "cancelado",
+  ).length;
+
+  const espacosUtilizados = new Set(
+    agendamentos
+      .filter(
+        (agendamento) => obterSituacaoRelatorio(agendamento) === "confirmado",
+      )
+      .map((agendamento) => agendamento.espacoEscolar)
+      .filter(Boolean),
+  );
+
+  relatorioTotal.textContent = String(agendamentos.length);
+
+  relatorioConfirmados.textContent = String(totalConfirmados);
+
+  relatorioCancelados.textContent = String(totalCancelados);
+
+  relatorioEspacos.textContent = String(espacosUtilizados.size);
+}
+
+// ========================================
+// ATUALIZAÇÃO DO RELATÓRIO
+// ========================================
+
+function atualizarRelatorios() {
+  const resultado = filtrarAgendamentosRelatorios();
+
+  if (resultado === null) {
+    return;
+  }
+
+  agendamentosFiltradosRelatorios = resultado;
+
+  atualizarIndicadoresRelatorios(resultado);
+
+  renderizarTabelaRelatorios(resultado);
+
+  const quantidade = resultado.length;
+
+  mensagemQuantidadeRelatorios.textContent =
+    quantidade === 1
+      ? "1 agendamento encontrado."
+      : `${quantidade} agendamentos encontrados.`;
+}
+
+// ========================================
+// DADOS PARA EXPORTAÇÃO
+// ========================================
+
+function obterDadosExportacaoRelatorios() {
+  return agendamentosFiltradosRelatorios.map((agendamento) => ({
+    "Professor responsável": obterProfessorRelatorio(agendamento),
+
+    Turma: obterTurmaRelatorio(agendamento),
+
+    Espaço: agendamento.espacoEscolar || "",
+
+    Data: formatarDataRelatorio(agendamento.dataAgendamento),
+
+    "Horário inicial": agendamento.horarioInicio || "",
+
+    "Horário final": agendamento.horarioFim || "",
+
+    Finalidade: agendamento.finalidade || "",
+
+    Situação: obterTextoSituacaoRelatorio(obterSituacaoRelatorio(agendamento)),
+  }));
+}
+
+function gerarNomeArquivoRelatorio(extensao) {
+  const dataAtual = new Date().toISOString().slice(0, 10);
+
+  return `relatorio-agendamentos-${dataAtual}.${extensao}`;
+}
+
+// ========================================
+// EXPORTAÇÃO PARA EXCEL (.XLSX)
+// ========================================
+
+function exportarRelatorioExcel() {
+  if (agendamentosFiltradosRelatorios.length === 0) {
+    alert("Não existem registros para exportar.");
+    return;
+  }
+
+  if (typeof XLSX === "undefined") {
+    alert(
+      "A biblioteca de exportação para Excel não foi carregada. " +
+      "Verifique sua conexão com a internet e recarregue a página.",
+    );
+
+    return;
+  }
+
+  const dados = obterDadosExportacaoRelatorios();
+
+  const planilha = XLSX.utils.json_to_sheet(dados);
+
+  planilha["!cols"] = [
+    { wch: 28 },
+    { wch: 15 },
+    { wch: 32 },
+    { wch: 14 },
+    { wch: 16 },
+    { wch: 16 },
+    { wch: 40 },
+    { wch: 16 },
+  ];
+
+  const pastaTrabalho = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(pastaTrabalho, planilha, "Agendamentos");
+
+  XLSX.writeFile(pastaTrabalho, gerarNomeArquivoRelatorio("xlsx"));
+}
+
+// ========================================
+// EXPORTAÇÃO PARA CSV (.CSV)
+// ========================================
+
+function protegerValorCSV(valor) {
+  const texto = String(valor ?? "");
+
+  // Evita que valores fornecidos pelo usuário sejam interpretados
+  // como fórmulas ao abrir o CSV em programas de planilha.
+  if (/^[\s\u0000-\u001f]*[=+\-@]/.test(texto)) {
+    return `'${texto}`;
+  }
+
+  return texto;
+}
+
+function exportarRelatorioCSV() {
+  if (agendamentosFiltradosRelatorios.length === 0) {
+    alert("Não existem registros para exportar.");
+    return;
+  }
+
+  const dados = obterDadosExportacaoRelatorios();
+
+  const cabecalhos = Object.keys(dados[0]);
+
+  const linhas = [
+    cabecalhos,
+    ...dados.map((registro) =>
+      cabecalhos.map((cabecalho) => registro[cabecalho]),
+    ),
+  ];
+
+  const conteudoCSV = linhas
+    .map((linha) =>
+      linha
+        .map((valor) => {
+          const texto = protegerValorCSV(valor);
+
+          return `"${texto.replace(/"/g, '""')}"`;
+        })
+        .join(";"),
+    )
+    .join("\r\n");
+
+  // BOM UTF-8 para preservar acentos em programas de planilha.
+  const arquivo = new Blob(["\uFEFF", conteudoCSV], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const enderecoTemporario = URL.createObjectURL(arquivo);
+
+  const linkDownload = document.createElement("a");
+
+  linkDownload.href = enderecoTemporario;
+  linkDownload.download = gerarNomeArquivoRelatorio("csv");
+
+  document.body.appendChild(linkDownload);
+
+  linkDownload.click();
+
+  linkDownload.remove();
+
+  URL.revokeObjectURL(enderecoTemporario);
+}
+
+// ========================================
+// IMPRESSÃO / SALVAR COMO PDF
+// ========================================
+
+function imprimirRelatorio() {
+  if (agendamentosFiltradosRelatorios.length === 0) {
+    alert("Não existem registros para imprimir.");
+    return;
+  }
+
+  document.body.classList.add("imprimindoRelatorio");
+
+  window.print();
+}
+
+// Remove a classe após a impressão ou ao fechar a janela de impressão.
+window.addEventListener("afterprint", () => {
+  document.body.classList.remove("imprimindoRelatorio");
+});
+
+// ========================================
+// EVENTOS DA PÁGINA DE RELATÓRIOS
+// ========================================
+
+formularioRelatorios.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+
+  atualizarRelatorios();
+});
+
+botaoLimparFiltrosRelatorios.addEventListener("click", () => {
+  // O evento reset ocorre antes da restauração efetiva dos campos.
+  window.setTimeout(() => {
+    atualizarRelatorios();
+  }, 0);
+});
+
+botaoExportarExcel.addEventListener("click", exportarRelatorioExcel);
+
+botaoExportarCSV.addEventListener("click", exportarRelatorioCSV);
+
+botaoImprimirRelatorio.addEventListener("click", imprimirRelatorio);
+
+// Exibe os registros ao abrir o sistema.
+atualizarRelatorios();
+// ========================================
 // INICIALIZAÇÃO DO SISTEMA
 // ========================================
 
