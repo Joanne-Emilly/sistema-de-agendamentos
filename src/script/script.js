@@ -64,6 +64,383 @@ const tituloLinhaTempoAgenda = document.querySelector(
   "#tituloLinhaTempoAgenda",
 );
 
+const CHAVE_NOTIFICACOES = "notificacoesEscolares";
+// ========================================
+// TAREFA 120 — CENTRAL DE NOTIFICAÇÕES
+// ========================================
+
+const botaoNotificacoes = document.querySelector("#botaoNotificacoes");
+
+const contadorNotificacoes = document.querySelector("#contadorNotificacoes");
+
+let painelNotificacoes = null;
+let listaNotificacoes = null;
+
+// Verifica se as notificações estão habilitadas.
+function notificacoesEstaoAtivas() {
+  try {
+    const configuracoes = obterConfiguracoes();
+
+    return configuracoes.notificacoesAtivas !== false;
+  } catch (erro) {
+    console.error(
+      "Não foi possível consultar as configurações de notificações:",
+      erro,
+    );
+
+    return true;
+  }
+}
+
+// Recupera as notificações armazenadas no navegador.
+function obterListaNotificacoes() {
+  try {
+    const dadosSalvos = localStorage.getItem(CHAVE_NOTIFICACOES);
+
+    if (!dadosSalvos) {
+      return [];
+    }
+
+    const notificacoes = JSON.parse(dadosSalvos);
+
+    return Array.isArray(notificacoes) ? notificacoes : [];
+  } catch (erro) {
+    console.error("Não foi possível carregar as notificações:", erro);
+
+    return [];
+  }
+}
+
+// Salva as notificações no navegador.
+function salvarListaNotificacoes(notificacoes) {
+  try {
+    localStorage.setItem(CHAVE_NOTIFICACOES, JSON.stringify(notificacoes));
+
+    return true;
+  } catch (erro) {
+    console.error("Não foi possível salvar as notificações:", erro);
+
+    return false;
+  }
+}
+
+// Registra uma notificação.
+function adicionarNotificacao(titulo, mensagem, tipo = "informacao") {
+  if (!notificacoesEstaoAtivas()) {
+    return;
+  }
+
+  const notificacoes = obterListaNotificacoes();
+
+  notificacoes.unshift({
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    titulo,
+    mensagem,
+    tipo,
+    data: new Date().toISOString(),
+    lida: false,
+  });
+
+  // Mantém somente as 100 notificações mais recentes.
+  const notificacoesLimitadas = notificacoes.slice(0, 100);
+
+  if (salvarListaNotificacoes(notificacoesLimitadas)) {
+    atualizarContadorNotificacoes();
+    renderizarNotificacoes();
+  }
+}
+
+// Formata a data e a hora da notificação.
+function formatarDataNotificacao(dataISO) {
+  const data = new Date(dataISO);
+
+  if (Number.isNaN(data.getTime())) {
+    return "Data não disponível";
+  }
+
+  return data.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+// Atualiza o contador de notificações não lidas.
+function atualizarContadorNotificacoes() {
+  if (!contadorNotificacoes || !botaoNotificacoes) {
+    return;
+  }
+
+  const notificacoes = obterListaNotificacoes();
+
+  const quantidadeNaoLidas = notificacoes.filter(
+    (notificacao) => !notificacao.lida,
+  ).length;
+
+  const notificacoesAtivas = notificacoesEstaoAtivas();
+
+  contadorNotificacoes.textContent =
+    quantidadeNaoLidas > 99 ? "99+" : String(quantidadeNaoLidas);
+
+  contadorNotificacoes.hidden = !notificacoesAtivas || quantidadeNaoLidas === 0;
+
+  botaoNotificacoes.setAttribute(
+    "aria-label",
+    notificacoesAtivas
+      ? `Notificações: ${quantidadeNaoLidas} não lidas`
+      : "Notificações desativadas",
+  );
+
+  botaoNotificacoes.title = notificacoesAtivas
+    ? "Notificações"
+    : "Notificações desativadas";
+}
+
+// Cria o painel de notificações sem duplicar elementos.
+function criarPainelNotificacoes() {
+  if (painelNotificacoes) {
+    return;
+  }
+
+  painelNotificacoes = document.createElement("section");
+  painelNotificacoes.id = "painelNotificacoes";
+  painelNotificacoes.className = "painelNotificacoes";
+  painelNotificacoes.hidden = true;
+
+  painelNotificacoes.setAttribute("aria-label", "Central de notificações");
+
+  const cabecalho = document.createElement("div");
+  cabecalho.className = "cabecalhoNotificacoes";
+
+  const titulo = document.createElement("h2");
+  titulo.textContent = "Notificações";
+
+  const acoes = document.createElement("div");
+  acoes.className = "acoesNotificacoes";
+
+  const botaoMarcarTodas = document.createElement("button");
+  botaoMarcarTodas.type = "button";
+  botaoMarcarTodas.textContent = "Marcar lidas";
+  botaoMarcarTodas.dataset.acaoNotificacao = "marcar-todas";
+
+  const botaoLimpar = document.createElement("button");
+  botaoLimpar.type = "button";
+  botaoLimpar.textContent = "Limpar";
+  botaoLimpar.dataset.acaoNotificacao = "limpar";
+
+  acoes.append(botaoMarcarTodas, botaoLimpar);
+  cabecalho.append(titulo, acoes);
+
+  listaNotificacoes = document.createElement("div");
+  listaNotificacoes.className = "listaNotificacoes";
+
+  const rodape = document.createElement("div");
+  rodape.className = "rodapeNotificacoes";
+  rodape.textContent = "As notificações são armazenadas neste navegador.";
+
+  painelNotificacoes.append(cabecalho, listaNotificacoes, rodape);
+
+  // Insere o painel logo depois do botão existente.
+  botaoNotificacoes.insertAdjacentElement("afterend", painelNotificacoes);
+}
+
+// Mostra as notificações no painel.
+function renderizarNotificacoes() {
+  if (!listaNotificacoes) {
+    return;
+  }
+
+  listaNotificacoes.replaceChildren();
+
+  if (!notificacoesEstaoAtivas()) {
+    const mensagem = document.createElement("p");
+    mensagem.className = "estadoVazioNotificacoes";
+    mensagem.textContent =
+      "As notificações estão desativadas nas configurações.";
+
+    listaNotificacoes.appendChild(mensagem);
+    return;
+  }
+
+  const notificacoes = obterListaNotificacoes();
+
+  if (notificacoes.length === 0) {
+    const mensagem = document.createElement("p");
+    mensagem.className = "estadoVazioNotificacoes";
+    mensagem.textContent = "Você não tem notificações.";
+
+    listaNotificacoes.appendChild(mensagem);
+    return;
+  }
+
+  notificacoes.forEach((notificacao) => {
+    const item = document.createElement("article");
+
+    item.className = notificacao.lida
+      ? "itemNotificacao"
+      : "itemNotificacao naoLida";
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = notificacao.titulo || "Notificação";
+
+    const mensagem = document.createElement("p");
+    mensagem.textContent = notificacao.mensagem || "";
+
+    const data = document.createElement("time");
+    data.className = "dataNotificacao";
+    data.dateTime = notificacao.data || "";
+    data.textContent = formatarDataNotificacao(notificacao.data);
+
+    item.append(titulo, mensagem, data);
+
+    if (!notificacao.lida) {
+      const botaoMarcarLida = document.createElement("button");
+
+      botaoMarcarLida.type = "button";
+      botaoMarcarLida.textContent = "Marcar como lida";
+      botaoMarcarLida.dataset.acaoNotificacao = "marcar";
+      botaoMarcarLida.dataset.idNotificacao = notificacao.id;
+
+      item.appendChild(botaoMarcarLida);
+    }
+
+    listaNotificacoes.appendChild(item);
+  });
+}
+
+// Abre ou fecha o painel.
+function alternarPainelNotificacoes() {
+  if (!painelNotificacoes) {
+    criarPainelNotificacoes();
+  }
+
+  const estaAberto = !painelNotificacoes.hidden;
+
+  if (!estaAberto) {
+    renderizarNotificacoes();
+  }
+
+  painelNotificacoes.hidden = estaAberto;
+
+  botaoNotificacoes.setAttribute("aria-expanded", String(!estaAberto));
+}
+
+// Marca uma notificação específica como lida.
+function marcarNotificacaoComoLida(id) {
+  const notificacoes = obterListaNotificacoes();
+
+  const atualizadas = notificacoes.map((notificacao) => {
+    if (String(notificacao.id) === String(id)) {
+      return {
+        ...notificacao,
+        lida: true,
+      };
+    }
+
+    return notificacao;
+  });
+
+  if (salvarListaNotificacoes(atualizadas)) {
+    atualizarContadorNotificacoes();
+    renderizarNotificacoes();
+  }
+}
+
+// Marca todas as notificações como lidas.
+function marcarTodasNotificacoesComoLidas() {
+  const notificacoes = obterListaNotificacoes();
+
+  const atualizadas = notificacoes.map((notificacao) => ({
+    ...notificacao,
+    lida: true,
+  }));
+
+  if (salvarListaNotificacoes(atualizadas)) {
+    atualizarContadorNotificacoes();
+    renderizarNotificacoes();
+  }
+}
+
+// Limpa todas as notificações.
+function limparNotificacoes() {
+  const confirmou = window.confirm(
+    "Deseja realmente excluir todas as notificações?",
+  );
+
+  if (!confirmou) {
+    return;
+  }
+
+  if (salvarListaNotificacoes([])) {
+    atualizarContadorNotificacoes();
+    renderizarNotificacoes();
+  }
+}
+
+// Configura os eventos do painel.
+function inicializarNotificacoes() {
+  if (!botaoNotificacoes) {
+    console.warn("O botão de notificações não foi encontrado.");
+    return;
+  }
+
+  criarPainelNotificacoes();
+
+  botaoNotificacoes.addEventListener("click", alternarPainelNotificacoes);
+
+  painelNotificacoes.addEventListener("click", (evento) => {
+    const botao = evento.target.closest("button[data-acao-notificacao]");
+
+    if (!botao) {
+      return;
+    }
+
+    const acao = botao.dataset.acaoNotificacao;
+
+    if (acao === "marcar") {
+      marcarNotificacaoComoLida(botao.dataset.idNotificacao);
+    }
+
+    if (acao === "marcar-todas") {
+      marcarTodasNotificacoesComoLidas();
+    }
+
+    if (acao === "limpar") {
+      limparNotificacoes();
+    }
+  });
+
+  // Fecha o painel quando o usuário clica fora dele.
+  document.addEventListener("click", (evento) => {
+    if (
+      painelNotificacoes.hidden ||
+      painelNotificacoes.contains(evento.target) ||
+      botaoNotificacoes.contains(evento.target)
+    ) {
+      return;
+    }
+
+    painelNotificacoes.hidden = true;
+
+    botaoNotificacoes.setAttribute("aria-expanded", "false");
+  });
+
+  // Fecha o painel com a tecla Escape.
+  document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape" && !painelNotificacoes.hidden) {
+      painelNotificacoes.hidden = true;
+
+      botaoNotificacoes.setAttribute("aria-expanded", "false");
+
+      botaoNotificacoes.focus();
+    }
+  });
+
+  atualizarContadorNotificacoes();
+  renderizarNotificacoes();
+}
 // ========================================
 // ARMAZENAMENTO
 // ========================================
@@ -138,6 +515,16 @@ function salvarAgendamentos(agendamentos) {
   } catch (erro) {
     console.error("Não foi possível salvar os agendamentos:", erro);
 
+    adicionarNotificacao(
+      "Agendamento confirmado",
+      `${novoAgendamento.espacoEscolar} reservado para ${formatarData(novoAgendamento.dataAgendamento)}, das ${novoAgendamento.horarioInicio} às ${novoAgendamento.horarioFim}.`,
+      "sucesso",
+    );
+    adicionarNotificacao(
+      "Agendamento atualizado",
+      `${agendamentos[indice].espacoEscolar}: reserva atualizada para ${formatarData(agendamentos[indice].dataAgendamento)}, das ${agendamentos[indice].horarioInicio} às ${agendamentos[indice].horarioFim}.`,
+      "sucesso",
+    );
     exibirMensagemFormulario(
       "Não foi possível salvar os dados no navegador. Verifique o espaço disponível e as configurações de armazenamento.",
       "erro",
@@ -559,6 +946,11 @@ formularioAgendamento.addEventListener("submit", (evento) => {
 
   // Confere conflitos antes de confirmar o agendamento.
   if (existeConflito(dadosFormulario, agendamentos, agendamentoEmEdicao)) {
+    adicionarNotificacao(
+      "Conflito de horário",
+      `Não foi possível reservar ${dadosFormulario.espacoEscolar} em ${formatarData(dadosFormulario.dataAgendamento)}, das ${dadosFormulario.horarioInicio} às ${dadosFormulario.horarioFim}, pois já existe uma reserva nesse período.`,
+      "aviso",
+    );
     exibirMensagemFormulario(
       "Este espaço já possui um agendamento nesse período. Escolha outro horário ou outro espaço.",
       "erro",
@@ -699,6 +1091,11 @@ listaAgendamentos.addEventListener("click", (evento) => {
       }
 
       renderizarAgendamentos();
+      adicionarNotificacao(
+        "Agendamento cancelado",
+        `A reserva do espaço ${agendamento.espacoEscolar}, em ${formatarData(agendamento.dataAgendamento)}, foi cancelada.`,
+        "aviso",
+      );
       consultarDisponibilidadeAtual();
       renderizarAgendaDiaria();
     }
@@ -1712,7 +2109,7 @@ function exportarRelatorioExcel() {
   if (typeof XLSX === "undefined") {
     alert(
       "A biblioteca de exportação para Excel não foi carregada. " +
-      "Verifique sua conexão com a internet e recarregue a página.",
+        "Verifique sua conexão com a internet e recarregue a página.",
     );
 
     return;
@@ -1853,43 +2250,37 @@ botaoImprimirRelatorio.addEventListener("click", imprimirRelatorio);
 // ========================================
 
 const formularioConfiguracoes = document.querySelector(
-  "#formularioConfiguracoes"
+  "#formularioConfiguracoes",
 );
 
 const configNomeEscola = document.querySelector("#configNomeEscola");
 const configResponsavel = document.querySelector("#configResponsavel");
 
-const configHorarioAbertura = document.querySelector(
-  "#configHorarioAbertura"
-);
+const configHorarioAbertura = document.querySelector("#configHorarioAbertura");
 
 const configHorarioFechamento = document.querySelector(
-  "#configHorarioFechamento"
+  "#configHorarioFechamento",
 );
 
 const configLaboratorioInformatica = document.querySelector(
-  "#configLaboratorioInformatica"
+  "#configLaboratorioInformatica",
 );
 
 const configLaboratorioBiologia = document.querySelector(
-  "#configLaboratorioBiologia"
+  "#configLaboratorioBiologia",
 );
 
 const configBiblioteca = document.querySelector("#configBiblioteca");
 
-const configFinaisDeSemana = document.querySelector(
-  "#configFinaisDeSemana"
-);
+const configFinaisDeSemana = document.querySelector("#configFinaisDeSemana");
 
 const configNotificacoes = document.querySelector("#configNotificacoes");
 
 const botaoRestaurarConfiguracoes = document.querySelector(
-  "#botaoRestaurarConfiguracoes"
+  "#botaoRestaurarConfiguracoes",
 );
 
-const mensagemConfiguracoes = document.querySelector(
-  "#mensagemConfiguracoes"
-);
+const mensagemConfiguracoes = document.querySelector("#mensagemConfiguracoes");
 
 const chaveConfiguracoes = "configuracoesEscolares";
 
@@ -1904,11 +2295,11 @@ const configuracoesPadrao = {
   laboratorios: {
     informatica: true,
     biologia: true,
-    biblioteca: true
+    biblioteca: true,
   },
 
   permitirFinaisDeSemana: false,
-  notificacoesAtivas: true
+  notificacoesAtivas: true,
 };
 
 // ========================================
@@ -1939,8 +2330,8 @@ function obterConfiguracoes() {
 
       laboratorios: {
         ...configuracoesPadrao.laboratorios,
-        ...(configuracoesSalvas.laboratorios || {})
-      }
+        ...(configuracoesSalvas.laboratorios || {}),
+      },
     };
   } catch (erro) {
     console.error("Erro ao carregar as configurações:", erro);
@@ -1962,20 +2353,15 @@ function preencherFormularioConfiguracoes() {
   configHorarioAbertura.value = configuracoes.horarioAbertura;
   configHorarioFechamento.value = configuracoes.horarioFechamento;
 
-  configLaboratorioInformatica.checked =
-    configuracoes.laboratorios.informatica;
+  configLaboratorioInformatica.checked = configuracoes.laboratorios.informatica;
 
-  configLaboratorioBiologia.checked =
-    configuracoes.laboratorios.biologia;
+  configLaboratorioBiologia.checked = configuracoes.laboratorios.biologia;
 
-  configBiblioteca.checked =
-    configuracoes.laboratorios.biblioteca;
+  configBiblioteca.checked = configuracoes.laboratorios.biblioteca;
 
-  configFinaisDeSemana.checked =
-    configuracoes.permitirFinaisDeSemana;
+  configFinaisDeSemana.checked = configuracoes.permitirFinaisDeSemana;
 
-  configNotificacoes.checked =
-    configuracoes.notificacoesAtivas;
+  configNotificacoes.checked = configuracoes.notificacoesAtivas;
 }
 
 // ========================================
@@ -1985,10 +2371,7 @@ function preencherFormularioConfiguracoes() {
 function exibirMensagemConfiguracoes(mensagem, erro = false) {
   mensagemConfiguracoes.textContent = mensagem;
 
-  mensagemConfiguracoes.classList.toggle(
-    "erroConfiguracoes",
-    erro
-  );
+  mensagemConfiguracoes.classList.toggle("erroConfiguracoes", erro);
 }
 
 // ========================================
@@ -2006,9 +2389,11 @@ function salvarConfiguracoes(evento) {
     !horarioFechamento ||
     horarioAbertura >= horarioFechamento
   ) {
+    atualizarContadorNotificacoes();
+    renderizarNotificacoes();
     exibirMensagemConfiguracoes(
       "O horário de encerramento deve ser posterior ao horário de abertura.",
-      true
+      true,
     );
 
     configHorarioFechamento.focus();
@@ -2022,10 +2407,7 @@ function salvarConfiguracoes(evento) {
     configBiblioteca.checked;
 
   if (!existeEspacoAtivo) {
-    exibirMensagemConfiguracoes(
-      "Ative pelo menos um espaço escolar.",
-      true
-    );
+    exibirMensagemConfiguracoes("Ative pelo menos um espaço escolar.", true);
 
     return;
   }
@@ -2040,37 +2422,32 @@ function salvarConfiguracoes(evento) {
     laboratorios: {
       informatica: configLaboratorioInformatica.checked,
       biologia: configLaboratorioBiologia.checked,
-      biblioteca: configBiblioteca.checked
+      biblioteca: configBiblioteca.checked,
     },
 
     permitirFinaisDeSemana: configFinaisDeSemana.checked,
-    notificacoesAtivas: configNotificacoes.checked
+    notificacoesAtivas: configNotificacoes.checked,
   };
 
   if (!configuracoes.nomeEscola || !configuracoes.responsavel) {
     exibirMensagemConfiguracoes(
       "Preencha o nome da escola e o responsável pelo sistema.",
-      true
+      true,
     );
 
     return;
   }
 
   try {
-    localStorage.setItem(
-      chaveConfiguracoes,
-      JSON.stringify(configuracoes)
-    );
+    localStorage.setItem(chaveConfiguracoes, JSON.stringify(configuracoes));
 
-    exibirMensagemConfiguracoes(
-      "Configurações salvas com sucesso."
-    );
+    exibirMensagemConfiguracoes("Configurações salvas com sucesso.");
   } catch (erro) {
     console.error("Erro ao salvar as configurações:", erro);
 
     exibirMensagemConfiguracoes(
       "Não foi possível salvar as configurações neste navegador.",
-      true
+      true,
     );
   }
 }
@@ -2082,7 +2459,7 @@ function salvarConfiguracoes(evento) {
 function restaurarConfiguracoes() {
   const confirmou = window.confirm(
     "Deseja restaurar as configurações padrão? " +
-    "Essa ação não apagará os agendamentos."
+      "Essa ação não apagará os agendamentos.",
   );
 
   if (!confirmou) {
@@ -2092,20 +2469,21 @@ function restaurarConfiguracoes() {
   try {
     localStorage.setItem(
       chaveConfiguracoes,
-      JSON.stringify(configuracoesPadrao)
+      JSON.stringify(configuracoesPadrao),
     );
 
     preencherFormularioConfiguracoes();
-
+    atualizarContadorNotificacoes();
+    renderizarNotificacoes();
     exibirMensagemConfiguracoes(
-      "Configurações padrão restauradas. Os agendamentos foram preservados."
+      "Configurações padrão restauradas. Os agendamentos foram preservados.",
     );
   } catch (erro) {
     console.error("Erro ao restaurar as configurações:", erro);
 
     exibirMensagemConfiguracoes(
       "Não foi possível restaurar as configurações.",
-      true
+      true,
     );
   }
 }
@@ -2114,16 +2492,9 @@ function restaurarConfiguracoes() {
 // EVENTOS
 // ========================================
 
-formularioConfiguracoes.addEventListener(
-  "submit",
-  salvarConfiguracoes
-);
+formularioConfiguracoes.addEventListener("submit", salvarConfiguracoes);
 
-botaoRestaurarConfiguracoes.addEventListener(
-  "click",
-  restaurarConfiguracoes
-);
-
+botaoRestaurarConfiguracoes.addEventListener("click", restaurarConfiguracoes);
 
 // ========================================
 // INICIALIZAÇÃO DO SISTEMA
@@ -2142,3 +2513,7 @@ inicializarConsultaDisponibilidade();
 inicializarAgendaDiaria();
 
 inicializarNavegacao();
+
+inicializarNotificacoes();
+
+preencherFormularioConfiguracoes();
