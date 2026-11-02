@@ -854,7 +854,9 @@
                 <!-- FIM DA PÁGINA DE RELATÓRIOS -->
 
                 <!-- PÁGINA DE CONFIGURAÇÕES -->
+                <!-- PÁGINA DE CONFIGURAÇÕES -->
                 <section id="configuracoes" aria-labelledby="tituloConfiguracoes">
+
                     <div class="cabecalhoSecao">
                         <div class="informacoesSecao">
                             <h1 class="tituloSecao" id="tituloConfiguracoes">
@@ -867,15 +869,178 @@
                         </div>
                     </div>
 
-                    <div class="cardConsultaDisponibilidade">
-                        <h2>Preferências do sistema</h2>
+                    <form id="formularioConfiguracoes">
 
-                        <p>
-                            Esta área poderá receber futuramente configurações de horários,
-                            espaços escolares e outras preferências da aplicação.
+                        <!-- DADOS DA ESCOLA -->
+                        <div class="cardConfiguracoes">
+
+                            <div class="cabecalhoConfiguracoes">
+                                <div>
+                                    <h2>Dados da escola</h2>
+                                    <p>Informações utilizadas na identificação do sistema.</p>
+                                </div>
+                            </div>
+
+                            <div class="gradeConfiguracoes">
+
+                                <div class="campoConfiguracao">
+                                    <label for="configNomeEscola">Nome da escola</label>
+
+                                    <input type="text" id="configNomeEscola" name="nomeEscola" maxlength="120" required>
+                                </div>
+
+                                <div class="campoConfiguracao">
+                                    <label for="configResponsavel">Responsável pelo sistema</label>
+
+                                    <input type="text" id="configResponsavel" name="responsavel" maxlength="100"
+                                        required>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- HORÁRIO DE FUNCIONAMENTO -->
+                        <div class="cardConfiguracoes">
+
+                            <div class="cabecalhoConfiguracoes">
+                                <div>
+                                    <h2>Horário de funcionamento</h2>
+                                    <p>Defina os limites de funcionamento da instituição.</p>
+                                </div>
+                            </div>
+
+                            <div class="gradeConfiguracoes">
+
+                                <div class="campoConfiguracao">
+                                    <label for="configHorarioAbertura">Horário de abertura</label>
+
+                                    <input type="time" id="configHorarioAbertura" name="horarioAbertura" required>
+                                </div>
+
+                                <div class="campoConfiguracao">
+                                    <label for="configHorarioFechamento">Horário de encerramento</label>
+
+                                    <input type="time" id="configHorarioFechamento" name="horarioFechamento" required>
+                                </div>
+
+                            </div>
+
+                            <p class="avisoConfiguracoes">
+                                Alterar esses horários não modifica automaticamente os agendamentos
+                                já registrados.
+                            </p>
+
+                        </div>
+
+                        <!-- ESPAÇOS ESCOLARES -->
+                        <div class="cardConfiguracoes">
+
+                            <div class="cabecalhoConfiguracoes">
+                                <div>
+                                    <h2>Espaços escolares</h2>
+                                    <p>Defina quais espaços estarão disponíveis para novos agendamentos.</p>
+                                </div>
+                            </div>
+
+                            <div class="listaEspacosConfiguracoes">
+
+                                <label class="opcaoConfiguracao">
+                                    <span>
+                                        <strong>Laboratório de Informática</strong>
+                                        <small>Ativar ou desativar este espaço.</small>
+                                    </span>
+
+                                    <input type="checkbox" id="configLaboratorioInformatica"
+                                        name="laboratorioInformatica">
+                                </label>
+
+                                <label class="opcaoConfiguracao">
+                                    <span>
+                                        <strong>Laboratório de Biologia</strong>
+                                        <small>Ativar ou desativar este espaço.</small>
+                                    </span>
+
+                                    <input type="checkbox" id="configLaboratorioBiologia" name="laboratorioBiologia">
+                                </label>
+
+                                <label class="opcaoConfiguracao">
+                                    <span>
+                                        <strong>Biblioteca</strong>
+                                        <small>Ativar ou desativar este espaço.</small>
+                                    </span>
+
+                                    <input type="checkbox" id="configBiblioteca" name="biblioteca">
+                                </label>
+
+                            </div>
+
+                            <p class="avisoConfiguracoes">
+                                Desativar um espaço não exclui os registros existentes.
+                            </p>
+
+                        </div>
+
+                        <!-- PREFERÊNCIAS -->
+                        <div class="cardConfiguracoes">
+
+                            <div class="cabecalhoConfiguracoes">
+                                <div>
+                                    <h2>Preferências de agendamento</h2>
+                                    <p>Configure regras gerais de utilização do sistema.</p>
+                                </div>
+                            </div>
+
+                            <div class="listaEspacosConfiguracoes">
+
+                                <label class="opcaoConfiguracao">
+                                    <span>
+                                        <strong>Permitir agendamentos aos finais de semana</strong>
+                                        <small>
+                                            Quando desativado, novos agendamentos aos sábados e domingos
+                                            devem ser bloqueados.
+                                        </small>
+                                    </span>
+
+                                    <input type="checkbox" id="configFinaisDeSemana" name="finaisDeSemana">
+                                </label>
+
+                                <label class="opcaoConfiguracao">
+                                    <span>
+                                        <strong>Exibir notificações visuais</strong>
+                                        <small>
+                                            Permite exibir avisos de sucesso e de validação na interface.
+                                        </small>
+                                    </span>
+
+                                    <input type="checkbox" id="configNotificacoes" name="notificacoes">
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <!-- AÇÕES -->
+                        <div class="acoesConfiguracoes">
+
+                            <button type="submit" class="botaoConfiguracao botaoSalvarConfiguracoes">
+                                Salvar configurações
+                            </button>
+
+                            <button type="button" id="botaoRestaurarConfiguracoes"
+                                class="botaoConfiguracao botaoRestaurarConfiguracoes">
+                                Restaurar padrões
+                            </button>
+
+                        </div>
+
+                        <p id="mensagemConfiguracoes" class="mensagemConfiguracoes" role="status" aria-live="polite">
                         </p>
-                    </div>
+
+                    </form>
+
                 </section>
+                <!-- FIM DA PÁGINA DE CONFIGURAÇÕES -->
             </main>
         </div>
 

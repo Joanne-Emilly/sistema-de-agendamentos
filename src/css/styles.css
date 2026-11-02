@@ -2798,3 +2798,216 @@ textarea:focus-visible {
     -webkit-print-color-adjust: exact;
   }
 }
+/* ========================================
+   TAREFA 119 - CONFIGURAÇÕES
+======================================== */
+
+#configuracoes {
+    width: 100%;
+}
+
+.cardConfiguracoes {
+    margin-bottom: 22px;
+    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #e3e9ef;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(23, 59, 101, 0.04);
+}
+
+.cabecalhoConfiguracoes {
+    margin-bottom: 22px;
+}
+
+.cabecalhoConfiguracoes h2 {
+    margin: 0 0 8px;
+    color: #173b65;
+    font-size: 19px;
+}
+
+.cabecalhoConfiguracoes p {
+    margin: 0;
+    color: #718096;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.gradeConfiguracoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.campoConfiguracao {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.campoConfiguracao label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.campoConfiguracao input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    color: #334155;
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font: inherit;
+}
+
+.campoConfiguracao input:focus {
+    border-color: #2563eb;
+    outline: 3px solid rgba(37, 99, 235, 0.12);
+}
+
+.listaEspacosConfiguracoes {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.opcaoConfiguracao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid #e2e8f0;
+    cursor: pointer;
+}
+
+.opcaoConfiguracao:first-child {
+    padding-top: 0;
+}
+
+.opcaoConfiguracao:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.opcaoConfiguracao span {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.opcaoConfiguracao strong {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.opcaoConfiguracao small {
+    color: #718096;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.opcaoConfiguracao input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 19px;
+    height: 19px;
+    accent-color: #173b65;
+    cursor: pointer;
+}
+
+.avisoConfiguracoes {
+    margin: 20px 0 0;
+    padding: 12px 14px;
+    color: #475569;
+    background-color: #f8fafc;
+    border-left: 3px solid #94a3b8;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.acoesConfiguracoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.botaoConfiguracao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 18px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.botaoSalvarConfiguracoes {
+    color: #ffffff;
+    background-color: #173b65;
+}
+
+.botaoSalvarConfiguracoes:hover {
+    background-color: #102b4b;
+}
+
+.botaoRestaurarConfiguracoes {
+    color: #334155;
+    background-color: #ffffff;
+    border-color: #cbd5e1;
+}
+
+.botaoRestaurarConfiguracoes:hover {
+    background-color: #f1f5f9;
+}
+
+.botaoConfiguracao:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+.mensagemConfiguracoes {
+    min-height: 20px;
+    margin-top: 16px;
+    color: #166534;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mensagemConfiguracoes.erroConfiguracoes {
+    color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+    .gradeConfiguracoes {
+        grid-template-columns: 1fr;
+    }
+
+    .cardConfiguracoes {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .acoesConfiguracoes {
+        flex-direction: column;
+    }
+
+    .botaoConfiguracao {
+        width: 100%;
+    }
+
+    .opcaoConfiguracao {
+        gap: 12px;
+    }
+}
