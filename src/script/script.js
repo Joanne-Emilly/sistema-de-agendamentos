@@ -1,16 +1,4 @@
 
-const SUPABASE_URL = "SUA_URL_DO_PROJETO";
-const SUPABASE_ANON_KEY = "SUA_CHAVE_PUBLICA";
-
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-// ========================================
-// SISTEMA DE AGENDAMENTO ESCOLAR
-// ARMAZENAMENTO, LISTAGEM, CONSULTA E AGENDA DIÁRIA
-// ========================================
-
 // ========================================
 // ELEMENTOS DO FORMULÁRIO DE AGENDAMENTO
 // ========================================
@@ -593,24 +581,18 @@ function obterAgendamentos() {
   }
 }
 
+
 function salvarAgendamentos(agendamentos) {
   try {
-    localStorage.setItem(chaveArmazenamento, JSON.stringify(agendamentos));
+    localStorage.setItem(
+      chaveArmazenamento,
+      JSON.stringify(agendamentos),
+    );
 
     return true;
   } catch (erro) {
     console.error("Não foi possível salvar os agendamentos:", erro);
 
-    adicionarNotificacao(
-      "Agendamento confirmado",
-      `${novoAgendamento.espacoEscolar} reservado para ${formatarData(novoAgendamento.dataAgendamento)}, das ${novoAgendamento.horarioInicio} às ${novoAgendamento.horarioFim}.`,
-      "sucesso",
-    );
-    adicionarNotificacao(
-      "Agendamento atualizado",
-      `${agendamentos[indice].espacoEscolar}: reserva atualizada para ${formatarData(agendamentos[indice].dataAgendamento)}, das ${agendamentos[indice].horarioInicio} às ${agendamentos[indice].horarioFim}.`,
-      "sucesso",
-    );
     exibirMensagemFormulario(
       "Não foi possível salvar os dados no navegador. Verifique o espaço disponível e as configurações de armazenamento.",
       "erro",
@@ -992,16 +974,16 @@ formularioAgendamento.addEventListener("submit", (evento) => {
   const dataAtual = obterDataLocalAtual();
 
   // Não permite datas passadas em novos agendamentos.
-  if (agendamentoEmEdicao === null && dataSelecionada < dataAtual) {
-    exibirMensagemFormulario(
-      "Selecione uma data igual ou posterior à data atual.",
-      "erro",
-    );
+ if (dataSelecionada < dataAtual) {
+  exibirMensagemFormulario(
+    "Não é permitido realizar ou atualizar agendamentos para datas passadas.",
+    "erro",
+  );
 
-    campoDataAgendamento.focus();
+  campoDataAgendamento.focus();
 
-    return;
-  }
+  return;
+}
 
   const dadosFormulario = {
     professorResponsavel:
@@ -2585,9 +2567,30 @@ botaoRestaurarConfiguracoes.addEventListener("click", restaurarConfiguracoes);
 // ========================================
 // INICIALIZAÇÃO DO SISTEMA
 // ========================================
-// Carrega as preferências ao iniciar a aplicação.
+
+function salvarAgendamentos(agendamentos) {
+  try {
+    localStorage.setItem(
+      chaveArmazenamento,
+      JSON.stringify(agendamentos),
+    );
+
+    return true;
+  } catch (erro) {
+    console.error("Não foi possível salvar os agendamentos:", erro);
+
+    exibirMensagemFormulario(
+      "Não foi possível salvar os dados no navegador. Verifique o espaço disponível e as configurações de armazenamento.",
+      "erro",
+    );
+
+    return false;
+  }
+}
+
+// Inicialização do sistema
 preencherFormularioConfiguracoes();
-// Exibe os registros ao abrir o sistema.
+
 atualizarRelatorios();
 
 definirDataMinima();
@@ -2601,5 +2604,3 @@ inicializarAgendaDiaria();
 inicializarNavegacao();
 
 inicializarNotificacoes();
-
-preencherFormularioConfiguracoes();

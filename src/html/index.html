@@ -8,8 +8,6 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" defer></script>
     <script src="/src/script/script.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
     <title>Sistema de Agendamento de Espaços Escolares</title>
 </head>
 
@@ -480,97 +478,6 @@
                     </div>
 
                 </section>
-
-                <section class="secaoAgendaDiaria" id="agendaDiaria" aria-labelledby="tituloAgendaDiaria">
-                    <div class="cabecalhoSecao">
-                        <div class="informacoesSecao">
-                            <h2 class="tituloSecao" id="tituloAgendaDiaria">
-                                Agenda Diária
-                            </h2>
-
-                            <p class="descricaoSecao">
-                                Visualize os agendamentos do dia e acompanhe os horários
-                                reservados nos espaços escolares.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- FILTROS DA AGENDA -->
-                    <div class="cardFiltrosAgenda">
-                        <form id="formularioAgendaDiaria">
-                            <div class="gradeFiltrosAgenda">
-
-                                <div class="campoFormulario">
-                                    <label for="dataAgendaDiaria">Data da agenda</label>
-
-                                    <input type="date" id="dataAgendaDiaria" name="dataAgendaDiaria" required>
-                                </div>
-
-                                <div class="campoFormulario">
-                                    <label for="espacoAgendaDiaria">Espaço escolar</label>
-
-                                    <select id="espacoAgendaDiaria" name="espacoAgendaDiaria">
-                                        <option value="todos">Todos os espaços</option>
-                                        <option value="Laboratório de Informática">
-                                            Laboratório de Informática
-                                        </option>
-                                        <option value="Laboratório de Biologia">
-                                            Laboratório de Biologia
-                                        </option>
-                                        <option value="Biblioteca">Biblioteca</option>
-                                    </select>
-                                </div>
-
-                                <div class="campoAgendaAcao">
-                                    <button type="submit" class="botaoFormulario botaoConsultar">
-                                        Visualizar agenda
-                                    </button>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- RESUMO DO DIA -->
-                    <div class="resumoAgendaDiaria" id="resumoAgendaDiaria">
-                        <div class="itemResumoAgenda">
-                            <span class="rotuloResumoAgenda">Data selecionada</span>
-                            <strong id="dataSelecionadaAgenda">--/--/----</strong>
-                        </div>
-
-                        <div class="itemResumoAgenda">
-                            <span class="rotuloResumoAgenda">Agendamentos</span>
-                            <strong id="totalAgendamentosAgenda">0</strong>
-                        </div>
-
-                        <div class="itemResumoAgenda">
-                            <span class="rotuloResumoAgenda">Espaços ocupados</span>
-                            <strong id="totalEspacosOcupadosAgenda">0 de 3</strong>
-                        </div>
-                    </div>
-
-                    <!-- LINHA DO TEMPO -->
-                    <div class="cardAgendaDiaria">
-                        <div class="cabecalhoAgendaDiaria">
-                            <div>
-                                <h3 id="tituloLinhaTempoAgenda">Programação do dia</h3>
-
-                                <p>
-                                    Os agendamentos são apresentados em ordem de horário.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div id="linhaTempoAgenda" class="linhaTempoAgenda" aria-live="polite" aria-atomic="false">
-                            <div class="estadoAgendaVazia">
-                                <h4>Carregando agenda...</h4>
-                                <p>Os agendamentos do dia serão exibidos aqui.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- FIM DA AGENDA VISUAL POR DIA -->
                 <!-- Seção de agendamentos cadastrados -->
                 <section class="secaoAgendamentos" id="meusAgendamentos" aria-labelledby="tituloMeusAgendamentos">
 

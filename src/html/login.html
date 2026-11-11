@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Acesso ao Sistema de Agendamento de Espaços Escolares da Escola Dr. Noronha Filho.">
+
+    <meta name="theme-color" content="#218443">
+
+    <title>Login | Sistema de Agendamento Escolar</title>
+
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Estilos da tela de login -->
+    <link rel="stylesheet" href="src/css/login.css">
+
+    <!-- Biblioteca Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+
+    <!-- Configuração da conexão Supabase -->
+    <script src="services/supabase.js" defer></script>
+
+    <!-- Funcionalidades da tela de login -->
+    <script src="src/script/login.js" defer></script>
+
+</head>
+
+<body>
+
+    <main class="paginaLogin">
+
+        <section class="containerLogin">
+
+            <!-- Área de identificação -->
+            <header class="cabecalhoLogin">
+
+                <div class="identidadeSistema">
+
+                    <div class="logoSistema">
+                        <img src="src/assets/logo.png" alt="Logotipo da Escola Dr. Noronha Filho">
+                    </div>
+
+                    <div class="informacoesSistema">
+
+                        <span class="nomeEscola">
+                            Escola Dr. Noronha Filho
+                        </span>
+
+                        <span class="nomeSistema">
+                            Sistema de Agendamento
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- Conteúdo do formulário -->
+            <div class="conteudoLogin">
+
+                <div class="introducaoLogin">
+
+                    <h1>Bem-vindo(a)!</h1>
+
+                    <p>
+                        Entre com suas credenciais para acessar
+                        o sistema de agendamento de espaços escolares.
+                    </p>
+
+                </div>
+
+                <!-- Formulário de autenticação -->
+                <form id="formularioLogin" class="formularioLogin">
+
+                    <!-- Mensagem de retorno -->
+                    <div id="mensagemLogin" class="mensagemLogin" role="alert" aria-live="polite" hidden></div>
+
+                    <!-- Campo de e-mail -->
+                    <div class="grupoCampoLogin">
+
+                        <label for="emailLogin">
+                            E-mail
+                        </label>
+
+                        <input type="email" id="emailLogin" name="email" placeholder="Digite seu e-mail"
+                            autocomplete="username" required>
+
+                    </div>
+
+                    <!-- Campo de senha -->
+                    <div class="grupoCampoLogin">
+
+                        <label for="senhaLogin">
+                            Senha
+                        </label>
+
+                        <div class="campoSenha">
+
+                            <input type="password" id="senhaLogin" name="senha" placeholder="Digite sua senha"
+                                autocomplete="current-password" required>
+
+                            <button type="button" id="botaoMostrarSenha" class="botaoMostrarSenha"
+                                aria-label="Mostrar senha" aria-pressed="false">
+                                Mostrar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Botão de acesso -->
+                    <button type="submit" id="botaoEntrar" class="botaoEntrar">
+
+                        <span id="textoBotaoEntrar">
+                            Entrar
+                        </span>
+
+                        <span id="indicadorCarregamento" class="indicadorCarregamento" aria-hidden="true" hidden></span>
+
+                    </button>
+
+                </form>
+
+                <!-- Informações de acesso -->
+                <div class="informacaoAcesso">
+
+                    <p>
+                        Acesso restrito aos professores autorizados.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Rodapé -->
+            <footer class="rodapeLogin">
+
+                <p>
+                    Sistema de Agendamento de Espaços Escolares
+                </p>
+
+                <span>
+                    Escola Dr. Noronha Filho
+                </span>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
