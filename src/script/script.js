@@ -1,3 +1,11 @@
+
+const SUPABASE_URL = "SUA_URL_DO_PROJETO";
+const SUPABASE_ANON_KEY = "SUA_CHAVE_PUBLICA";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 // ========================================
 // SISTEMA DE AGENDAMENTO ESCOLAR
 // ARMAZENAMENTO, LISTAGEM, CONSULTA E AGENDA DIÁRIA
@@ -76,6 +84,57 @@ const contadorNotificacoes = document.querySelector("#contadorNotificacoes");
 let painelNotificacoes = null;
 let listaNotificacoes = null;
 
+// ========================================
+// FUNÇÕES DE AUTENTICAÇÃO COM SUPABASE
+// ========================================
+async function entrarNoSistema(email, senha) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: senha
+    });
+
+    if (error) {
+        console.error("Erro ao entrar:", error.message);
+        return {
+            sucesso: false,
+            mensagem: "E-mail ou senha inválidos."
+        };
+    }
+
+    return {
+        sucesso: true,
+        usuario: data.user
+    };
+}
+
+// ====================================================
+// Função para cadastrar um novo professor no Supabase
+// ====================================================
+
+async function cadastrarProfessor(nome, email, senha) {
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: senha,
+        options: {
+            data: {
+                nome: nome
+            }
+        }
+    });
+
+    if (error) {
+        return {
+            sucesso: false,
+            mensagem: error.message
+        };
+    }
+
+    return {
+        sucesso: true,
+        usuario: data.user
+    };
+}
+
 // Verifica se as notificações estão habilitadas.
 function notificacoesEstaoAtivas() {
   try {
@@ -92,6 +151,33 @@ function notificacoesEstaoAtivas() {
   }
 }
 
+// ========================================
+// Verifica se o usuário está logado, caso contrário redireciona para a página de login.
+// ========================================
+async function verificarUsuarioLogado() {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error || !data.user) {
+        window.location.href = "login.html";
+        return null;
+    }
+
+    return data.user;
+}
+
+// ========================================
+// Função para sair do sistema e redirecionar para a página de login
+// ========================================
+async function sairDoSistema() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error("Erro ao sair:", error.message);
+        return;
+    }
+
+    window.location.href = "login.html";
+}
 // Recupera as notificações armazenadas no navegador.
 function obterListaNotificacoes() {
   try {
