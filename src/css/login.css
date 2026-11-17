@@ -1,0 +1,448 @@
+
+/* ========================================
+   LOGIN - SISTEMA DE AGENDAMENTO ESCOLAR
+   ======================================== */
+
+/* Variáveis de identidade visual */
+:root {
+    --corPrimaria: #218443;
+    --corPrimariaEscura: #18743b;
+    --corPrimariaDestaque: #329b55;
+    --corPrimariaHover: #176d36;
+
+    --corFundoPrincipal: #f5f9fd;
+    --corFundoCard: #ffffff;
+
+    --corTextoPrincipal: #16345c;
+    --corTextoSecundario: #6b83a5;
+    --corTextoBranco: #ffffff;
+
+    --corBorda: #dce7f2;
+    --corBordaFoco: #218443;
+
+    --corErro: #d92d20;
+    --corErroFundo: #fef3f2;
+
+    --corSombra: rgba(22, 52, 92, 0.08);
+
+    --fontePrincipal: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+/* ========================================
+   RESET E CONFIGURAÇÕES GERAIS
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--fontePrincipal);
+    background-color: var(--corFundoPrincipal);
+    color: var(--corTextoPrincipal);
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+/* ========================================
+   ESTRUTURA PRINCIPAL
+   ======================================== */
+
+.paginaLogin {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(33, 132, 67, 0.08),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(50, 155, 85, 0.07),
+            transparent 35%
+        ),
+        var(--corFundoPrincipal);
+}
+
+.containerLogin {
+    width: 100%;
+    max-width: 460px;
+    background-color: var(--corFundoCard);
+    border: 1px solid var(--corBorda);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px var(--corSombra);
+    overflow: hidden;
+}
+
+/* ========================================
+   CABEÇALHO
+   ======================================== */
+
+.cabecalhoLogin {
+    padding: 30px 36px;
+    border-bottom: 1px solid var(--corBorda);
+}
+
+.identidadeSistema {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logoSistema {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoSistema img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.informacoesSistema {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nomeEscola {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--corTextoSecundario);
+}
+
+.nomeSistema {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--corTextoPrincipal);
+}
+
+/* ========================================
+   CONTEÚDO DO LOGIN
+   ======================================== */
+
+.conteudoLogin {
+    padding: 36px;
+}
+
+.introducaoLogin {
+    margin-bottom: 30px;
+}
+
+.introducaoLogin h1 {
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--corTextoPrincipal);
+    margin-bottom: 10px;
+}
+
+.introducaoLogin p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--corTextoSecundario);
+}
+
+/* ========================================
+   FORMULÁRIO
+   ======================================== */
+
+.formularioLogin {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.grupoCampoLogin {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.grupoCampoLogin label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--corTextoPrincipal);
+}
+
+.grupoCampoLogin input {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--corBorda);
+    border-radius: 8px;
+    outline: none;
+    background-color: var(--corFundoCard);
+    color: var(--corTextoPrincipal);
+    font-size: 14px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.grupoCampoLogin input::placeholder {
+    color: #9aabc0;
+}
+
+.grupoCampoLogin input:hover {
+    border-color: #b7c8dc;
+}
+
+.grupoCampoLogin input:focus {
+    border-color: var(--corBordaFoco);
+    box-shadow: 0 0 0 3px rgba(33, 132, 67, 0.12);
+}
+
+/* ========================================
+   CAMPO DE SENHA
+   ======================================== */
+
+.campoSenha {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.campoSenha input {
+    padding-right: 90px;
+}
+
+.botaoMostrarSenha {
+    position: absolute;
+    right: 12px;
+    padding: 6px 4px;
+    border: none;
+    background: transparent;
+    color: var(--corPrimaria);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.botaoMostrarSenha:hover {
+    color: var(--corPrimariaEscura);
+}
+
+.botaoMostrarSenha:focus-visible {
+    outline: 2px solid var(--corPrimaria);
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+/* ========================================
+   BOTÃO ENTRAR
+   ======================================== */
+
+.botaoEntrar {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 4px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--corPrimaria);
+    color: var(--corTextoBranco);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.botaoEntrar:hover:not(:disabled) {
+    background-color: var(--corPrimariaHover);
+    box-shadow: 0 4px 12px rgba(33, 132, 67, 0.2);
+}
+
+.botaoEntrar:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.botaoEntrar:focus-visible {
+    outline: 3px solid rgba(33, 132, 67, 0.25);
+    outline-offset: 3px;
+}
+
+.botaoEntrar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   INDICADOR DE CARREGAMENTO
+   ======================================== */
+
+.indicadorCarregamento {
+    width: 17px;
+    height: 17px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: var(--corTextoBranco);
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   MENSAGENS DO FORMULÁRIO
+   ======================================== */
+
+.mensagemLogin {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.mensagemLogin[hidden],
+.indicadorCarregamento[hidden] {
+    display: none;
+}
+
+.mensagemLogin.erro {
+    border: 1px solid #fecdca;
+    background-color: var(--corErroFundo);
+    color: var(--corErro);
+}
+
+.mensagemLogin.sucesso {
+    border: 1px solid #abefc6;
+    background-color: #ecfdf3;
+    color: #067647;
+}
+
+/* ========================================
+   INFORMAÇÕES DE ACESSO
+   ======================================== */
+
+.informacaoAcesso {
+    margin-top: 26px;
+    text-align: center;
+}
+
+.informacaoAcesso p {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--corTextoSecundario);
+}
+
+/* ========================================
+   RODAPÉ
+   ======================================== */
+
+.rodapeLogin {
+    padding: 20px 30px;
+    border-top: 1px solid var(--corBorda);
+    background-color: #fbfdff;
+    text-align: center;
+}
+
+.rodapeLogin p {
+    margin-bottom: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--corTextoPrincipal);
+}
+
+.rodapeLogin span {
+    font-size: 11px;
+    color: var(--corTextoSecundario);
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (max-width: 480px) {
+
+    .paginaLogin {
+        padding: 20px 14px;
+    }
+
+    .containerLogin {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+
+    .cabecalhoLogin {
+        padding: 24px 22px;
+    }
+
+    .conteudoLogin {
+        padding: 28px 22px;
+    }
+
+    .logoSistema {
+        width: 46px;
+        height: 46px;
+    }
+
+    .nomeEscola {
+        font-size: 11px;
+    }
+
+    .nomeSistema {
+        font-size: 13px;
+    }
+
+    .introducaoLogin h1 {
+        font-size: 24px;
+    }
+
+    .introducaoLogin p {
+        font-size: 13px;
+    }
+
+    .rodapeLogin {
+        padding: 18px 15px;
+    }
+}
+
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+}
