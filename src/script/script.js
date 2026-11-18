@@ -144,7 +144,7 @@ function notificacoesEstaoAtivas() {
 // Verifica se o usuário está logado, caso contrário redireciona para a página de login.
 // ========================================
 async function verificarUsuarioLogado() {
-    const { data, error } = await supabase.auth.getUser();
+    const { data, error } = await clienteSupabase.auth.getUser();
 
     if (error || !data.user) {
         window.location.href = "login.html";
@@ -179,7 +179,7 @@ if (botaoSair) {
             }
 
             // Redireciona após encerrar a sessão
-            window.location.replace("/login.html");
+            window.location.replace("/src/html/login.html");
 
         } catch (erro) {
             console.error("Erro ao encerrar sessão:", erro);

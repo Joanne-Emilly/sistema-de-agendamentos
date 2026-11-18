@@ -38,7 +38,7 @@ async function verificarAutenticacao() {
 
     } catch (erro) {
         console.error("Erro ao verificar autenticação:", erro);
-        window.location.replace("/login.html");
+        window.location.replace("/src/html/login.html");
     }
 }
 
