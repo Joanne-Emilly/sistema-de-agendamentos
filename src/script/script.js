@@ -20,6 +20,10 @@ const botaoSair = document.querySelector(".itemSair");
 
 let agendamentoEmEdicao = null;
 
+// Os agendamentos são mantidos em memória após a consulta ao Supabase.
+let agendamentosEmMemoria = [];
+let modoLeituraAgendamentos = true;
+
 // ========================================
 // ELEMENTOS DA CONSULTA DE DISPONIBILIDADE
 // ========================================
@@ -548,67 +552,8 @@ function inicializarNotificacoes() {
 // ========================================
 
 function obterAgendamentos() {
-  try {
-    const dadosSalvos = localStorage.getItem(chaveArmazenamento);
-
-    if (!dadosSalvos) {
-      return [];
-    }
-
-    const agendamentos = JSON.parse(dadosSalvos);
-
-    if (!Array.isArray(agendamentos)) {
-      return [];
-    }
-
-    // Atualiza registros antigos que ainda estavam pendentes.
-    // Todo agendamento ativo passa a ser considerado confirmado.
-    let houveAlteracao = false;
-
-    const agendamentosAtualizados = agendamentos.map((agendamento) => {
-      const statusAtual = String(agendamento.status || "")
-        .trim()
-        .toLowerCase();
-
-      if (statusAtual === "pendente") {
-        houveAlteracao = true;
-
-        return {
-          ...agendamento,
-          status: "confirmado",
-        };
-      }
-
-      if (!statusAtual && agendamento.status !== "cancelado") {
-        houveAlteracao = true;
-
-        return {
-          ...agendamento,
-          status: "confirmado",
-        };
-      }
-
-      return {
-        ...agendamento,
-        status: statusAtual || "confirmado",
-      };
-    });
-
-    if (houveAlteracao) {
-      localStorage.setItem(
-        chaveArmazenamento,
-        JSON.stringify(agendamentosAtualizados),
-      );
-    }
-
-    return agendamentosAtualizados;
-  } catch (erro) {
-    console.error("Não foi possível ler os agendamentos:", erro);
-
-    return [];
-  }
+  return [...agendamentosEmMemoria];
 }
-
 
 function salvarAgendamentos(agendamentos) {
   try {
@@ -821,7 +766,7 @@ function criarCardAgendamento(agendamento) {
 
   card.append(cabecalho, detalhes);
 
-  if (!cancelado) {
+  if (!cancelado && !modoLeituraAgendamentos) {
     const acoes = criarElemento("div", "acoesAgendamento");
 
     const botaoEditar = criarElemento(
@@ -987,6 +932,14 @@ function encerrarEdicao(limparFormulario = true) {
 formularioAgendamento.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
+  if (modoLeituraAgendamentos) {
+    exibirMensagemFormulario(
+      "A consulta dos agendamentos já está integrada. O cadastro será habilitado na próxima etapa.",
+      "aviso",
+    );
+    return;
+  }
+
   limparMensagemFormulario();
 
   if (!formularioAgendamento.reportValidity()) {
@@ -1141,6 +1094,10 @@ formularioAgendamento.addEventListener("submit", (evento) => {
 // ========================================
 
 listaAgendamentos.addEventListener("click", (evento) => {
+  if (modoLeituraAgendamentos) {
+    return;
+  }
+
   const botao = evento.target.closest("button[data-acao]");
 
   if (!botao) {
@@ -1267,6 +1224,38 @@ function preencherSelectComEspacos(select, espacos, textoInicial, incluirTodos =
     select.value = "todos";
   } else {
     select.value = "";
+  }
+}
+
+async function carregarAgendamentosDoBanco() {
+  listaAgendamentos.replaceChildren(
+    criarElemento("p", "estadoCarregamento", "Carregando agendamentos..."),
+  );
+  contadorAgendamentos.textContent = "Carregando...";
+
+  try {
+    if (!window.servicoAgendamentosSupabase) {
+      throw new Error("O serviço de agendamentos não foi carregado.");
+    }
+
+    agendamentosEmMemoria =
+      await window.servicoAgendamentosSupabase.listarAgendamentos();
+
+    renderizarAgendamentos();
+    atualizarRelatorios();
+    renderizarAgendaDiaria();
+    consultarDisponibilidadeAtual();
+  } catch (erro) {
+    console.error("Não foi possível carregar os agendamentos do Supabase:", erro);
+
+    listaAgendamentos.replaceChildren(
+      criarElemento(
+        "p",
+        "mensagemErro",
+        "Não foi possível carregar os agendamentos. Atualize a página ou tente novamente mais tarde.",
+      ),
+    );
+    contadorAgendamentos.textContent = "Falha ao carregar";
   }
 }
 
@@ -1529,7 +1518,7 @@ function consultarDisponibilidade(espaco, data) {
     criarElemento(
       "p",
       "avisoDisponibilidade",
-      "Os horários exibidos correspondem aos agendamentos confirmados registrados neste navegador.",
+      "Os horários exibidos correspondem aos agendamentos confirmados registrados no sistema.",
     ),
   );
 
@@ -1826,7 +1815,7 @@ function renderizarAgendaDiaria() {
       criarElementoAgenda(
         "p",
         "mensagemAvisoAgenda",
-        "A ausência de registros nesta agenda não garante disponibilidade real. Esta versão utiliza dados armazenados somente neste navegador.",
+        "A ausência de registros nesta agenda não garante disponibilidade futura; consulte novamente antes de solicitar uma reserva.",
       ),
     );
 
@@ -1845,7 +1834,7 @@ function renderizarAgendaDiaria() {
     criarElementoAgenda(
       "p",
       "mensagemAvisoAgenda",
-      "Esta agenda apresenta os registros salvos neste navegador.",
+      "Esta agenda apresenta os registros compartilhados no sistema.",
     ),
   );
 }
@@ -2733,3 +2722,6 @@ inicializarAgendaDiaria();
 inicializarNavegacao();
 
 inicializarNotificacoes();
+
+// Consulta os registros compartilhados no banco após inicializar os componentes.
+carregarAgendamentosDoBanco();
