@@ -2292,256 +2292,203 @@ botaoExportarCSV.addEventListener("click", exportarRelatorioCSV);
 
 botaoImprimirRelatorio.addEventListener("click", imprimirRelatorio);
 // ========================================
-// TAREFA 119 - CONFIGURAÇÕES DO SISTEMA
+// ========================================
+// CONFIGURAÇÕES GERAIS DO SISTEMA
 // ========================================
 
-const formularioConfiguracoes = document.querySelector(
-  "#formularioConfiguracoes",
-);
-
+const formularioConfiguracoes = document.querySelector("#formularioConfiguracoes");
 const configNomeEscola = document.querySelector("#configNomeEscola");
 const configResponsavel = document.querySelector("#configResponsavel");
-
 const configHorarioAbertura = document.querySelector("#configHorarioAbertura");
-
-const configHorarioFechamento = document.querySelector(
-  "#configHorarioFechamento",
-);
-
-const configLaboratorioInformatica = document.querySelector(
-  "#configLaboratorioInformatica",
-);
-
-const configLaboratorioBiologia = document.querySelector(
-  "#configLaboratorioBiologia",
-);
-
+const configHorarioFechamento = document.querySelector("#configHorarioFechamento");
+const configLaboratorioInformatica = document.querySelector("#configLaboratorioInformatica");
+const configLaboratorioBiologia = document.querySelector("#configLaboratorioBiologia");
 const configBiblioteca = document.querySelector("#configBiblioteca");
-
 const configFinaisDeSemana = document.querySelector("#configFinaisDeSemana");
-
-const configNotificacoes = document.querySelector("#configNotificacoes");
-
-const botaoRestaurarConfiguracoes = document.querySelector(
-  "#botaoRestaurarConfiguracoes",
-);
-
+const botaoRestaurarConfiguracoes = document.querySelector("#botaoRestaurarConfiguracoes");
 const mensagemConfiguracoes = document.querySelector("#mensagemConfiguracoes");
 
-const chaveConfiguracoes = "configuracoesEscolares";
-
-// Valores iniciais do sistema.
-const configuracoesPadrao = {
+const idConfiguracaoSistema = "00000000-0000-4000-8000-000000000001";
+let configuracoesSistema = {
   nomeEscola: "CETI Dr. Noronha Filho",
   responsavel: "Coordenador",
-
   horarioAbertura: "07:30",
   horarioFechamento: "18:30",
-
-  laboratorios: {
-    informatica: true,
-    biologia: true,
-    biblioteca: true,
-  },
-
   permitirFinaisDeSemana: false,
-  notificacoesAtivas: true,
 };
-
-// ========================================
-// LEITURA DAS CONFIGURAÇÕES
-// ========================================
-
-function obterConfiguracoes() {
-  try {
-    const dadosSalvos = localStorage.getItem(chaveConfiguracoes);
-
-    if (!dadosSalvos) {
-      return structuredClone(configuracoesPadrao);
-    }
-
-    const configuracoesSalvas = JSON.parse(dadosSalvos);
-
-    if (
-      !configuracoesSalvas ||
-      typeof configuracoesSalvas !== "object" ||
-      Array.isArray(configuracoesSalvas)
-    ) {
-      return structuredClone(configuracoesPadrao);
-    }
-
-    return {
-      ...structuredClone(configuracoesPadrao),
-      ...configuracoesSalvas,
-
-      laboratorios: {
-        ...configuracoesPadrao.laboratorios,
-        ...(configuracoesSalvas.laboratorios || {}),
-      },
-    };
-  } catch (erro) {
-    console.error("Erro ao carregar as configurações:", erro);
-
-    return structuredClone(configuracoesPadrao);
-  }
-}
-
-// ========================================
-// EXIBIÇÃO DAS CONFIGURAÇÕES
-// ========================================
-
-function preencherFormularioConfiguracoes() {
-  const configuracoes = obterConfiguracoes();
-
-  configNomeEscola.value = configuracoes.nomeEscola;
-  configResponsavel.value = configuracoes.responsavel;
-
-  configHorarioAbertura.value = configuracoes.horarioAbertura;
-  configHorarioFechamento.value = configuracoes.horarioFechamento;
-
-  configLaboratorioInformatica.checked = configuracoes.laboratorios.informatica;
-
-  configLaboratorioBiologia.checked = configuracoes.laboratorios.biologia;
-
-  configBiblioteca.checked = configuracoes.laboratorios.biblioteca;
-
-  configFinaisDeSemana.checked = configuracoes.permitirFinaisDeSemana;
-
-  configNotificacoes.checked = configuracoes.notificacoesAtivas;
-}
-
-// ========================================
-// MENSAGENS DA INTERFACE
-// ========================================
+let configuracoesSistemaCarregadas = false;
 
 function exibirMensagemConfiguracoes(mensagem, erro = false) {
   mensagemConfiguracoes.textContent = mensagem;
-
   mensagemConfiguracoes.classList.toggle("erroConfiguracoes", erro);
 }
 
-// ========================================
-// SALVAR CONFIGURAÇÕES
-// ========================================
+function aplicarNomeEscola(nome) {
+  const elementoNomeEscola = document.querySelector(".nomeEscola");
+  if (elementoNomeEscola && nome) {
+    elementoNomeEscola.textContent = nome;
+  }
+}
 
-function salvarConfiguracoes(evento) {
+function preencherFormularioConfiguracoes(configuracoes, espacos) {
+  configNomeEscola.value = configuracoes.nome_escola || configuracoes.nomeEscola || "";
+  configResponsavel.value = configuracoes.responsavel || "";
+  configHorarioAbertura.value = String(configuracoes.horario_abertura || configuracoes.horarioAbertura || "07:30").slice(0, 5);
+  configHorarioFechamento.value = String(configuracoes.horario_fechamento || configuracoes.horarioFechamento || "18:30").slice(0, 5);
+  configFinaisDeSemana.checked = Boolean(configuracoes.finais_de_semana ?? configuracoes.permitirFinaisDeSemana);
+
+  const status = Object.fromEntries((espacos || []).map((espaco) => [espaco.nome, espaco.ativo]));
+  configLaboratorioInformatica.checked = status["Laboratório de Informática"] ?? false;
+  configLaboratorioBiologia.checked = status["Laboratório de Biologia"] ?? false;
+  configBiblioteca.checked = status["Biblioteca"] ?? false;
+
+  configuracoesSistema = {
+    nomeEscola: configNomeEscola.value,
+    responsavel: configResponsavel.value,
+    horarioAbertura: configHorarioAbertura.value,
+    horarioFechamento: configHorarioFechamento.value,
+    permitirFinaisDeSemana: configFinaisDeSemana.checked,
+  };
+  aplicarNomeEscola(configuracoesSistema.nomeEscola);
+}
+
+async function carregarConfiguracoesSistema() {
+  try {
+    const servico = window.servicoAgendamentosSupabase;
+    if (!servico) throw new Error("Serviço do Supabase indisponível.");
+
+    const [configuracoes, espacos] = await Promise.all([
+      servico.obterConfiguracoesSistema(),
+      servico.listarTodosEspacos(),
+    ]);
+
+    if (!configuracoes) throw new Error("As configurações gerais não foram encontradas.");
+    preencherFormularioConfiguracoes(configuracoes, espacos);
+    configuracoesSistemaCarregadas = true;
+  } catch (erro) {
+    console.error("Erro ao carregar configurações:", erro);
+    exibirMensagemConfiguracoes("Não foi possível carregar as configurações compartilhadas. Atualize a página.", true);
+  }
+}
+
+async function salvarConfiguracoes(evento) {
   evento.preventDefault();
 
   const horarioAbertura = configHorarioAbertura.value;
   const horarioFechamento = configHorarioFechamento.value;
-
-  if (
-    !horarioAbertura ||
-    !horarioFechamento ||
-    horarioAbertura >= horarioFechamento
-  ) {
-    atualizarContadorNotificacoes();
-    renderizarNotificacoes();
-    exibirMensagemConfiguracoes(
-      "O horário de encerramento deve ser posterior ao horário de abertura.",
-      true,
-    );
-
+  if (!horarioAbertura || !horarioFechamento || horarioAbertura >= horarioFechamento) {
+    exibirMensagemConfiguracoes("O horário de encerramento deve ser posterior ao horário de abertura.", true);
     configHorarioFechamento.focus();
-
     return;
   }
 
-  const existeEspacoAtivo =
-    configLaboratorioInformatica.checked ||
-    configLaboratorioBiologia.checked ||
-    configBiblioteca.checked;
-
-  if (!existeEspacoAtivo) {
+  if (!(configLaboratorioInformatica.checked || configLaboratorioBiologia.checked || configBiblioteca.checked)) {
     exibirMensagemConfiguracoes("Ative pelo menos um espaço escolar.", true);
-
     return;
   }
 
   const configuracoes = {
     nomeEscola: configNomeEscola.value.trim(),
     responsavel: configResponsavel.value.trim(),
-
     horarioAbertura,
     horarioFechamento,
-
-    laboratorios: {
-      informatica: configLaboratorioInformatica.checked,
-      biologia: configLaboratorioBiologia.checked,
-      biblioteca: configBiblioteca.checked,
-    },
-
     permitirFinaisDeSemana: configFinaisDeSemana.checked,
-    notificacoesAtivas: configNotificacoes.checked,
   };
 
   if (!configuracoes.nomeEscola || !configuracoes.responsavel) {
-    exibirMensagemConfiguracoes(
-      "Preencha o nome da escola e o responsável pelo sistema.",
-      true,
-    );
-
+    exibirMensagemConfiguracoes("Preencha o nome da escola e o responsável pelo sistema.", true);
     return;
   }
 
+  const botaoSalvar = formularioConfiguracoes.querySelector('[type="submit"]');
+  if (botaoSalvar) botaoSalvar.disabled = true;
+
   try {
-    localStorage.setItem(chaveConfiguracoes, JSON.stringify(configuracoes));
+    const servico = window.servicoAgendamentosSupabase;
+    await servico.salvarConfiguracoesSistema(configuracoes);
+    await servico.atualizarStatusEspacos({
+      "Laboratório de Informática": configLaboratorioInformatica.checked,
+      "Laboratório de Biologia": configLaboratorioBiologia.checked,
+      "Biblioteca": configBiblioteca.checked,
+    });
 
-    exibirMensagemConfiguracoes("Configurações salvas com sucesso.");
+    configuracoesSistema = configuracoes;
+    configuracoesSistemaCarregadas = true;
+    aplicarNomeEscola(configuracoes.nomeEscola);
+    await carregarEspacosNosFiltros();
+    exibirMensagemConfiguracoes("Configurações salvas e compartilhadas com todos os usuários.");
   } catch (erro) {
-    console.error("Erro ao salvar as configurações:", erro);
-
-    exibirMensagemConfiguracoes(
-      "Não foi possível salvar as configurações neste navegador.",
-      true,
-    );
+    console.error("Erro ao salvar configurações:", erro);
+    exibirMensagemConfiguracoes("Não foi possível concluir todas as alterações. Recarregue a página e confira os dados antes de tentar novamente.", true);
+  } finally {
+    if (botaoSalvar) botaoSalvar.disabled = false;
   }
 }
 
-// ========================================
-// RESTAURAR CONFIGURAÇÕES PADRÃO
-// ========================================
-
-function restaurarConfiguracoes() {
+async function restaurarConfiguracoes() {
   const confirmou = window.confirm(
-    "Deseja restaurar as configurações padrão? " +
-      "Essa ação não apagará os agendamentos.",
+    "Deseja restaurar os padrões do sistema? Horários, espaços e regra de finais de semana serão redefinidos. Os agendamentos existentes serão preservados.",
   );
+  if (!confirmou) return;
 
-  if (!confirmou) {
-    return;
-  }
+  configNomeEscola.value = "CETI Dr. Noronha Filho";
+  configResponsavel.value = "Coordenador";
+  configHorarioAbertura.value = "07:30";
+  configHorarioFechamento.value = "18:30";
+  configFinaisDeSemana.checked = false;
+  configLaboratorioInformatica.checked = true;
+  configLaboratorioBiologia.checked = true;
+  configBiblioteca.checked = true;
 
-  try {
-    localStorage.setItem(
-      chaveConfiguracoes,
-      JSON.stringify(configuracoesPadrao),
-    );
-
-    preencherFormularioConfiguracoes();
-    atualizarContadorNotificacoes();
-    renderizarNotificacoes();
-    exibirMensagemConfiguracoes(
-      "Configurações padrão restauradas. Os agendamentos foram preservados.",
-    );
-  } catch (erro) {
-    console.error("Erro ao restaurar as configurações:", erro);
-
-    exibirMensagemConfiguracoes(
-      "Não foi possível restaurar as configurações.",
-      true,
-    );
+  await salvarConfiguracoes(new Event("submit", { cancelable: true }));
+  if (!mensagemConfiguracoes.classList.contains("erroConfiguracoes")) {
+    exibirMensagemConfiguracoes("Padrões restaurados. Os agendamentos existentes foram preservados.");
   }
 }
-
-// ========================================
-// EVENTOS
-// ========================================
 
 formularioConfiguracoes.addEventListener("submit", salvarConfiguracoes);
-
 botaoRestaurarConfiguracoes.addEventListener("click", restaurarConfiguracoes);
 
+function salvarAgendamentos(agendamentos) {
+  try {
+    localStorage.setItem(
+      chaveArmazenamento,
+      JSON.stringify(agendamentos),
+    );
+
+    return true;
+  } catch (erro) {
+    console.error("Não foi possível salvar os agendamentos:", erro);
+
+    exibirMensagemFormulario(
+      "Não foi possível salvar os dados no navegador. Verifique o espaço disponível e as configurações de armazenamento.",
+      "erro",
+    );
+
+    return false;
+  }
+}
+
+// Inicialização do sistema
+carregarPerfilUsuario();
+carregarEspacosNosFiltros();
+
+carregarConfiguracoesSistema();
+
+atualizarRelatorios();
+
+definirDataMinima();
+
+renderizarAgendamentos();
+
+inicializarAgendaDiaria();
+
+inicializarNavegacao();
+
+inicializarNotificacoes();
+
+// Consulta os registros compartilhados no banco após inicializar os componentes.
+carregarAgendamentosDoBanco()
 // ========================================
 // INICIALIZAÇÃO DO SISTEMA
 // ========================================
