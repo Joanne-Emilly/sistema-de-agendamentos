@@ -35,6 +35,7 @@ let agendamentoEmEdicao = null;
 let agendamentosEmMemoria = [];
 let modoLeituraAgendamentos = true;
 let usuarioAutenticadoId = null;
+let papelUsuarioAutenticado = null;
 
 // ========================================
 // ELEMENTOS DA AGENDA DIÁRIA
@@ -1584,6 +1585,17 @@ const linksNavegacao = document.querySelectorAll(".menuLateral a[data-pagina]");
 const secoesPrincipais = document.querySelectorAll(".areaPrincipal > section");
 
 function mostrarPagina(idPagina) {
+  if (idPagina === "configuracoes") {
+    if (papelUsuarioAutenticado === null) {
+      return;
+    }
+
+    if (papelUsuarioAutenticado !== "coordenador") {
+      mostrarPagina("inicio");
+      return;
+    }
+  }
+
   const secaoSelecionada = document.getElementById(idPagina);
 
   if (
@@ -1727,6 +1739,19 @@ async function carregarPerfilUsuario() {
     }
 
     usuarioAutenticadoId = usuario.id;
+    papelUsuarioAutenticado = String(dadosPerfil.papel || "").trim().toLowerCase();
+
+    const linkConfiguracoes = document.querySelector("#linkConfiguracoes");
+    const paginaConfiguracoes = document.querySelector("#configuracoes");
+    const podeAcessarConfiguracoes = papelUsuarioAutenticado === "coordenador";
+
+    if (linkConfiguracoes) {
+      linkConfiguracoes.hidden = !podeAcessarConfiguracoes;
+    }
+
+    if (paginaConfiguracoes) {
+      paginaConfiguracoes.hidden = !podeAcessarConfiguracoes;
+    }
 
     const nome = String(dadosPerfil.nome || "").trim() || "Usuário";
     const email = dadosPerfil.email || usuario.email || "E-mail não informado";
@@ -1746,6 +1771,7 @@ async function carregarPerfilUsuario() {
     perfilPapel.textContent = papel;
     mensagemPerfil.textContent = "";
     renderizarAgendamentos();
+    inicializarNavegacao();
   } catch (erro) {
     console.error("Não foi possível carregar o perfil do usuário:", erro);
 
@@ -1761,6 +1787,14 @@ async function carregarPerfilUsuario() {
     perfilEmail.textContent = "Não foi possível carregar";
     perfilPapel.textContent = "Não foi possível carregar";
     usuarioAutenticadoId = null;
+    papelUsuarioAutenticado = null;
+
+    const linkConfiguracoes = document.querySelector("#linkConfiguracoes");
+    const paginaConfiguracoes = document.querySelector("#configuracoes");
+
+    if (linkConfiguracoes) linkConfiguracoes.hidden = true;
+    if (paginaConfiguracoes) paginaConfiguracoes.hidden = true;
+
     renderizarAgendamentos();
     mensagemPerfil.textContent =
       "Não foi possível consultar seus dados. Atualize a página ou solicite suporte à administração.";
