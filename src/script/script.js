@@ -1233,6 +1233,105 @@ botaoCancelarEdicao.addEventListener("click", () => {
 });
 
 // ========================================
+ // CARREGAMENTO DOS ESPAÇOS CADASTRADOS NO SUPABASE
+ // ========================================
+
+function preencherSelectComEspacos(select, espacos, textoInicial, incluirTodos = false) {
+  if (!select) {
+    return;
+  }
+
+  const valorAnterior = select.value;
+  const opcoes = [];
+
+  if (incluirTodos) {
+    opcoes.push(new Option("Todos os espaços", "todos"));
+  } else {
+    opcoes.push(new Option(textoInicial, ""));
+  }
+
+  espacos.forEach((espaco) => {
+    opcoes.push(new Option(espaco.nome, espaco.nome));
+  });
+
+  select.replaceChildren(...opcoes);
+  select.disabled = espacos.length === 0;
+
+  const valorExiste = Array.from(select.options).some(
+    (opcao) => opcao.value === valorAnterior,
+  );
+
+  if (valorExiste) {
+    select.value = valorAnterior;
+  } else if (incluirTodos) {
+    select.value = "todos";
+  } else {
+    select.value = "";
+  }
+}
+
+async function carregarEspacosNosFiltros() {
+  const seletores = [
+    formularioAgendamento?.elements.espacoEscolar,
+    filtroEspaco,
+    espacoAgendaDiaria,
+  ].filter(Boolean);
+
+  seletores.forEach((select) => {
+    select.disabled = true;
+  });
+
+  try {
+    if (!window.servicoAgendamentosSupabase) {
+      throw new Error("O serviço de agendamentos não foi carregado.");
+    }
+
+    const espacos = await window.servicoAgendamentosSupabase.listarEspacos();
+
+    preencherSelectComEspacos(
+      formularioAgendamento?.elements.espacoEscolar,
+      espacos,
+      "Selecione um espaço",
+    );
+
+    preencherSelectComEspacos(
+      filtroEspaco,
+      espacos,
+      "Selecione um espaço",
+    );
+
+    preencherSelectComEspacos(
+      espacoAgendaDiaria,
+      espacos,
+      "Todos os espaços",
+      true,
+    );
+
+    if (espacos.length === 0) {
+      console.warn("Não há espaços ativos cadastrados no Supabase.");
+    }
+  } catch (erro) {
+    console.error("Não foi possível carregar os espaços:", erro);
+
+    seletores.forEach((select) => {
+      const texto = select === espacoAgendaDiaria
+        ? "Espaços indisponíveis"
+        : "Não foi possível carregar os espaços";
+
+      select.replaceChildren(new Option(texto, ""));
+      select.disabled = true;
+    });
+
+    if (typeof exibirMensagemFormulario === "function") {
+      exibirMensagemFormulario(
+        "Não foi possível carregar os espaços cadastrados. Atualize a página ou tente novamente mais tarde.",
+        "erro",
+      );
+    }
+  }
+}
+
+// ========================================
 // CONSULTA DE DISPONIBILIDADE
 // ========================================
 
@@ -2617,6 +2716,8 @@ function salvarAgendamentos(agendamentos) {
 }
 
 // Inicialização do sistema
+carregarEspacosNosFiltros();
+
 preencherFormularioConfiguracoes();
 
 atualizarRelatorios();
