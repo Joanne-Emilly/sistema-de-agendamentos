@@ -1334,8 +1334,29 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
     checkbox.name = "recursosPedagogicos";
     checkbox.value = recurso.id;
     checkbox.dataset.recursoNome = recurso.nome;
+    checkbox.dataset.recursoCategoria = recurso.nome.startsWith("Projetor ")
+      ? "projetor"
+      : recurso.nome.startsWith("Caixa de Som ")
+        ? "caixaSom"
+        : "outro";
     // A consulta listarEspacos() já retorna somente recursos ativos.
     checkbox.disabled = false;
+
+    checkbox.addEventListener("change", () => {
+      if (!checkbox.checked || checkbox.dataset.recursoCategoria === "outro") return;
+
+      const categoria = checkbox.dataset.recursoCategoria;
+      listaRecursosAgendamento
+        .querySelectorAll('input[name="recursosPedagogicos"]')
+        .forEach((outroCheckbox) => {
+          if (
+            outroCheckbox !== checkbox &&
+            outroCheckbox.dataset.recursoCategoria === categoria
+          ) {
+            outroCheckbox.checked = false;
+          }
+        });
+    });
 
     const nome = criarElementoAgenda("span", "nomeOpcaoRecurso", recurso.nome);
     label.append(checkbox, nome);
