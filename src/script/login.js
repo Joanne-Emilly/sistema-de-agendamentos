@@ -107,7 +107,7 @@ async function entrarNoSistema() {
             throw new Error("Não foi possível estabelecer a sessão.");
         }
 
-        window.location.replace("/index.html");
+        window.location.replace("/src/html/index.html");
     } catch (erro) {
         console.error("Erro ao realizar login:", erro);
         exibirMensagemLogin(obterMensagemErroLogin(erro));
