@@ -1,0 +1,254 @@
+/* ========================================
+   SERVIÇO DE AGENDAMENTOS - SUPABASE
+   Centraliza o acesso à tabela public.agendamentos.
+======================================== */
+
+(function () {
+  "use strict";
+
+  function obterClienteSupabase() {
+    if (!window.clienteSupabase && typeof clienteSupabase === "undefined") {
+      throw new Error("A conexão com o Supabase não foi inicializada.");
+    }
+
+    return typeof clienteSupabase !== "undefined"
+      ? clienteSupabase
+      : window.clienteSupabase;
+  }
+
+  function converterAgendamentoParaInterface(registro) {
+    return {
+      id: registro.id,
+      usuarioId: registro.usuario_id,
+      espacoId: registro.espaco_id,
+      professorResponsavel: registro.professor_responsavel,
+      turma: registro.turma,
+      espacoEscolar: registro.espacos?.nome || "",
+      dataAgendamento: registro.data_agendamento,
+      horarioInicio: String(registro.horario_inicio || "").slice(0, 5),
+      horarioFim: String(registro.horario_fim || "").slice(0, 5),
+      finalidade: registro.finalidade,
+      status: registro.status,
+      criadoEm: registro.criado_em,
+      atualizadoEm: registro.atualizado_em,
+    };
+  }
+
+  async function obterUsuarioAutenticado(cliente) {
+    const { data, error } = await cliente.auth.getUser();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data.user) {
+      throw new Error("Sua sessão expirou. Entre novamente no sistema.");
+    }
+
+    return data.user;
+  }
+
+  async function obterEspacoPorNome(cliente, nomeEspaco) {
+    const { data, error } = await cliente
+      .from("espacos")
+      .select("id, nome")
+      .eq("nome", nomeEspaco)
+      .eq("ativo", true)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error("O espaço selecionado não foi encontrado ou está inativo.");
+    }
+
+    return data;
+  }
+
+  async function listarAgendamentos() {
+    const cliente = obterClienteSupabase();
+
+    const { data, error } = await cliente
+      .from("agendamentos")
+      .select(`
+        id,
+        usuario_id,
+        espaco_id,
+        professor_responsavel,
+        turma,
+        data_agendamento,
+        horario_inicio,
+        horario_fim,
+        finalidade,
+        status,
+        criado_em,
+        atualizado_em,
+        espacos ( nome )
+      `)
+      .order("data_agendamento", { ascending: true })
+      .order("horario_inicio", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data || []).map(converterAgendamentoParaInterface);
+  }
+
+  async function listarEspacos() {
+    const cliente = obterClienteSupabase();
+
+    const { data, error } = await cliente
+      .from("espacos")
+      .select("id, nome")
+      .eq("ativo", true)
+      .order("nome", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  }
+
+  async function salvarNovoAgendamento(dadosFormulario) {
+    const cliente = obterClienteSupabase();
+    const usuario = await obterUsuarioAutenticado(cliente);
+    const espaco = await obterEspacoPorNome(
+      cliente,
+      dadosFormulario.espacoEscolar,
+    );
+
+    // A tabela agendamentos possui chave estrangeira para public.perfis.
+    // Confirma que o perfil do usuário autenticado já está cadastrado.
+    const { data: perfil, error: erroPerfil } = await cliente
+      .from("perfis")
+      .select("id")
+      .eq("id", usuario.id)
+      .maybeSingle();
+
+    if (erroPerfil) {
+      throw erroPerfil;
+    }
+
+    if (!perfil) {
+      throw new Error(
+        "Seu usuário ainda não possui um perfil cadastrado no sistema. Solicite à administração o cadastro do perfil.",
+      );
+    }
+
+    const registro = {
+      usuario_id: usuario.id,
+      espaco_id: espaco.id,
+      professor_responsavel: dadosFormulario.professorResponsavel,
+      turma: dadosFormulario.turma,
+      data_agendamento: dadosFormulario.dataAgendamento,
+      horario_inicio: dadosFormulario.horarioInicio,
+      horario_fim: dadosFormulario.horarioFim,
+      finalidade: dadosFormulario.finalidade,
+      status: "confirmado",
+    };
+
+    const { data, error } = await cliente
+      .from("agendamentos")
+      .insert(registro)
+      .select(`
+        id,
+        usuario_id,
+        espaco_id,
+        professor_responsavel,
+        turma,
+        data_agendamento,
+        horario_inicio,
+        horario_fim,
+        finalidade,
+        status,
+        criado_em,
+        atualizado_em,
+        espacos ( nome )
+      `)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return converterAgendamentoParaInterface(data);
+  }
+
+  async function atualizarAgendamento(id, dadosFormulario) {
+    const cliente = obterClienteSupabase();
+    const espaco = await obterEspacoPorNome(
+      cliente,
+      dadosFormulario.espacoEscolar,
+    );
+
+    const alteracoes = {
+      espaco_id: espaco.id,
+      professor_responsavel: dadosFormulario.professorResponsavel,
+      turma: dadosFormulario.turma,
+      data_agendamento: dadosFormulario.dataAgendamento,
+      horario_inicio: dadosFormulario.horarioInicio,
+      horario_fim: dadosFormulario.horarioFim,
+      finalidade: dadosFormulario.finalidade,
+      atualizado_em: new Date().toISOString(),
+    };
+
+    const { data, error } = await cliente
+      .from("agendamentos")
+      .update(alteracoes)
+      .eq("id", id)
+      .select(`
+        id,
+        usuario_id,
+        espaco_id,
+        professor_responsavel,
+        turma,
+        data_agendamento,
+        horario_inicio,
+        horario_fim,
+        finalidade,
+        status,
+        criado_em,
+        atualizado_em,
+        espacos ( nome )
+      `)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return converterAgendamentoParaInterface(data);
+  }
+
+  async function cancelarAgendamento(id) {
+    const cliente = obterClienteSupabase();
+
+    const { data, error } = await cliente
+      .from("agendamentos")
+      .update({
+        status: "cancelado",
+        atualizado_em: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select("id")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
+
+  window.servicoAgendamentosSupabase = Object.freeze({
+    listarAgendamentos,
+    listarEspacos,
+    salvarNovoAgendamento,
+    atualizarAgendamento,
+    cancelarAgendamento,
+  });
+})();
