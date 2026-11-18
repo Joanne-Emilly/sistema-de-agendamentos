@@ -3348,3 +3348,425 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ============================================
+   RESPONSIVIDADE GERAL — CELULARES E TABLETS
+   Ajustes complementares sem alterar o layout desktop
+============================================ */
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+  font: inherit;
+}
+
+.aplicacao,
+.estruturaPrincipal,
+.areaPrincipal,
+.menuLateral,
+.card,
+.cardFormulario,
+.cardAgendaDiaria,
+.painelAgendaInicio,
+.cardRelatorios,
+.cardConfiguracoes {
+  min-width: 0;
+}
+
+.tabelaRelatoriosResponsiva {
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .cabecalhoPrincipal {
+    gap: 16px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .nomeSistema {
+    font-size: 15px;
+  }
+
+  .estruturaPrincipal {
+    flex-direction: column;
+  }
+
+  .menuLateral {
+    width: 100%;
+    min-height: auto;
+    padding: 12px 16px;
+  }
+
+  .navegacaoPrincipal {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .itemNavegacao {
+    justify-content: center;
+    min-height: 46px;
+    gap: 8px;
+    padding: 10px 8px;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .areaSaida {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .areaPrincipal {
+    padding: 24px 20px;
+  }
+
+  .gradeFormulario,
+  .gradeConfiguracoes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gradeFiltrosAgenda,
+  .filtrosAgendaInicio {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .campoAgendaAcao,
+  .filtrosAgendaInicio .botaoFiltrarAgenda {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  html,
+  body {
+    min-width: 320px;
+  }
+
+  .cabecalhoPrincipal {
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .identidadeSistema {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .marcaSistema {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .informacoesSistema {
+    min-width: 0;
+  }
+
+  .nomeSistema {
+    display: block;
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .acoesCabecalho {
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .estruturaPrincipal {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .menuLateral {
+    width: 100%;
+    min-height: 0;
+    padding: 10px;
+    overflow: visible;
+  }
+
+  .navegacaoPrincipal {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .itemNavegacao {
+    justify-content: flex-start;
+    min-width: 0;
+    min-height: 46px;
+    gap: 7px;
+    padding: 9px 8px;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+
+  .iconeNavegacao {
+    width: 18px;
+    height: 18px;
+  }
+
+  .areaSaida {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .itemSair {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .areaPrincipal {
+    width: 100%;
+    padding: 18px 12px;
+  }
+
+  .secaoBoasVindas {
+    margin-bottom: 20px;
+  }
+
+  .tituloBoasVindas,
+  .cabecalhoInicio h1 {
+    font-size: 21px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .descricaoBoasVindas {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .card,
+  .cardFormulario,
+  .cardFiltrosAgenda,
+  .cardAgendaDiaria,
+  .painelAgendaInicio,
+  .cardRelatorios,
+  .cardConfiguracoes,
+  .cartaoPerfil {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .listaEspacos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gradeFormulario,
+  .gradeConsulta,
+  .gradeFiltrosAgenda,
+  .gradeFiltrosRelatorios,
+  .gradeConfiguracoes,
+  .dadosPerfil,
+  .indicadoresRelatorios {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .campoCompleto,
+  .campoAgendaAcao {
+    grid-column: auto;
+  }
+
+  .campoFormulario input,
+  .campoFormulario select,
+  .campoFormulario textarea,
+  .campoFiltroAgenda input,
+  .campoFiltroAgenda select,
+  .campoConfiguracao input {
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  .acoesFormulario,
+  .acoesConfiguracoes,
+  .acoesRelatorios,
+  .acoesExportacao {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .botaoFormulario,
+  .botaoConfiguracao,
+  .botaoRelatorio,
+  .botaoNovoAgendamentoInicio,
+  .botaoFiltrarAgenda,
+  .botaoConsultar {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  .cabecalhoPainelInicio {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .cabecalhoPainelInicio h2 {
+    font-size: 19px;
+  }
+
+  .filtrosAgendaInicio,
+  .resumoAgendaInicio,
+  .resumoAgendaDiaria {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .itemLinhaTempo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .detalhesCartaoAgenda,
+  .detalhesAgendamento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .finalidadeCartaoAgenda,
+  .finalidadeAgendamento {
+    grid-column: auto;
+  }
+
+  .cabecalhoCartaoAgenda,
+  .cabecalhoAgendamento {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .acoesAgendamento {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .botaoEditarAgendamento,
+  .botaoCancelarAgendamento {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .cabecalhoRelatorios,
+  .cabecalhoTabelaRelatorios {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .tabelaRelatorios {
+    min-width: 900px;
+  }
+
+  .opcaoConfiguracao {
+    align-items: flex-start;
+  }
+
+  .opcaoConfiguracao span {
+    min-width: 0;
+  }
+
+  .cartaoPerfil {
+    width: 100%;
+  }
+
+  .cabecalhoCartaoPerfil {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .avatarPerfil {
+    width: 52px;
+    height: 52px;
+    font-size: 18px;
+  }
+
+  .painelNotificacoes {
+    top: 76px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    max-height: calc(100dvh - 96px);
+  }
+
+  .listaNotificacoes {
+    max-height: calc(100dvh - 220px);
+  }
+}
+
+@media (max-width: 380px) {
+  .cabecalhoPrincipal {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .simboloSistema {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .nomeSistema {
+    font-size: 10px;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 9px;
+  }
+
+  .botaoNotificacoes,
+  .avatarUsuario {
+    width: 32px;
+    height: 32px;
+  }
+
+  .navegacaoPrincipal {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .itemNavegacao {
+    font-size: 10px;
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+
+  .areaPrincipal {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+}
