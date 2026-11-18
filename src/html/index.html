@@ -507,16 +507,26 @@
                                     <input type="text" id="turma" name="turma" placeholder="Ex.: 1º Ano A" required>
                                 </div>
 
-                                <!-- Espaço escolar -->
-                                <div class="campoFormulario">
-                                    <label for="espacoEscolar">
-                                        Espaço ou recurso pedagógico
-                                    </label>
+                                <!-- Seleção obrigatória de um único espaço físico -->
+                                <div class="campoFormulario campoCompleto grupoSelecaoAgendamento">
+                                    <div class="tituloGrupoSelecao">
+                                        <label for="espacoEscolar">Espaço físico</label>
+                                        <small>Selecione apenas um ambiente para a atividade.</small>
+                                    </div>
 
                                     <select id="espacoEscolar" name="espacoEscolar" required>
-                                        <option value="">Selecione um espaço ou recurso</option>
+                                        <option value="">Selecione um espaço físico</option>
                                     </select>
                                 </div>
+
+                                <!-- Seleção opcional de vários recursos pedagógicos -->
+                                <fieldset class="campoFormulario campoCompleto grupoSelecaoAgendamento grupoRecursos">
+                                    <legend>Recursos pedagógicos</legend>
+                                    <p class="textoAjuda">Selecione um ou mais equipamentos. Esta etapa é opcional.</p>
+                                    <div id="listaRecursosAgendamento" class="listaCheckboxRecursos">
+                                        <p class="estadoRecursos">Carregando recursos pedagógicos...</p>
+                                    </div>
+                                </fieldset>
 
                                 <!-- Data -->
                                 <div class="campoFormulario">
