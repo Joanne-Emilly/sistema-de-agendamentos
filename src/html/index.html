@@ -38,15 +38,14 @@
                     <span class="contadorNotificacoes" id="contadorNotificacoes" hidden>0</span>
                 </button>
 
-                <div class="perfilUsuario">
-                    <div class="avatarUsuario" aria-hidden="true">
-                        ADM
-                    </div>
-                    <div class="informacoesUsuario">
-                        <span class="nomeUsuario">Administrador</span>
-                        <span class="tipoUsuario">Responsável pelo Agendamento</span>
-                    </div>
-                </div>
+                <button type="button" class="perfilUsuario" id="botaoPerfil"
+                    aria-label="Abrir perfil do usuário" aria-controls="perfil" title="Meu perfil">
+                    <span class="avatarUsuario" id="avatarUsuarioCabecalho" aria-hidden="true">...</span>
+                    <span class="informacoesUsuario">
+                        <span class="nomeUsuario" id="nomeUsuarioCabecalho">Carregando perfil...</span>
+                        <span class="tipoUsuario" id="tipoUsuarioCabecalho">Conta autenticada</span>
+                    </span>
+                </button>
             </div>
         </header>
 
@@ -962,6 +961,46 @@
 
                 </section>
                 <!-- FIM DA PÁGINA DE CONFIGURAÇÕES -->
+
+                <!-- PÁGINA DE PERFIL DO USUÁRIO -->
+                <section class="secaoPerfil" id="perfil" aria-labelledby="tituloPerfil">
+                    <div class="cabecalhoSecao">
+                        <div class="informacoesSecao">
+                            <h1 class="tituloSecao" id="tituloPerfil">Meu Perfil</h1>
+                            <p class="descricaoSecao">
+                                Consulte os dados da sua conta autenticada no sistema.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cartaoPerfil">
+                        <div class="cabecalhoCartaoPerfil">
+                            <div class="avatarPerfil" id="avatarPerfil" aria-hidden="true">...</div>
+                            <div>
+                                <h2 id="perfilNomeCabecalho">Carregando perfil...</h2>
+                                <p id="perfilPapelCabecalho">Consultando tipo de usuário</p>
+                            </div>
+                        </div>
+
+                        <div class="dadosPerfil">
+                            <div class="campoPerfil">
+                                <span class="rotuloPerfil">Nome completo</span>
+                                <p id="perfilNome">Carregando...</p>
+                            </div>
+                            <div class="campoPerfil">
+                                <span class="rotuloPerfil">E-mail institucional</span>
+                                <p id="perfilEmail">Carregando...</p>
+                            </div>
+                            <div class="campoPerfil">
+                                <span class="rotuloPerfil">Tipo de usuário</span>
+                                <p id="perfilPapel">Carregando...</p>
+                            </div>
+                        </div>
+
+                        <p class="mensagemPerfil" id="mensagemPerfil" role="status" aria-live="polite"></p>
+                    </div>
+                </section>
+                <!-- FIM DA PÁGINA DE PERFIL -->
             </main>
         </div>
 
