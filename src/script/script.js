@@ -1935,8 +1935,8 @@ function obterIniciais(nome) {
 function formatarPapelUsuario(papel) {
   const papelNormalizado = String(papel || "professor").trim().toLowerCase();
 
-  if (papelNormalizado === "administrador") {
-    return "Administrador";
+  if (papelNormalizado === "coordenador") {
+    return "Coordenador";
   }
 
   if (papelNormalizado === "professor") {
@@ -2546,7 +2546,7 @@ const chaveConfiguracoes = "configuracoesEscolares";
 // Valores iniciais do sistema.
 const configuracoesPadrao = {
   nomeEscola: "CETI Dr. Noronha Filho",
-  responsavel: "Administrador",
+  responsavel: "Coordenador",
 
   horarioAbertura: "07:30",
   horarioFechamento: "18:30",
