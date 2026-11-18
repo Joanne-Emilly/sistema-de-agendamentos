@@ -520,3 +520,13 @@ input {
 .botaoSecundarioLogin:hover {
     background: #f7fafc;
 }
+
+
+.botaoSecundarioLogin[hidden] {
+    display: none;
+}
+
+.botaoSecundarioLogin:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
