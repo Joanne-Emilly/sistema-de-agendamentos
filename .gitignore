@@ -1,17 +1,5 @@
 .vscode/
-/services/supabase.js
 /node_modules/
 /package-lock.json
 /package.json
 
-
-sistema-de-agendamentos/
-|__ services/
-    |── supabase.js
-└── src/
-    |── html/index.html
-    ├── html/login.html
-    ├── css/login.css
-    ├── css/style.css
-    |── script/script.js
-    |── script/login.js
