@@ -3770,3 +3770,61 @@ textarea {
     padding-left: 9px;
   }
 }
+
+
+/* ============================================
+   AJUSTE DE LEGIBILIDADE — MENU EM TELAS MENORES
+============================================ */
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .itemNavegacao {
+    font-size: 14px;
+    min-height: 50px;
+    gap: 9px;
+  }
+
+  .iconeNavegacao {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+@media (max-width: 600px) {
+  .menuLateral {
+    padding: 12px;
+  }
+
+  .navegacaoPrincipal {
+    gap: 8px;
+  }
+
+  .itemNavegacao {
+    min-height: 52px;
+    gap: 9px;
+    padding: 11px 10px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .iconeNavegacao {
+    width: 22px;
+    height: 22px;
+  }
+
+  .itemSair {
+    min-height: 48px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navegacaoPrincipal {
+    grid-template-columns: 1fr;
+  }
+
+  .itemNavegacao {
+    min-height: 50px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
