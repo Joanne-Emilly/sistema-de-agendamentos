@@ -1270,9 +1270,11 @@ function renderizarCatalogoRecursos(recursos) {
     const rodape = criarElemento("div", "rodapeCardEspaco");
     rodape.appendChild(criarElemento("span", "indicadorEspaco",
       recurso.ativo ? "Disponível para reserva" : "Indisponível no momento"));
-    const link = criarElemento("a", "botaoConsultarEspaco", "Consultar →");
-    link.href = "#inicio";
-    rodape.appendChild(link);
+    if (recurso.ativo) {
+      const link = criarElemento("a", "botaoConsultarEspaco", "Consultar →");
+      link.href = "#inicio";
+      rodape.appendChild(link);
+    }
     card.append(cabecalho, conteudo, rodape);
     if (!recurso.ativo) card.classList.add("recursoInativo");
     lista.appendChild(card);
