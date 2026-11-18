@@ -935,6 +935,11 @@ function encerrarEdicao(limparFormulario = true) {
 formularioAgendamento.addEventListener("submit", async (evento) => {
   evento.preventDefault();
 
+  if (!configuracoesSistemaCarregadas) {
+    exibirMensagemFormulario("Aguarde o carregamento das regras de agendamento e tente novamente.", "aviso");
+    return;
+  }
+
   // Nesta etapa, somente novos cadastros estão habilitados.
   // Edição e cancelamento serão integrados separadamente ao Supabase.
   if (agendamentoEmEdicao !== null) {
@@ -962,6 +967,16 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
   if (dataSelecionada < dataAtual) {
     exibirMensagemFormulario(
       "Não é permitido realizar agendamentos para datas passadas.",
+      "erro",
+    );
+    campoDataAgendamento.focus();
+    return;
+  }
+
+  const diaDaSemana = new Date(`${dataSelecionada}T12:00:00`).getDay();
+  if (!configuracoesSistema.permitirFinaisDeSemana && (diaDaSemana === 0 || diaDaSemana === 6)) {
+    exibirMensagemFormulario(
+      "Agendamentos aos sábados e domingos estão desabilitados nas configurações do sistema.",
       "erro",
     );
     campoDataAgendamento.focus();
@@ -2417,9 +2432,11 @@ async function salvarConfiguracoes(evento) {
     aplicarNomeEscola(configuracoes.nomeEscola);
     await carregarEspacosNosFiltros();
     exibirMensagemConfiguracoes("Configurações salvas e compartilhadas com todos os usuários.");
+    return true;
   } catch (erro) {
     console.error("Erro ao salvar configurações:", erro);
     exibirMensagemConfiguracoes("Não foi possível concluir todas as alterações. Recarregue a página e confira os dados antes de tentar novamente.", true);
+    return false;
   } finally {
     if (botaoSalvar) botaoSalvar.disabled = false;
   }
@@ -2440,8 +2457,8 @@ async function restaurarConfiguracoes() {
   configLaboratorioBiologia.checked = true;
   configBiblioteca.checked = true;
 
-  await salvarConfiguracoes(new Event("submit", { cancelable: true }));
-  if (!mensagemConfiguracoes.classList.contains("erroConfiguracoes")) {
+  const restaurado = await salvarConfiguracoes(new Event("submit", { cancelable: true }));
+  if (restaurado) {
     exibirMensagemConfiguracoes("Padrões restaurados. Os agendamentos existentes foram preservados.");
   }
 }
