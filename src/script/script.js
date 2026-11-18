@@ -983,6 +983,18 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
     return;
   }
 
+  if (
+    dadosFormulario.horarioInicio < configuracoesSistema.horarioAbertura ||
+    dadosFormulario.horarioFim > configuracoesSistema.horarioFechamento
+  ) {
+    exibirMensagemFormulario(
+      `O horário solicitado deve estar dentro do funcionamento da escola: ${configuracoesSistema.horarioAbertura} às ${configuracoesSistema.horarioFechamento}.`,
+      "erro",
+    );
+    campoHorarioInicio.focus();
+    return;
+  }
+
   const dadosFormulario = {
     professorResponsavel:
       formularioAgendamento.elements.professorResponsavel.value.trim(),
@@ -1055,7 +1067,7 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
       );
     } else {
       exibirMensagemFormulario(
-        erro?.message?.includes("perfil cadastrado")
+        erro?.message?.includes("perfil cadastrado") || erro?.code === "23514"
           ? erro.message
           : "Não foi possível salvar o agendamento. Verifique sua conexão e tente novamente.",
         "erro",
