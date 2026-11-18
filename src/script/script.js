@@ -749,6 +749,15 @@ function criarCardAgendamento(agendamento) {
 
   adicionarDetalhe(detalhes, "Turma", agendamento.turma);
 
+  adicionarDetalhe(
+    detalhes,
+    "Recursos pedagógicos",
+    Array.isArray(agendamento.recursosPedagogicos) &&
+      agendamento.recursosPedagogicos.length > 0
+      ? agendamento.recursosPedagogicos.join(", ")
+      : "Nenhum recurso reservado",
+  );
+
   adicionarDetalhe(detalhes, "Data", formatarData(agendamento.dataAgendamento));
 
   adicionarDetalhe(
@@ -1565,6 +1574,13 @@ function criarCartaoAgendaDiaria(agendamento) {
       agendamento.professorResponsavel,
     ),
     criarDetalheAgenda("Turma", agendamento.turma),
+    criarDetalheAgenda(
+      "Recursos pedagógicos",
+      Array.isArray(agendamento.recursosPedagogicos) &&
+        agendamento.recursosPedagogicos.length > 0
+        ? agendamento.recursosPedagogicos.join(", ")
+        : "Nenhum recurso reservado",
+    ),
     criarDetalheAgenda(
       "Finalidade",
       agendamento.finalidade,
