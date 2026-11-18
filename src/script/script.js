@@ -12,6 +12,7 @@ const listaAgendamentos = document.querySelector("#listaAgendamentos");
 const estadoVazio = document.querySelector("#estadoVazio");
 const contadorAgendamentos = document.querySelector("#contadorAgendamentos");
 const chaveArmazenamento = "agendamentosEscolares";
+let espacosSistema = [];
 const secaoAgendamento = document.querySelector("#novoAgendamento");
 const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
 const botaoLimparFormulario = document.querySelector("#botaoLimparFormulario");
@@ -1253,10 +1254,55 @@ async function carregarAgendamentosDoBanco() {
   }
 }
 
+function renderizarCatalogoRecursos(recursos) {
+  const lista = document.querySelector(".listaEspacos");
+  if (!lista) return;
+  lista.replaceChildren();
+  recursos.forEach((recurso) => {
+    const card = criarElemento("article", "cardEspaco");
+    const cabecalho = criarElemento("div", "cabecalhoCardEspaco");
+    cabecalho.appendChild(criarElemento("span", "etiquetaEspaco",
+      recurso.tipo === "recurso" ? "Recurso pedagógico" : "Espaço escolar"));
+    const conteudo = criarElemento("div", "conteudoCardEspaco");
+    conteudo.appendChild(criarElemento("h3", "nomeEspaco", recurso.nome));
+    conteudo.appendChild(criarElemento("p", "descricaoEspaco",
+      recurso.descricao || (recurso.tipo === "recurso" ? "Recurso pedagógico reservável." : "Espaço escolar reservável.")));
+    const rodape = criarElemento("div", "rodapeCardEspaco");
+    rodape.appendChild(criarElemento("span", "indicadorEspaco",
+      recurso.ativo ? "Disponível para reserva" : "Indisponível no momento"));
+    const link = criarElemento("a", "botaoConsultarEspaco", "Consultar →");
+    link.href = "#inicio";
+    rodape.appendChild(link);
+    card.append(cabecalho, conteudo, rodape);
+    if (!recurso.ativo) card.classList.add("recursoInativo");
+    lista.appendChild(card);
+  });
+}
+
+function renderizarControlesEspacos(recursos) {
+  const lista = document.querySelector("#listaEspacosConfiguracoes");
+  if (!lista) return;
+  lista.replaceChildren();
+  recursos.forEach((recurso) => {
+    const label = document.createElement("label");
+    label.className = "opcaoConfiguracao";
+    const texto = document.createElement("span");
+    texto.appendChild(criarElemento("strong", "", recurso.nome));
+    texto.appendChild(criarElemento("small", "", recurso.tipo === "recurso" ? "Recurso pedagógico reservável." : "Espaço escolar reservável."));
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.dataset.espacoNome = recurso.nome;
+    checkbox.checked = recurso.ativo;
+    label.append(texto, checkbox);
+    lista.appendChild(label);
+  });
+}
+
 async function carregarEspacosNosFiltros() {
   const seletores = [
     formularioAgendamento?.elements.espacoEscolar,
     espacoAgendaDiaria,
+    relatorioEspaco,
   ].filter(Boolean);
 
   seletores.forEach((select) => {
@@ -1269,6 +1315,9 @@ async function carregarEspacosNosFiltros() {
     }
 
     const espacos = await window.servicoAgendamentosSupabase.listarEspacos();
+    espacosSistema = await window.servicoAgendamentosSupabase.listarTodosEspacos();
+    renderizarCatalogoRecursos(espacosSistema);
+    renderizarControlesEspacos(espacosSistema);
 
     preencherSelectComEspacos(
       formularioAgendamento?.elements.espacoEscolar,
@@ -1279,7 +1328,14 @@ async function carregarEspacosNosFiltros() {
     preencherSelectComEspacos(
       espacoAgendaDiaria,
       espacos,
-      "Todos os espaços",
+      "Todos os espaços e recursos",
+      true,
+    );
+
+    preencherSelectComEspacos(
+      relatorioEspaco,
+      espacosSistema,
+      "Todos os espaços e recursos",
       true,
     );
 
@@ -2398,10 +2454,7 @@ function preencherFormularioConfiguracoes(configuracoes, espacos) {
   configHorarioFechamento.value = String(configuracoes.horario_fechamento || configuracoes.horarioFechamento || "18:30").slice(0, 5);
   configFinaisDeSemana.checked = Boolean(configuracoes.finais_de_semana ?? configuracoes.permitirFinaisDeSemana);
 
-  const status = Object.fromEntries((espacos || []).map((espaco) => [espaco.nome, espaco.ativo]));
-  configLaboratorioInformatica.checked = status["Laboratório de Informática"] ?? false;
-  configLaboratorioBiologia.checked = status["Laboratório de Biologia"] ?? false;
-  configBiblioteca.checked = status["Biblioteca"] ?? false;
+  renderizarControlesEspacos(espacos || []);
 
   configuracoesSistema = {
     nomeEscola: configNomeEscola.value,
@@ -2443,11 +2496,6 @@ async function salvarConfiguracoes(evento) {
     return;
   }
 
-  if (!(configLaboratorioInformatica.checked || configLaboratorioBiologia.checked || configBiblioteca.checked)) {
-    exibirMensagemConfiguracoes("Ative pelo menos um espaço escolar.", true);
-    return;
-  }
-
   const configuracoes = {
     nomeEscola: configNomeEscola.value.trim(),
     responsavel: configResponsavel.value.trim(),
@@ -2467,11 +2515,11 @@ async function salvarConfiguracoes(evento) {
   try {
     const servico = window.servicoAgendamentosSupabase;
     await servico.salvarConfiguracoesSistema(configuracoes);
-    await servico.atualizarStatusEspacos({
-      "Laboratório de Informática": configLaboratorioInformatica.checked,
-      "Laboratório de Biologia": configLaboratorioBiologia.checked,
-      "Biblioteca": configBiblioteca.checked,
-    });
+    const statusRecursos = Object.fromEntries(
+      Array.from(document.querySelectorAll("#listaEspacosConfiguracoes input[data-espaco-nome]"))
+        .map((checkbox) => [checkbox.dataset.espacoNome, checkbox.checked]),
+    );
+    await servico.atualizarStatusEspacos(statusRecursos);
 
     configuracoesSistema = configuracoes;
     configuracoesSistemaCarregadas = true;
@@ -2499,9 +2547,9 @@ async function restaurarConfiguracoes() {
   configHorarioAbertura.value = "07:30";
   configHorarioFechamento.value = "18:30";
   configFinaisDeSemana.checked = false;
-  configLaboratorioInformatica.checked = true;
-  configLaboratorioBiologia.checked = true;
-  configBiblioteca.checked = true;
+  document.querySelectorAll("#listaEspacosConfiguracoes input[data-espaco-nome]").forEach((checkbox) => {
+    checkbox.checked = true;
+  });
 
   const restaurado = await salvarConfiguracoes(new Event("submit", { cancelable: true }));
   if (restaurado) {
