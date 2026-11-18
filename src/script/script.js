@@ -983,18 +983,6 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
     return;
   }
 
-  if (
-    dadosFormulario.horarioInicio < configuracoesSistema.horarioAbertura ||
-    dadosFormulario.horarioFim > configuracoesSistema.horarioFechamento
-  ) {
-    exibirMensagemFormulario(
-      `O horário solicitado deve estar dentro do funcionamento da escola: ${configuracoesSistema.horarioAbertura} às ${configuracoesSistema.horarioFechamento}.`,
-      "erro",
-    );
-    campoHorarioInicio.focus();
-    return;
-  }
-
   const dadosFormulario = {
     professorResponsavel:
       formularioAgendamento.elements.professorResponsavel.value.trim(),
@@ -1010,6 +998,18 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
     exibirMensagemFormulario("Preencha todos os campos obrigatórios.", "erro");
     return;
   }
+  if (
+    dadosFormulario.horarioInicio < configuracoesSistema.horarioAbertura ||
+    dadosFormulario.horarioFim > configuracoesSistema.horarioFechamento
+  ) {
+    exibirMensagemFormulario(
+      `O horário solicitado deve estar dentro do funcionamento da escola: ${configuracoesSistema.horarioAbertura} às ${configuracoesSistema.horarioFechamento}.`,
+      "erro",
+    );
+    campoHorarioInicio.focus();
+    return;
+  }
+
 
   if (existeConflito(dadosFormulario, obterAgendamentos())) {
     adicionarNotificacao(
