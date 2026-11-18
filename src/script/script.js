@@ -1340,11 +1340,6 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
     const nome = criarElementoAgenda("span", "nomeOpcaoRecurso", recurso.nome);
     label.append(checkbox, nome);
 
-    if (!recurso.ativo) {
-      label.classList.add("recursoAgendamentoInativo");
-      label.appendChild(criarElementoAgenda("small", "avisoRecursoInativo", "Indisponível"));
-    }
-
     fragmento.appendChild(label);
   });
 
