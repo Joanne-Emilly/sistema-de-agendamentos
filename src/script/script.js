@@ -34,21 +34,7 @@ let agendamentoEmEdicao = null;
 // Os agendamentos são mantidos em memória após a consulta ao Supabase.
 let agendamentosEmMemoria = [];
 let modoLeituraAgendamentos = true;
-
-// ========================================
-// ELEMENTOS DA CONSULTA DE DISPONIBILIDADE
-// ========================================
-
-const formularioConsultaDisponibilidade = document.querySelector(
-  "#formularioConsultaDisponibilidade",
-);
-
-const filtroEspaco = document.querySelector("#filtroEspaco");
-const filtroData = document.querySelector("#filtroData");
-
-const resultadoDisponibilidade = document.querySelector(
-  "#resultadoDisponibilidade",
-);
+let usuarioAutenticadoId = null;
 
 // ========================================
 // ELEMENTOS DA AGENDA DIÁRIA
@@ -818,7 +804,12 @@ function criarCardAgendamento(agendamento) {
 }
 
 function renderizarAgendamentos() {
-  const agendamentos = obterAgendamentos();
+  const agendamentos = obterAgendamentos().filter((agendamento) => {
+    return (
+      usuarioAutenticadoId &&
+      String(agendamento.usuarioId) === String(usuarioAutenticadoId)
+    );
+  });
 
   listaAgendamentos.replaceChildren();
 
@@ -1027,7 +1018,6 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
 
     renderizarAgendamentos();
     atualizarRelatorios();
-    consultarDisponibilidadeAtual();
     renderizarAgendaDiaria();
 
     exibirMensagemFormulario(
@@ -1122,8 +1112,7 @@ listaAgendamentos.addEventListener("click", (evento) => {
         `A reserva do espaço ${agendamento.espacoEscolar}, em ${formatarData(agendamento.dataAgendamento)}, foi cancelada.`,
         "aviso",
       );
-      consultarDisponibilidadeAtual();
-      renderizarAgendaDiaria();
+        renderizarAgendaDiaria();
     }
   }
 });
@@ -1217,7 +1206,6 @@ async function carregarAgendamentosDoBanco() {
     renderizarAgendamentos();
     atualizarRelatorios();
     renderizarAgendaDiaria();
-    consultarDisponibilidadeAtual();
   } catch (erro) {
     console.error("Não foi possível carregar os agendamentos do Supabase:", erro);
 
@@ -1235,7 +1223,6 @@ async function carregarAgendamentosDoBanco() {
 async function carregarEspacosNosFiltros() {
   const seletores = [
     formularioAgendamento?.elements.espacoEscolar,
-    filtroEspaco,
     espacoAgendaDiaria,
   ].filter(Boolean);
 
@@ -1252,12 +1239,6 @@ async function carregarEspacosNosFiltros() {
 
     preencherSelectComEspacos(
       formularioAgendamento?.elements.espacoEscolar,
-      espacos,
-      "Selecione um espaço",
-    );
-
-    preencherSelectComEspacos(
-      filtroEspaco,
       espacos,
       "Selecione um espaço",
     );
@@ -1296,239 +1277,6 @@ async function carregarEspacosNosFiltros() {
 // ========================================
 // CONSULTA DE DISPONIBILIDADE
 // ========================================
-
-function inicializarConsultaDisponibilidade() {
-  filtroData.value = obterDataLocalAtual();
-
-  exibirEstadoInicialConsulta();
-}
-
-function formatarDataConsulta(data) {
-  const [ano, mes, dia] = data.split("-");
-
-  return `${dia}/${mes}/${ano}`;
-}
-
-function exibirEstadoInicialConsulta() {
-  resultadoDisponibilidade.replaceChildren();
-
-  const estado = criarElemento("div", "estadoConsultaInicial");
-
-  estado.appendChild(
-    criarElemento("h3", "", "Consulte os horários disponíveis"),
-  );
-
-  estado.appendChild(
-    criarElemento(
-      "p",
-      "",
-      "Escolha o espaço e a data para visualizar os agendamentos registrados.",
-    ),
-  );
-
-  resultadoDisponibilidade.appendChild(estado);
-}
-
-function exibirConsultaSemReservas(espaco, data) {
-  resultadoDisponibilidade.replaceChildren();
-
-  const mensagem = criarElemento("div", "mensagemSemReservas");
-
-  mensagem.appendChild(
-    criarElemento("h3", "", "Nenhum agendamento encontrado"),
-  );
-
-  mensagem.appendChild(
-    criarElemento(
-      "p",
-      "",
-      `Não foram encontradas reservas ativas para ${espaco} em ${formatarDataConsulta(data)}.`,
-    ),
-  );
-
-  resultadoDisponibilidade.appendChild(mensagem);
-
-  resultadoDisponibilidade.appendChild(
-    criarElemento(
-      "p",
-      "avisoDisponibilidade",
-      "Esta consulta considera apenas os dados armazenados neste navegador.",
-    ),
-  );
-
-  adicionarBotaoUsarEspaco(espaco, data);
-}
-
-function adicionarBotaoUsarEspaco(espaco, data) {
-  const acoes = criarElemento("div", "acoesResultadoDisponibilidade");
-
-  const botao = criarElemento(
-    "button",
-    "botaoUsarEspaco",
-    "Solicitar agendamento neste espaço",
-  );
-
-  botao.type = "button";
-
-  botao.addEventListener("click", () => {
-    mostrarPagina("novoAgendamento");
-
-    formularioAgendamento.elements.espacoEscolar.value = espaco;
-
-    campoDataAgendamento.value = data;
-
-    secaoAgendamento.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    formularioAgendamento.elements.professorResponsavel.focus();
-  });
-
-  acoes.appendChild(botao);
-
-  resultadoDisponibilidade.appendChild(acoes);
-}
-
-function consultarDisponibilidade(espaco, data) {
-  resultadoDisponibilidade.replaceChildren();
-
-  if (!espaco || !data) {
-    exibirEstadoInicialConsulta();
-
-    return;
-  }
-
-  const agendamentos = obterAgendamentos();
-
-  const reservasEncontradas = agendamentos
-    .filter((agendamento) => {
-      return (
-        agendamento.espacoEscolar === espaco &&
-        agendamento.dataAgendamento === data &&
-        String(agendamento.status).toLowerCase() !== "cancelado"
-      );
-    })
-    .sort((a, b) => {
-      return a.horarioInicio.localeCompare(b.horarioInicio);
-    });
-
-  if (reservasEncontradas.length === 0) {
-    exibirConsultaSemReservas(espaco, data);
-
-    return;
-  }
-
-  const cabecalho = criarElemento("div", "cabecalhoResultadoDisponibilidade");
-
-  const informacoes = criarElemento("div");
-
-  informacoes.appendChild(
-    criarElemento("h3", "tituloResultadoDisponibilidade", espaco),
-  );
-
-  informacoes.appendChild(
-    criarElemento(
-      "p",
-      "subtituloResultadoDisponibilidade",
-      `Agendamentos registrados para ${formatarDataConsulta(data)}`,
-    ),
-  );
-
-  const contador = criarElemento(
-    "span",
-    "contadorResultadoDisponibilidade",
-    reservasEncontradas.length === 1
-      ? "1 agendamento"
-      : `${reservasEncontradas.length} agendamentos`,
-  );
-
-  cabecalho.append(informacoes, contador);
-
-  resultadoDisponibilidade.appendChild(cabecalho);
-
-  const lista = criarElemento("div", "listaHorariosOcupados");
-
-  reservasEncontradas.forEach((reserva) => {
-    const item = criarElemento("article", "itemHorarioOcupado");
-
-    const informacoesHorario = criarElemento("div", "informacoesHorario");
-
-    informacoesHorario.appendChild(
-      criarElemento(
-        "span",
-        "horarioReserva",
-        `${reserva.horarioInicio} às ${reserva.horarioFim}`,
-      ),
-    );
-
-    informacoesHorario.appendChild(
-      criarElemento(
-        "span",
-        "responsavelReserva",
-        `Professor(a): ${reserva.professorResponsavel}`,
-      ),
-    );
-
-    informacoesHorario.appendChild(
-      criarElemento("span", "responsavelReserva", `Turma: ${reserva.turma}`),
-    );
-
-    const status = criarElemento(
-      "span",
-      "statusHorario confirmado",
-      "Confirmado",
-    );
-
-    item.append(informacoesHorario, status);
-
-    lista.appendChild(item);
-  });
-
-  resultadoDisponibilidade.appendChild(lista);
-
-  resultadoDisponibilidade.appendChild(
-    criarElemento(
-      "p",
-      "avisoDisponibilidade",
-      "Os horários exibidos correspondem aos agendamentos confirmados registrados no sistema.",
-    ),
-  );
-
-  adicionarBotaoUsarEspaco(espaco, data);
-}
-
-function consultarDisponibilidadeAtual() {
-  if (
-    formularioConsultaDisponibilidade &&
-    filtroEspaco.value &&
-    filtroData.value
-  ) {
-    consultarDisponibilidade(filtroEspaco.value, filtroData.value);
-  }
-}
-
-formularioConsultaDisponibilidade.addEventListener("submit", (evento) => {
-  evento.preventDefault();
-
-  if (!formularioConsultaDisponibilidade.reportValidity()) {
-    return;
-  }
-
-  consultarDisponibilidade(filtroEspaco.value, filtroData.value);
-});
-
-filtroEspaco.addEventListener("change", () => {
-  if (filtroEspaco.value && filtroData.value) {
-    consultarDisponibilidade(filtroEspaco.value, filtroData.value);
-  }
-});
-
-filtroData.addEventListener("change", () => {
-  if (filtroEspaco.value && filtroData.value) {
-    consultarDisponibilidade(filtroEspaco.value, filtroData.value);
-  }
-});
 
 // ========================================
 // AGENDA DIÁRIA
@@ -1978,6 +1726,8 @@ async function carregarPerfilUsuario() {
       throw erroPerfil;
     }
 
+    usuarioAutenticadoId = usuario.id;
+
     const nome = String(dadosPerfil.nome || "").trim() || "Usuário";
     const email = dadosPerfil.email || usuario.email || "E-mail não informado";
     const papel = formatarPapelUsuario(dadosPerfil.papel);
@@ -1995,6 +1745,7 @@ async function carregarPerfilUsuario() {
     perfilEmail.textContent = email;
     perfilPapel.textContent = papel;
     mensagemPerfil.textContent = "";
+    renderizarAgendamentos();
   } catch (erro) {
     console.error("Não foi possível carregar o perfil do usuário:", erro);
 
@@ -2009,6 +1760,8 @@ async function carregarPerfilUsuario() {
     perfilNome.textContent = "Não foi possível carregar";
     perfilEmail.textContent = "Não foi possível carregar";
     perfilPapel.textContent = "Não foi possível carregar";
+    usuarioAutenticadoId = null;
+    renderizarAgendamentos();
     mensagemPerfil.textContent =
       "Não foi possível consultar seus dados. Atualize a página ou solicite suporte à administração.";
   }
@@ -2790,8 +2543,6 @@ atualizarRelatorios();
 definirDataMinima();
 
 renderizarAgendamentos();
-
-inicializarConsultaDisponibilidade();
 
 inicializarAgendaDiaria();
 
