@@ -2058,7 +2058,7 @@ function filtrarAgendamentosRelatorios() {
       const correspondeDataFinal = !dataFinal || data <= dataFinal;
 
       const correspondeEspaco =
-        !espacoSelecionado || espaco === espacoSelecionado;
+        !espacoSelecionado || espacoSelecionado === "todos" || espaco === espacoSelecionado;
 
       const correspondeProfessor =
         !professorDigitado || professor.includes(professorDigitado);
