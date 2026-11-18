@@ -51,7 +51,14 @@
         </header>
 
         <div class="estruturaPrincipal">
-            <aside class="menuLateral">
+            <button type="button" class="botaoMenuMobile" id="botaoMenuMobile"
+                aria-controls="menuLateral" aria-expanded="false" aria-label="Abrir menu de navegação">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span>Menu</span>
+            </button>
+            <aside class="menuLateral menuFechado" id="menuLateral">
                 <nav class="navegacaoPrincipal">
                     <a href="#inicio" data-pagina="inicio" class="itemNavegacao ativo" aria-current="page">
                         <svg class="iconeNavegacao" viewBox="0 0 24 24" fill="none" stroke="currentColor"
