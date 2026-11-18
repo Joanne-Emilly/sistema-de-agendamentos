@@ -1614,6 +1614,30 @@ espacoAgendaDiaria.addEventListener("change", () => {
 
 const linksNavegacao = document.querySelectorAll(".menuLateral a[data-pagina]");
 
+// Menu recolhível em celulares e tablets.
+const menuLateral = document.getElementById("menuLateral");
+const botaoMenuMobile = document.getElementById("botaoMenuMobile");
+
+function fecharMenuMobile() {
+  if (!menuLateral || !botaoMenuMobile) return;
+  menuLateral.classList.add("menuFechado");
+  botaoMenuMobile.setAttribute("aria-expanded", "false");
+  botaoMenuMobile.setAttribute("aria-label", "Abrir menu de navegação");
+}
+
+if (menuLateral && botaoMenuMobile) {
+  botaoMenuMobile.addEventListener("click", () => {
+    const menuEstaAberto = !menuLateral.classList.contains("menuFechado");
+    menuLateral.classList.toggle("menuFechado", menuEstaAberto);
+    botaoMenuMobile.setAttribute("aria-expanded", String(!menuEstaAberto));
+    botaoMenuMobile.setAttribute(
+      "aria-label",
+      menuEstaAberto ? "Abrir menu de navegação" : "Fechar menu de navegação",
+    );
+  });
+}
+
+
 const secoesPrincipais = document.querySelectorAll(".areaPrincipal > section");
 
 function mostrarPagina(idPagina) {
@@ -1675,6 +1699,10 @@ linksNavegacao.forEach((link) => {
     evento.preventDefault();
 
     mostrarPagina(link.dataset.pagina);
+
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      fecharMenuMobile();
+    }
   });
 });
 
