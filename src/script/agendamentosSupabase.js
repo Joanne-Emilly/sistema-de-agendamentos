@@ -125,7 +125,7 @@
     // Confirma que o perfil do usuário autenticado já está cadastrado.
     const { data: perfil, error: erroPerfil } = await cliente
       .from("perfis")
-      .select("id")
+      .select("id, nome")
       .eq("id", usuario.id)
       .maybeSingle();
 
@@ -142,7 +142,7 @@
     const registro = {
       usuario_id: usuario.id,
       espaco_id: espaco.id,
-      professor_responsavel: dadosFormulario.professorResponsavel,
+      professor_responsavel: String(perfil.nome || "").trim(),
       turma: dadosFormulario.turma,
       data_agendamento: dadosFormulario.dataAgendamento,
       horario_inicio: dadosFormulario.horarioInicio,
