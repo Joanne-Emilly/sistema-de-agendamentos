@@ -3885,3 +3885,105 @@ textarea {
     display: flex;
   }
 }
+
+
+/* ============================================
+   SEPARAÇÃO: ESPAÇO FÍSICO E RECURSOS PEDAGÓGICOS
+============================================ */
+
+.grupoSelecaoAgendamento {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--corBorda);
+  border-radius: 10px;
+  background: var(--corFundoCard);
+}
+
+.tituloGrupoSelecao {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 9px;
+}
+
+.tituloGrupoSelecao label,
+.grupoRecursos legend {
+  color: var(--corTextoPrincipal);
+  font-weight: 700;
+}
+
+.tituloGrupoSelecao small,
+.grupoRecursos > .textoAjuda {
+  color: var(--corTextoSecundario);
+  font-size: 13px;
+}
+
+.grupoRecursos {
+  margin: 0;
+}
+
+.grupoRecursos legend {
+  padding: 0 5px;
+}
+
+.listaCheckboxRecursos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.opcaoRecursoAgendamento {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--corBorda);
+  border-radius: 8px;
+  background: var(--corFundo);
+  cursor: pointer;
+}
+
+.opcaoRecursoAgendamento input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--corPrimaria);
+}
+
+.nomeOpcaoRecurso {
+  min-width: 0;
+  color: var(--corTextoPrincipal);
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.recursoAgendamentoInativo {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.avisoRecursoInativo {
+  margin-left: auto;
+  color: var(--corTextoSecundario);
+  font-size: 11px;
+}
+
+.estadoRecursos {
+  grid-column: 1 / -1;
+  color: var(--corTextoSecundario);
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .listaCheckboxRecursos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grupoSelecaoAgendamento {
+    padding: 13px;
+  }
+}
