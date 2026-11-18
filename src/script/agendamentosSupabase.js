@@ -24,6 +24,7 @@
       professorResponsavel: registro.professor_responsavel,
       turma: registro.turma,
       espacoEscolar: registro.espacos?.nome || "",
+      recursosPedagogicos: (registro.agendamento_recursos || []).map((item) => item.recurso?.nome).filter(Boolean),
       dataAgendamento: registro.data_agendamento,
       horarioInicio: String(registro.horario_inicio || "").slice(0, 5),
       horarioFim: String(registro.horario_fim || "").slice(0, 5),
@@ -85,7 +86,8 @@
         status,
         criado_em,
         atualizado_em,
-        espacos ( nome )
+        espacos ( nome ),
+        agendamento_recursos ( recurso:espacos!agendamento_recursos_recurso_id_fkey ( nome ) )
       `)
       .order("data_agendamento", { ascending: true })
       .order("horario_inicio", { ascending: true });
@@ -115,45 +117,34 @@
 
   async function salvarNovoAgendamento(dadosFormulario) {
     const cliente = obterClienteSupabase();
-    const usuario = await obterUsuarioAutenticado(cliente);
     const espaco = await obterEspacoPorNome(
       cliente,
       dadosFormulario.espacoEscolar,
     );
 
-    // A tabela agendamentos possui chave estrangeira para public.perfis.
-    // Confirma que o perfil do usuário autenticado já está cadastrado.
-    const { data: perfil, error: erroPerfil } = await cliente
-      .from("perfis")
-      .select("id, nome")
-      .eq("id", usuario.id)
-      .maybeSingle();
+    const recursosPedagogicos = Array.isArray(dadosFormulario.recursosPedagogicos)
+      ? dadosFormulario.recursosPedagogicos
+      : [];
 
-    if (erroPerfil) {
-      throw erroPerfil;
+    const { data: agendamentoId, error } = await cliente.rpc(
+      "criar_agendamento_com_recursos",
+      {
+        p_espaco_id: espaco.id,
+        p_turma: dadosFormulario.turma,
+        p_data: dadosFormulario.dataAgendamento,
+        p_horario_inicio: dadosFormulario.horarioInicio,
+        p_horario_fim: dadosFormulario.horarioFim,
+        p_finalidade: dadosFormulario.finalidade,
+        p_recursos: recursosPedagogicos,
+      },
+    );
+
+    if (error) {
+      throw error;
     }
 
-    if (!perfil) {
-      throw new Error(
-        "Seu usuário ainda não possui um perfil cadastrado no sistema. Solicite à administração o cadastro do perfil.",
-      );
-    }
-
-    const registro = {
-      usuario_id: usuario.id,
-      espaco_id: espaco.id,
-      professor_responsavel: String(perfil.nome || "").trim(),
-      turma: dadosFormulario.turma,
-      data_agendamento: dadosFormulario.dataAgendamento,
-      horario_inicio: dadosFormulario.horarioInicio,
-      horario_fim: dadosFormulario.horarioFim,
-      finalidade: dadosFormulario.finalidade,
-      status: "confirmado",
-    };
-
-    const { data, error } = await cliente
+    const { data, error: erroConsulta } = await cliente
       .from("agendamentos")
-      .insert(registro)
       .select(`
         id,
         usuario_id,
@@ -167,12 +158,14 @@
         status,
         criado_em,
         atualizado_em,
-        espacos ( nome )
+        espacos ( nome ),
+        agendamento_recursos ( recurso:espacos!agendamento_recursos_recurso_id_fkey ( nome ) )
       `)
+      .eq("id", agendamentoId)
       .single();
 
-    if (error) {
-      throw error;
+    if (erroConsulta) {
+      throw erroConsulta;
     }
 
     return converterAgendamentoParaInterface(data);
