@@ -244,9 +244,80 @@
     return data;
   }
 
+
+  async function obterConfiguracoesSistema() {
+    const cliente = obterClienteSupabase();
+    const { data, error } = await cliente
+      .from("configuracoes")
+      .select("id, nome_escola, responsavel, horario_abertura, horario_fechamento, finais_de_semana")
+      .order("atualizado_em", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async function salvarConfiguracoesSistema(configuracoes) {
+    const cliente = obterClienteSupabase();
+    const { data, error } = await cliente
+      .from("configuracoes")
+      .update({
+        nome_escola: configuracoes.nomeEscola,
+        responsavel: configuracoes.responsavel,
+        horario_abertura: configuracoes.horarioAbertura,
+        horario_fechamento: configuracoes.horarioFechamento,
+        finais_de_semana: configuracoes.permitirFinaisDeSemana,
+        atualizado_em: new Date().toISOString(),
+      })
+      .eq("id", "00000000-0000-4000-8000-000000000001")
+      .select("id")
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async function listarTodosEspacos() {
+    const cliente = obterClienteSupabase();
+    const { data, error } = await cliente
+      .from("espacos")
+      .select("id, nome, ativo")
+      .order("nome", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function atualizarStatusEspacos(statusPorNome) {
+    const cliente = obterClienteSupabase();
+    const espacos = await listarTodosEspacos();
+
+    await Promise.all(
+      espacos.map((espaco) => {
+        const ativo = statusPorNome[espaco.nome];
+        if (typeof ativo !== "boolean" || ativo === espaco.ativo) {
+          return Promise.resolve();
+        }
+
+        return cliente
+          .from("espacos")
+          .update({ ativo })
+          .eq("id", espaco.id)
+          .then(({ error }) => {
+            if (error) throw error;
+          });
+      }),
+    );
+  }
+
   window.servicoAgendamentosSupabase = Object.freeze({
     listarAgendamentos,
     listarEspacos,
+    obterConfiguracoesSistema,
+    salvarConfiguracoesSistema,
+    listarTodosEspacos,
+    atualizarStatusEspacos,
     salvarNovoAgendamento,
     atualizarAgendamento,
     cancelarAgendamento,
