@@ -1327,7 +1327,7 @@ async function carregarEspacosNosFiltros() {
 
     preencherSelectComEspacos(
       espacoAgendaDiaria,
-      espacos,
+      espacosSistema,
       "Todos os espaços e recursos",
       true,
     );
@@ -2418,9 +2418,6 @@ const configNomeEscola = document.querySelector("#configNomeEscola");
 const configResponsavel = document.querySelector("#configResponsavel");
 const configHorarioAbertura = document.querySelector("#configHorarioAbertura");
 const configHorarioFechamento = document.querySelector("#configHorarioFechamento");
-const configLaboratorioInformatica = document.querySelector("#configLaboratorioInformatica");
-const configLaboratorioBiologia = document.querySelector("#configLaboratorioBiologia");
-const configBiblioteca = document.querySelector("#configBiblioteca");
 const configFinaisDeSemana = document.querySelector("#configFinaisDeSemana");
 const botaoRestaurarConfiguracoes = document.querySelector("#botaoRestaurarConfiguracoes");
 const mensagemConfiguracoes = document.querySelector("#mensagemConfiguracoes");
