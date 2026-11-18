@@ -446,3 +446,77 @@ input {
     }
 
 }
+
+
+/* ========================================
+   LINK PARA CADASTRO INSTITUCIONAL
+   ======================================== */
+
+.linkCadastro {
+    margin-top: 22px;
+    text-align: center;
+}
+
+.linkCadastro p {
+    margin-bottom: 7px;
+    color: var(--corTextoSecundario);
+    font-size: 12px;
+}
+
+.linkCadastro a {
+    color: var(--corPrimaria);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.linkCadastro a:hover {
+    color: var(--corPrimariaEscura);
+    text-decoration: underline;
+}
+
+.linkCadastro a:focus-visible {
+    outline: 2px solid var(--corPrimaria);
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+.formularioCadastro {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.formularioCadastro .grupoCampoLogin input {
+    height: 46px;
+}
+
+.avisoCadastro {
+    padding: 12px 14px;
+    border: 1px solid var(--corBorda);
+    border-radius: 8px;
+    background: #f7fafc;
+    color: var(--corTextoSecundario);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.botaoSecundarioLogin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 12px;
+    border: 1px solid var(--corBorda);
+    border-radius: 8px;
+    color: var(--corTextoPrincipal);
+    background: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.botaoSecundarioLogin:hover {
+    background: #f7fafc;
+}
