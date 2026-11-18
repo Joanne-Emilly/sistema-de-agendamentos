@@ -1334,7 +1334,8 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
     checkbox.name = "recursosPedagogicos";
     checkbox.value = recurso.id;
     checkbox.dataset.recursoNome = recurso.nome;
-    checkbox.disabled = !recurso.ativo;
+    // A consulta listarEspacos() já retorna somente recursos ativos.
+    checkbox.disabled = false;
 
     const nome = criarElementoAgenda("span", "nomeOpcaoRecurso", recurso.nome);
     label.append(checkbox, nome);
