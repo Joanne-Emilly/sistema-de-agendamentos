@@ -102,7 +102,7 @@
 
     const { data, error } = await cliente
       .from("espacos")
-      .select("id, nome")
+      .select("id, nome, tipo")
       .eq("ativo", true)
       .order("nome", { ascending: true });
 
@@ -282,7 +282,7 @@
     const cliente = obterClienteSupabase();
     const { data, error } = await cliente
       .from("espacos")
-      .select("id, nome, ativo")
+      .select("id, nome, ativo, tipo")
       .order("nome", { ascending: true });
 
     if (error) throw error;
