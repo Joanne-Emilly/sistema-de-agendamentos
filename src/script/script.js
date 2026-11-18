@@ -929,12 +929,14 @@ function encerrarEdicao(limparFormulario = true) {
 // CADASTRO E ATUALIZAÇÃO DE AGENDAMENTOS
 // ========================================
 
-formularioAgendamento.addEventListener("submit", (evento) => {
+formularioAgendamento.addEventListener("submit", async (evento) => {
   evento.preventDefault();
 
-  if (modoLeituraAgendamentos) {
+  // Nesta etapa, somente novos cadastros estão habilitados.
+  // Edição e cancelamento serão integrados separadamente ao Supabase.
+  if (agendamentoEmEdicao !== null) {
     exibirMensagemFormulario(
-      "A consulta dos agendamentos já está integrada. O cadastro será habilitado na próxima etapa.",
+      "A edição será habilitada após a integração dessa operação com o banco de dados.",
       "aviso",
     );
     return;
@@ -954,47 +956,32 @@ formularioAgendamento.addEventListener("submit", (evento) => {
   const dataSelecionada = campoDataAgendamento.value;
   const dataAtual = obterDataLocalAtual();
 
-  // Não permite datas passadas em novos agendamentos.
- if (dataSelecionada < dataAtual) {
-  exibirMensagemFormulario(
-    "Não é permitido realizar ou atualizar agendamentos para datas passadas.",
-    "erro",
-  );
-
-  campoDataAgendamento.focus();
-
-  return;
-}
+  if (dataSelecionada < dataAtual) {
+    exibirMensagemFormulario(
+      "Não é permitido realizar agendamentos para datas passadas.",
+      "erro",
+    );
+    campoDataAgendamento.focus();
+    return;
+  }
 
   const dadosFormulario = {
     professorResponsavel:
       formularioAgendamento.elements.professorResponsavel.value.trim(),
-
     turma: formularioAgendamento.elements.turma.value.trim(),
-
     espacoEscolar: formularioAgendamento.elements.espacoEscolar.value,
-
     dataAgendamento: campoDataAgendamento.value,
-
     horarioInicio: campoHorarioInicio.value,
-
     horarioFim: campoHorarioFim.value,
-
     finalidade: formularioAgendamento.elements.finalidade.value.trim(),
   };
 
-  const camposObrigatorios = Object.values(dadosFormulario);
-
-  if (camposObrigatorios.some((valor) => !valor)) {
+  if (Object.values(dadosFormulario).some((valor) => !valor)) {
     exibirMensagemFormulario("Preencha todos os campos obrigatórios.", "erro");
-
     return;
   }
 
-  const agendamentos = obterAgendamentos();
-
-  // Confere conflitos antes de confirmar o agendamento.
-  if (existeConflito(dadosFormulario, agendamentos, agendamentoEmEdicao)) {
+  if (existeConflito(dadosFormulario, obterAgendamentos())) {
     adicionarNotificacao(
       "Conflito de horário",
       `Não foi possível reservar ${dadosFormulario.espacoEscolar} em ${formatarData(dadosFormulario.dataAgendamento)}, das ${dadosFormulario.horarioInicio} às ${dadosFormulario.horarioFim}, pois já existe uma reserva nesse período.`,
@@ -1004,89 +991,64 @@ formularioAgendamento.addEventListener("submit", (evento) => {
       "Este espaço já possui um agendamento nesse período. Escolha outro horário ou outro espaço.",
       "erro",
     );
-
     return;
   }
 
-  // ========================================
-  // MODO DE EDIÇÃO
-  // ========================================
+  const botaoEnviar = formularioAgendamento.querySelector('[type="submit"]');
+  if (botaoEnviar) {
+    botaoEnviar.disabled = true;
+  }
 
-  if (agendamentoEmEdicao !== null) {
-    const indice = agendamentos.findIndex(
-      (item) => String(item.id) === agendamentoEmEdicao,
-    );
+  try {
+    if (!window.servicoAgendamentosSupabase) {
+      throw new Error("O serviço de agendamentos não foi carregado. Atualize a página.");
+    }
 
-    if (
-      indice === -1 ||
-      String(agendamentos[indice].status).toLowerCase() === "cancelado"
-    ) {
-      encerrarEdicao();
-
-      exibirMensagemFormulario(
-        "O agendamento não foi encontrado ou já foi cancelado.",
-        "erro",
+    const novoAgendamento =
+      await window.servicoAgendamentosSupabase.salvarNovoAgendamento(
+        dadosFormulario,
       );
 
-      return;
-    }
+    agendamentosEmMemoria.push(novoAgendamento);
 
-    const agendamentoOriginal = agendamentos[indice];
-
-    agendamentos[indice] = {
-      ...agendamentoOriginal,
-      ...dadosFormulario,
-      status: "confirmado",
-      atualizadoEm: new Date().toISOString(),
-    };
-
-    if (!salvarAgendamentos(agendamentos)) {
-      return;
-    }
-
-    encerrarEdicao();
+    formularioAgendamento.reset();
+    definirDataMinima();
 
     renderizarAgendamentos();
+    atualizarRelatorios();
     consultarDisponibilidadeAtual();
     renderizarAgendaDiaria();
 
     exibirMensagemFormulario(
-      "Agendamento atualizado e confirmado com sucesso!",
+      "Agendamento salvo com sucesso! A reserva já está disponível para os demais usuários.",
       "sucesso",
     );
+  } catch (erro) {
+    console.error("Não foi possível salvar o agendamento no Supabase:", erro);
 
-    return;
+    if (erro?.code === "23P01") {
+      adicionarNotificacao(
+        "Conflito de horário",
+        "Outra reserva ocupa esse espaço no período solicitado.",
+        "aviso",
+      );
+      exibirMensagemFormulario(
+        "Este espaço acabou de ser reservado por outra pessoa nesse período. Escolha outro horário ou outro espaço.",
+        "erro",
+      );
+    } else {
+      exibirMensagemFormulario(
+        erro?.message?.includes("perfil cadastrado")
+          ? erro.message
+          : "Não foi possível salvar o agendamento. Verifique sua conexão e tente novamente.",
+        "erro",
+      );
+    }
+  } finally {
+    if (botaoEnviar) {
+      botaoEnviar.disabled = false;
+    }
   }
-
-  // ========================================
-  // MODO DE NOVO CADASTRO
-  // ========================================
-
-  const novoAgendamento = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    ...dadosFormulario,
-    status: "confirmado",
-    criadoEm: new Date().toISOString(),
-  };
-
-  agendamentos.push(novoAgendamento);
-
-  if (!salvarAgendamentos(agendamentos)) {
-    return;
-  }
-
-  formularioAgendamento.reset();
-
-  definirDataMinima();
-
-  renderizarAgendamentos();
-  consultarDisponibilidadeAtual();
-  renderizarAgendaDiaria();
-
-  exibirMensagemFormulario(
-    "Agendamento confirmado com sucesso! Não foi identificado conflito de horário.",
-    "sucesso",
-  );
 });
 
 // ========================================
