@@ -3885,3 +3885,133 @@ textarea {
     display: flex;
   }
 }
+
+
+/* ============================================
+   CABEÇALHO MAIS LEGÍVEL — CELULARES E TABLETS
+============================================ */
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .nomeSistema {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .nomeUsuario {
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .tipoUsuario {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .avatarUsuario,
+  .botaoNotificacoes {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cabecalhoPrincipal {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .identidadeSistema {
+    flex: 1 1 100%;
+  }
+
+  .marcaSistema {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .simboloSistema {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    font-size: 16px;
+  }
+
+  .informacoesSistema {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nomeSistema {
+    font-size: 15px;
+    line-height: 1.3;
+    overflow-wrap: normal;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .acoesCabecalho {
+    flex: 1 1 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .perfilUsuario {
+    flex: 1;
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .nomeUsuario {
+    font-size: 15px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .tipoUsuario {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .avatarUsuario,
+  .botaoNotificacoes {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+  }
+
+  .botaoMenuMobile {
+    min-height: 50px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nomeSistema {
+    font-size: 14px;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 12px;
+  }
+
+  .nomeUsuario {
+    font-size: 14px;
+  }
+
+  .tipoUsuario {
+    font-size: 12px;
+  }
+}
