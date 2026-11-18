@@ -3313,7 +3313,7 @@ textarea:focus-visible {
   padding: 16px;
   border: 1px solid var(--corBorda);
   border-radius: var(--raioCard);
-  background-color: var(--corFundo);
+  background-color: var(--corFundoPrincipal);
 }
 
 .rotuloPerfil {
