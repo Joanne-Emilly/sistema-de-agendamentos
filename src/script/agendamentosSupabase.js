@@ -86,7 +86,7 @@
         status,
         criado_em,
         atualizado_em,
-        espacos ( nome ),
+        espacos!agendamentos_espaco_id_fkey ( nome ),
         agendamento_recursos ( recurso:espacos!agendamento_recursos_recurso_id_fkey ( nome ) )
       `)
       .order("data_agendamento", { ascending: true })
@@ -158,7 +158,7 @@
         status,
         criado_em,
         atualizado_em,
-        espacos ( nome ),
+        espacos!agendamentos_espaco_id_fkey ( nome ),
         agendamento_recursos ( recurso:espacos!agendamento_recursos_recurso_id_fkey ( nome ) )
       `)
       .eq("id", agendamentoId)
@@ -206,7 +206,7 @@
         status,
         criado_em,
         atualizado_em,
-        espacos ( nome )
+        espacos!agendamentos_espaco_id_fkey ( nome )
       `)
       .single();
 
