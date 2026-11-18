@@ -17,6 +17,17 @@ const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
 const botaoLimparFormulario = document.querySelector("#botaoLimparFormulario");
 const textoBotaoEnviar = document.querySelector("#textoBotaoEnviar");
 const botaoSair = document.querySelector(".itemSair");
+const botaoPerfil = document.querySelector("#botaoPerfil");
+const avatarUsuarioCabecalho = document.querySelector("#avatarUsuarioCabecalho");
+const nomeUsuarioCabecalho = document.querySelector("#nomeUsuarioCabecalho");
+const tipoUsuarioCabecalho = document.querySelector("#tipoUsuarioCabecalho");
+const avatarPerfil = document.querySelector("#avatarPerfil");
+const perfilNomeCabecalho = document.querySelector("#perfilNomeCabecalho");
+const perfilPapelCabecalho = document.querySelector("#perfilPapelCabecalho");
+const perfilNome = document.querySelector("#perfilNome");
+const perfilEmail = document.querySelector("#perfilEmail");
+const perfilPapel = document.querySelector("#perfilPapel");
+const mensagemPerfil = document.querySelector("#mensagemPerfil");
 
 let agendamentoEmEdicao = null;
 
@@ -1906,6 +1917,108 @@ function inicializarNavegacao() {
   mostrarPagina(paginaExiste ? paginaSolicitada : "inicio");
 }
 
+
+// ========================================
+// PERFIL DO USUÁRIO AUTENTICADO
+// ========================================
+
+function obterIniciais(nome) {
+  return String(nome || "U")
+    .trim()
+    .split(/\\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((parte) => parte.charAt(0).toLocaleUpperCase("pt-BR"))
+    .join("");
+}
+
+function formatarPapelUsuario(papel) {
+  const papelNormalizado = String(papel || "professor").trim().toLowerCase();
+
+  if (papelNormalizado === "administrador") {
+    return "Administrador";
+  }
+
+  if (papelNormalizado === "professor") {
+    return "Professor";
+  }
+
+  return papelNormalizado
+    ? papelNormalizado.charAt(0).toLocaleUpperCase("pt-BR") + papelNormalizado.slice(1)
+    : "Usuário";
+}
+
+async function carregarPerfilUsuario() {
+  mensagemPerfil.textContent = "Carregando os dados da sua conta...";
+  perfilNome.textContent = "Carregando...";
+  perfilEmail.textContent = "Carregando...";
+  perfilPapel.textContent = "Carregando...";
+
+  try {
+    const { data: dadosAutenticacao, error: erroAutenticacao } =
+      await clienteSupabase.auth.getUser();
+
+    if (erroAutenticacao) {
+      throw erroAutenticacao;
+    }
+
+    const usuario = dadosAutenticacao.user;
+
+    if (!usuario) {
+      throw new Error("Não foi possível identificar a conta autenticada. Entre novamente no sistema.");
+    }
+
+    const { data: dadosPerfil, error: erroPerfil } = await clienteSupabase
+      .from("perfis")
+      .select("nome, email, papel")
+      .eq("id", usuario.id)
+      .single();
+
+    if (erroPerfil) {
+      throw erroPerfil;
+    }
+
+    const nome = String(dadosPerfil.nome || "").trim() || "Usuário";
+    const email = dadosPerfil.email || usuario.email || "E-mail não informado";
+    const papel = formatarPapelUsuario(dadosPerfil.papel);
+    const iniciais = obterIniciais(nome);
+
+    nomeUsuarioCabecalho.textContent = nome;
+    tipoUsuarioCabecalho.textContent = papel;
+    avatarUsuarioCabecalho.textContent = iniciais;
+
+    perfilNomeCabecalho.textContent = nome;
+    perfilPapelCabecalho.textContent = papel;
+    avatarPerfil.textContent = iniciais;
+
+    perfilNome.textContent = nome;
+    perfilEmail.textContent = email;
+    perfilPapel.textContent = papel;
+    mensagemPerfil.textContent = "";
+  } catch (erro) {
+    console.error("Não foi possível carregar o perfil do usuário:", erro);
+
+    nomeUsuarioCabecalho.textContent = "Perfil indisponível";
+    tipoUsuarioCabecalho.textContent = "Conta autenticada";
+    avatarUsuarioCabecalho.textContent = "?";
+
+    perfilNomeCabecalho.textContent = "Perfil indisponível";
+    perfilPapelCabecalho.textContent = "";
+    avatarPerfil.textContent = "?";
+
+    perfilNome.textContent = "Não foi possível carregar";
+    perfilEmail.textContent = "Não foi possível carregar";
+    perfilPapel.textContent = "Não foi possível carregar";
+    mensagemPerfil.textContent =
+      "Não foi possível consultar seus dados. Atualize a página ou solicite suporte à administração.";
+  }
+}
+
+botaoPerfil.addEventListener("click", () => {
+  mostrarPagina("perfil");
+  carregarPerfilUsuario();
+});
+
 // ========================================
 // TAREFA 118 - RELATÓRIOS E EXPORTAÇÃO
 // ========================================
@@ -2667,6 +2780,7 @@ function salvarAgendamentos(agendamentos) {
 }
 
 // Inicialização do sistema
+carregarPerfilUsuario();
 carregarEspacosNosFiltros();
 
 preencherFormularioConfiguracoes();
