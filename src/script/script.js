@@ -12,6 +12,7 @@ const listaAgendamentos = document.querySelector("#listaAgendamentos");
 const estadoVazio = document.querySelector("#estadoVazio");
 const contadorAgendamentos = document.querySelector("#contadorAgendamentos");
 const chaveArmazenamento = "agendamentosEscolares";
+const listaRecursosAgendamento = document.querySelector("#listaRecursosAgendamento");
 let espacosSistema = [];
 const secaoAgendamento = document.querySelector("#novoAgendamento");
 const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
@@ -1300,6 +1301,41 @@ function renderizarControlesEspacos(recursos) {
   });
 }
 
+function renderizarOpcoesRecursosAgendamento(recursos) {
+  if (!listaRecursosAgendamento) return;
+
+  if (recursos.length === 0) {
+    listaRecursosAgendamento.replaceChildren(
+      criarElemento("p", "estadoRecursos", "Nenhum recurso pedagógico está disponível para reserva."),
+    );
+    return;
+  }
+
+  const fragmento = document.createDocumentFragment();
+
+  recursos.forEach((recurso) => {
+    const label = criarElemento("label", "opcaoRecursoAgendamento");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "recursosPedagogicos";
+    checkbox.value = recurso.nome;
+    checkbox.dataset.recursoId = recurso.id;
+    checkbox.disabled = !recurso.ativo;
+
+    const nome = criarElemento("span", "nomeOpcaoRecurso", recurso.nome);
+    label.append(checkbox, nome);
+
+    if (!recurso.ativo) {
+      label.classList.add("recursoAgendamentoInativo");
+      label.appendChild(criarElemento("small", "avisoRecursoInativo", "Indisponível"));
+    }
+
+    fragmento.appendChild(label);
+  });
+
+  listaRecursosAgendamento.replaceChildren(fragmento);
+}
+
 async function carregarEspacosNosFiltros() {
   const seletores = [
     formularioAgendamento?.elements.espacoEscolar,
@@ -1323,8 +1359,12 @@ async function carregarEspacosNosFiltros() {
 
     preencherSelectComEspacos(
       formularioAgendamento?.elements.espacoEscolar,
-      espacos,
-      "Selecione um espaço",
+      espacos.filter((item) => item.tipo === "espaco"),
+      "Selecione um espaço físico",
+    );
+
+    renderizarOpcoesRecursosAgendamento(
+      espacos.filter((item) => item.tipo === "recurso"),
     );
 
     preencherSelectComEspacos(
