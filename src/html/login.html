@@ -16,15 +16,17 @@
     <link rel="stylesheet" href="/src/css/login.css">
     <!-- Biblioteca Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <!-- Configuração da conexão Supabase -->
-    <script src="services/supabase.js" defer></script>
-    <!-- Funcionalidades da tela de login -->
-    <script src="src/script/login.js" defer></script>
+    <!-- Configuração da conexão -->
+    <script src="/services/supabase.js" defer></script>
+
+    <!-- Funcionalidades do login -->
+    <script src="/src/script/login.js" defer></script>
+
 </head>
 
 <body>
     <main class="paginaLogin">
-        
+
         <section class="containerLogin">
             <!-- Área de identificação -->
             <header class="cabecalhoLogin">
@@ -66,7 +68,7 @@
                 </div>
 
                 <!-- Formulário de autenticação -->
-                <form id="formularioLogin" class="formularioLogin">
+                <form id="formularioLogin" class="formularioLogin" method="post">
 
                     <!-- Mensagem de retorno -->
                     <div id="mensagemLogin" class="mensagemLogin" role="alert" aria-live="polite" hidden></div>

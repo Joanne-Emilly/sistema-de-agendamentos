@@ -16,6 +16,7 @@ const secaoAgendamento = document.querySelector("#novoAgendamento");
 const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
 const botaoLimparFormulario = document.querySelector("#botaoLimparFormulario");
 const textoBotaoEnviar = document.querySelector("#textoBotaoEnviar");
+const botaoSair = document.querySelector(".itemSair");
 
 let agendamentoEmEdicao = null;
 
@@ -156,16 +157,43 @@ async function verificarUsuarioLogado() {
 // ========================================
 // Função para sair do sistema e redirecionar para a página de login
 // ========================================
-async function sairDoSistema() {
-    const { error } = await supabase.auth.signOut();
 
-    if (error) {
-        console.error("Erro ao sair:", error.message);
-        return;
-    }
+/* ========================================
+   ENCERRAR SESSÃO - BOTÃO SAIR
+======================================== */
 
-    window.location.href = "login.html";
+
+if (botaoSair) {
+    botaoSair.addEventListener("click", async function (evento) {
+        evento.preventDefault();
+
+        // Evita cliques repetidos
+        botaoSair.style.pointerEvents = "none";
+        botaoSair.style.opacity = "0.6";
+
+        try {
+            const { error } = await clienteSupabase.auth.signOut();
+
+            if (error) {
+                throw error;
+            }
+
+            // Redireciona após encerrar a sessão
+            window.location.replace("/login.html");
+
+        } catch (erro) {
+            console.error("Erro ao encerrar sessão:", erro);
+
+            alert(
+                "Não foi possível sair do sistema. Tente novamente."
+            );
+
+            botaoSair.style.pointerEvents = "";
+            botaoSair.style.opacity = "";
+        }
+    });
 }
+
 // Recupera as notificações armazenadas no navegador.
 function obterListaNotificacoes() {
   try {

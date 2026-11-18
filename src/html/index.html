@@ -5,9 +5,15 @@
     <meta charset="UTF-8">
     <meta name="description" content="Sistema de Agendamento de Espaços Escolares da Escola Dr. Noronha Filho.">
     <link rel="stylesheet" href="/src/css/styles.css">
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" defer></script>
-    <script src="/src/script/script.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer>
+    </script>
+    <!-- Biblioteca para exportação de planilhas -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" defer>
+    </script>
+    <!-- Configuração e conexão com o Supabase -->
+    <script src="/services/supabase.js" defer></script>
+    <!-- Verificação de autenticação e carregamento da aplicação -->
+    <script src="/src/script/protegerAcesso.js" defer></script>
     <title>Sistema de Agendamento de Espaços Escolares</title>
 </head>
 
@@ -959,4 +965,5 @@
 
     </div>
 </body>
+
 </html>

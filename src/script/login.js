@@ -120,14 +120,15 @@ function obterMensagemErroLogin(erro) {
 // AUTENTICAÇÃO COM SUPABASE
 // ========================================
 
+
 async function entrarNoSistema() {
 
     ocultarMensagemLogin();
 
     // Verifica se a conexão está disponível
     if (
-        typeof supabase === "undefined" ||
-        !supabase.auth
+        typeof clienteSupabase === "undefined" ||
+        !clienteSupabase.auth
     ) {
         exibirMensagemLogin(
             "Não foi possível estabelecer a conexão com o serviço de autenticação."
@@ -173,18 +174,22 @@ async function entrarNoSistema() {
 
         definirEstadoCarregamento(true);
 
-        // Autenticação utilizando Supabase Auth
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: senha
-        });
+        // Autenticação com Supabase
+        const { data, error } =
+            await clienteSupabase.auth.signInWithPassword({
+                email: email,
+                password: senha
+            });
 
         if (error) {
             throw error;
         }
 
+        // Verifica se a sessão foi estabelecida
         if (!data.user || !data.session) {
-            throw new Error("Não foi possível estabelecer a sessão.");
+            throw new Error(
+                "Não foi possível estabelecer a sessão."
+            );
         }
 
         // Login realizado com sucesso
@@ -206,6 +211,8 @@ async function entrarNoSistema() {
     }
 
 }
+
+
 
 // ========================================
 // EVENTOS DO FORMULÁRIO
