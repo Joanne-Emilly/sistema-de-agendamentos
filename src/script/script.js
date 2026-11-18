@@ -990,14 +990,28 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
       formularioAgendamento.elements.professorResponsavel.value.trim(),
     turma: formularioAgendamento.elements.turma.value.trim(),
     espacoEscolar: formularioAgendamento.elements.espacoEscolar.value,
+    recursosPedagogicos: Array.from(
+      formularioAgendamento.querySelectorAll('input[name="recursosPedagogicos"]:checked'),
+      (checkbox) => checkbox.value,
+    ),
     dataAgendamento: campoDataAgendamento.value,
     horarioInicio: campoHorarioInicio.value,
     horarioFim: campoHorarioFim.value,
     finalidade: formularioAgendamento.elements.finalidade.value.trim(),
   };
 
-  if (Object.values(dadosFormulario).some((valor) => !valor)) {
-    exibirMensagemFormulario("Preencha todos os campos obrigatórios.", "erro");
+  const camposObrigatorios = [
+    dadosFormulario.professorResponsavel,
+    dadosFormulario.turma,
+    dadosFormulario.espacoEscolar,
+    dadosFormulario.dataAgendamento,
+    dadosFormulario.horarioInicio,
+    dadosFormulario.horarioFim,
+    dadosFormulario.finalidade,
+  ];
+
+  if (camposObrigatorios.some((valor) => !valor)) {
+    exibirMensagemFormulario("Preencha todos os campos obrigatórios. A seleção de recursos pedagógicos é opcional.", "erro");
     return;
   }
   if (
@@ -1306,7 +1320,7 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
 
   if (recursos.length === 0) {
     listaRecursosAgendamento.replaceChildren(
-      criarElemento("p", "estadoRecursos", "Nenhum recurso pedagógico está disponível para reserva."),
+      criarElementoAgenda("p", "estadoRecursos", "Nenhum recurso pedagógico está disponível para reserva."),
     );
     return;
   }
@@ -1314,20 +1328,20 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
   const fragmento = document.createDocumentFragment();
 
   recursos.forEach((recurso) => {
-    const label = criarElemento("label", "opcaoRecursoAgendamento");
+    const label = criarElementoAgenda("label", "opcaoRecursoAgendamento");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.name = "recursosPedagogicos";
-    checkbox.value = recurso.nome;
-    checkbox.dataset.recursoId = recurso.id;
+    checkbox.value = recurso.id;
+    checkbox.dataset.recursoNome = recurso.nome;
     checkbox.disabled = !recurso.ativo;
 
-    const nome = criarElemento("span", "nomeOpcaoRecurso", recurso.nome);
+    const nome = criarElementoAgenda("span", "nomeOpcaoRecurso", recurso.nome);
     label.append(checkbox, nome);
 
     if (!recurso.ativo) {
       label.classList.add("recursoAgendamentoInativo");
-      label.appendChild(criarElemento("small", "avisoRecursoInativo", "Indisponível"));
+      label.appendChild(criarElementoAgenda("small", "avisoRecursoInativo", "Indisponível"));
     }
 
     fragmento.appendChild(label);
