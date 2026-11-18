@@ -1925,7 +1925,7 @@ function inicializarNavegacao() {
 function obterIniciais(nome) {
   return String(nome || "U")
     .trim()
-    .split(/\\s+/)
+    .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((parte) => parte.charAt(0).toLocaleUpperCase("pt-BR"))
