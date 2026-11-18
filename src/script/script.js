@@ -1169,6 +1169,11 @@ formularioAgendamento.addEventListener("reset", () => {
   setTimeout(() => {
     campoHorarioFim.setCustomValidity("");
 
+    const nomeUsuario = String(perfilNome.textContent || "").trim();
+    if (nomeUsuario && nomeUsuario !== "Carregando..." && nomeUsuario !== "Não foi possível carregar") {
+      formularioAgendamento.elements.professorResponsavel.value = nomeUsuario;
+    }
+
     limparMensagemFormulario();
 
     definirDataMinima();
@@ -1781,6 +1786,7 @@ async function carregarPerfilUsuario() {
     }
 
     const nome = String(dadosPerfil.nome || "").trim() || "Usuário";
+    formularioAgendamento.elements.professorResponsavel.value = nome;
     const email = dadosPerfil.email || usuario.email || "E-mail não informado";
     const papel = formatarPapelUsuario(dadosPerfil.papel);
     const iniciais = obterIniciais(nome);
