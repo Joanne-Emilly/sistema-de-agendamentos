@@ -1198,7 +1198,7 @@ function preencherSelectComEspacos(select, espacos, textoInicial, incluirTodos =
   const opcoes = [];
 
   if (incluirTodos) {
-    opcoes.push(new Option("Todos os espaços", "todos"));
+    opcoes.push(new Option("Todos os espaços e recursos", "todos"));
   } else {
     opcoes.push(new Option(textoInicial, ""));
   }
@@ -1608,11 +1608,11 @@ function renderizarAgendaDiaria() {
     agendamentosDoDia.map((agendamento) => agendamento.espacoEscolar),
   );
 
-  totalEspacosOcupadosAgenda.textContent = `${espacosOcupados.size} de ${espacoSelecionado === "todos" ? 3 : 1}`;
+  totalEspacosOcupadosAgenda.textContent = `${espacosOcupados.size} de ${espacoSelecionado === "todos" ? espacosSistema.length : 1}`;
 
   tituloLinhaTempoAgenda.textContent =
     espacoSelecionado === "todos"
-      ? "Programação de todos os espaços"
+      ? "Programação de todos os espaços e recursos"
       : `Programação: ${espacoSelecionado}`;
 
   if (agendamentosDoDia.length === 0) {
