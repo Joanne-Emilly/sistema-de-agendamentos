@@ -663,6 +663,65 @@ function limparMensagemFormulario() {
   mensagemFormulario.hidden = true;
 }
 
+function mostrarPopupSucessoAgendamento() {
+  let popup = document.querySelector("#popupSucessoAgendamento");
+
+  if (!popup) {
+    popup = document.createElement("div");
+    popup.id = "popupSucessoAgendamento";
+    popup.className = "sobreposicaoPopupSucesso";
+
+    const cartao = document.createElement("section");
+    cartao.className = "cartaoPopupSucesso";
+    cartao.setAttribute("role", "dialog");
+    cartao.setAttribute("aria-modal", "true");
+    cartao.setAttribute("aria-labelledby", "tituloPopupSucesso");
+
+    const icone = document.createElement("span");
+    icone.className = "iconePopupSucesso";
+    icone.setAttribute("aria-hidden", "true");
+    icone.textContent = "✓";
+
+    const titulo = document.createElement("h2");
+    titulo.id = "tituloPopupSucesso";
+    titulo.textContent = "AGENDAMENTO REALIZADO COM SUCESSO";
+
+    const descricao = document.createElement("p");
+    descricao.textContent = "Sua reserva foi registrada e já está disponível na agenda.";
+
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "botaoPopupSucesso";
+    botao.textContent = "Entendi";
+    botao.addEventListener("click", fecharPopupSucessoAgendamento);
+
+    cartao.append(icone, titulo, descricao, botao);
+    popup.appendChild(cartao);
+    popup.addEventListener("click", (evento) => {
+      if (evento.target === popup) fecharPopupSucessoAgendamento();
+    });
+    document.body.appendChild(popup);
+  }
+
+  popup.hidden = false;
+  popup.querySelector(".botaoPopupSucesso").focus();
+  document.addEventListener("keydown", tratarTeclaPopupSucesso);
+}
+
+function fecharPopupSucessoAgendamento() {
+  const popup = document.querySelector("#popupSucessoAgendamento");
+  if (!popup || popup.hidden) return;
+
+  popup.hidden = true;
+  document.removeEventListener("keydown", tratarTeclaPopupSucesso);
+  const botaoEnviar = formularioAgendamento.querySelector('[type="submit"]');
+  if (botaoEnviar) botaoEnviar.focus();
+}
+
+function tratarTeclaPopupSucesso(evento) {
+  if (evento.key === "Escape") fecharPopupSucessoAgendamento();
+}
+
 // ========================================
 // CRIAÇÃO DE ELEMENTOS HTML
 // ========================================
@@ -1073,10 +1132,8 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
     atualizarRelatorios();
     renderizarAgendaDiaria();
 
-    exibirMensagemFormulario(
-      "Agendamento salvo com sucesso! A reserva já está disponível para os demais usuários.",
-      "sucesso",
-    );
+    limparMensagemFormulario();
+    mostrarPopupSucessoAgendamento();
   } catch (erro) {
     console.error("Não foi possível salvar o agendamento no Supabase:", erro);
 
