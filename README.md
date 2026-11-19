@@ -63,7 +63,7 @@ A aplicação permite que professores consultem a agenda compartilhada, solicite
 - Biblioteca.
 
 **Recursos pedagógicos:**
-- Projetor 1, Projetor 2 e Projetor 3;
+- Projetor 1, Projetor 2, Projetor 3 e Projetor 4;
 - Caixa de Som 1, Caixa de Som 2 e Caixa de Som 3.
 
 Regras para os recursos:
