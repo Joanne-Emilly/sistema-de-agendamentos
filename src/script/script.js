@@ -865,40 +865,20 @@ function criarCardAgendamento(agendamento) {
 
   card.append(cabecalho, detalhes);
 
-  if (!cancelado && !modoLeituraAgendamentos) {
+  const podeCancelar =
+    !cancelado &&
+    papelUsuarioAutenticado === "professor" &&
+    usuarioAutenticadoId &&
+    String(agendamento.usuarioId) === String(usuarioAutenticadoId);
+
+  if (podeCancelar) {
     const acoes = criarElemento("div", "acoesAgendamento");
-
-    const botaoEditar = criarElemento(
-      "button",
-      "botaoEditarAgendamento",
-      "Editar",
-    );
-
-    botaoEditar.type = "button";
-    botaoEditar.dataset.acao = "editar";
-    botaoEditar.dataset.id = String(agendamento.id);
-
-    botaoEditar.setAttribute(
-      "aria-label",
-      `Editar agendamento ${agendamento.id}`,
-    );
-
-    const botaoCancelar = criarElemento(
-      "button",
-      "botaoCancelarAgendamento",
-      "Cancelar agendamento",
-    );
-
+    const botaoCancelar = criarElemento("button", "botaoCancelarAgendamento", "Cancelar agendamento");
     botaoCancelar.type = "button";
     botaoCancelar.dataset.acao = "cancelar";
     botaoCancelar.dataset.id = String(agendamento.id);
-
-    botaoCancelar.setAttribute(
-      "aria-label",
-      `Cancelar agendamento ${agendamento.id}`,
-    );
-
-    acoes.append(botaoEditar, botaoCancelar);
+    botaoCancelar.setAttribute("aria-label", `Cancelar agendamento ${agendamento.id}`);
+    acoes.appendChild(botaoCancelar);
     card.appendChild(acoes);
   }
 
@@ -1194,64 +1174,43 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
 // CANCELAMENTO DE AGENDAMENTOS
 // ========================================
 
-listaAgendamentos.addEventListener("click", (evento) => {
-  if (modoLeituraAgendamentos) {
-    return;
-  }
-
-  const botao = evento.target.closest("button[data-acao]");
-
-  if (!botao) {
-    return;
-  }
+listaAgendamentos.addEventListener("click", async (evento) => {
+  const botao = evento.target.closest('button[data-acao="cancelar"]');
+  if (!botao || botao.disabled) return;
 
   const id = botao.dataset.id;
-  const acao = botao.dataset.acao;
+  const agendamento = obterAgendamentos().find((item) => String(item.id) === String(id));
 
-  if (acao === "editar") {
-    iniciarEdicao(id);
-
+  if (!agendamento ||
+      String(agendamento.status).toLowerCase() === "cancelado" ||
+      papelUsuarioAutenticado !== "professor" ||
+      !usuarioAutenticadoId ||
+      String(agendamento.usuarioId) !== String(usuarioAutenticadoId)) {
+    window.alert("Você só pode cancelar seus próprios agendamentos confirmados.");
     return;
   }
 
-  if (acao === "cancelar") {
-    const confirmar = window.confirm(
-      "Deseja realmente cancelar este agendamento?",
+  if (!window.confirm("Deseja realmente cancelar este agendamento? O espaço e os recursos ficarão disponíveis novamente.")) {
+    return;
+  }
+
+  botao.disabled = true;
+  botao.textContent = "Cancelando...";
+
+  try {
+    await window.agendamentosSupabase.cancelarAgendamento(id);
+    await atualizarAgendaDiariaDoBanco();
+    adicionarNotificacao(
+      "Agendamento cancelado",
+      `A reserva do espaço ${agendamento.espacoEscolar}, em ${formatarData(agendamento.dataAgendamento)}, foi cancelada.`,
+      "aviso",
     );
-
-    if (!confirmar) {
-      return;
-    }
-
-    const agendamentos = obterAgendamentos();
-
-    const agendamento = agendamentos.find(
-      (item) => String(item.id) === String(id),
-    );
-
-    if (
-      !agendamento ||
-      String(agendamento.status).toLowerCase() === "cancelado"
-    ) {
-      return;
-    }
-
-    agendamento.status = "cancelado";
-    agendamento.canceladoEm = new Date().toISOString();
-
-    if (salvarAgendamentos(agendamentos)) {
-      if (agendamentoEmEdicao === String(id)) {
-        encerrarEdicao();
-      }
-
-      renderizarAgendamentos();
-      adicionarNotificacao(
-        "Agendamento cancelado",
-        `A reserva do espaço ${agendamento.espacoEscolar}, em ${formatarData(agendamento.dataAgendamento)}, foi cancelada.`,
-        "aviso",
-      );
-        renderizarAgendaDiaria();
-    }
+    window.alert("AGENDAMENTO CANCELADO COM SUCESSO");
+  } catch (erro) {
+    console.error("Erro ao cancelar agendamento:", erro);
+    window.alert(erro?.message || "Não foi possível cancelar o agendamento. Tente novamente.");
+    botao.disabled = false;
+    botao.textContent = "Cancelar agendamento";
   }
 });
 
