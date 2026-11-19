@@ -2111,6 +2111,12 @@ function abrirNovoAgendamentoPelaAgenda(data, periodo, itemSelecionado) {
   campoDataAgendamento.value = data;
   const valorPeriodo = `${periodo.numero}|${periodo.inicio}|${periodo.fim}`;
   campoPeriodoAula.value = valorPeriodo;
+
+  recursosSelecionadosAgendamento.clear();
+  if (item?.tipo === "recurso") {
+    recursosSelecionadosAgendamento.add(item.id);
+  }
+
   campoPeriodoAula.dispatchEvent(new Event("change", { bubbles: true }));
 
   if (item?.tipo === "espaco") {
@@ -2119,13 +2125,10 @@ function abrirNovoAgendamentoPelaAgenda(data, periodo, itemSelecionado) {
       seletorEspaco.value = itemSelecionado;
       seletorEspaco.dispatchEvent(new Event("change", { bubbles: true }));
     }
-  } else {
-    const checkboxRecurso = Array.from(document.querySelectorAll("#listaRecursosAgendamento input[type='checkbox']"))
-      .find((checkbox) => checkbox.dataset.recursoNome === itemSelecionado);
-    if (checkboxRecurso) {
-      checkboxRecurso.checked = true;
-      checkboxRecurso.dispatchEvent(new Event("change", { bubbles: true }));
-    }
+  } else if (item?.tipo === "recurso") {
+    // A seleção é mantida por ID enquanto o sistema consulta a disponibilidade
+    // e redesenha os checkboxes do formulário.
+    atualizarRecursosDisponiveis();
   }
   mostrarPagina("novoAgendamento");
 }
