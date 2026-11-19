@@ -1051,6 +1051,60 @@
         </div>
 
     </div>
+
+    <!-- Detalhes da reserva: modal no desktop e bottom sheet no celular -->
+    <dialog id="modalDetalhesAgendamento" class="modalDetalhesAgendamento"
+        aria-labelledby="tituloModalDetalhesAgendamento"
+        aria-describedby="descricaoModalDetalhesAgendamento">
+        <div class="conteudoModalDetalhes">
+            <header class="cabecalhoModalDetalhes">
+                <div>
+                    <h2 id="tituloModalDetalhesAgendamento">Detalhes do agendamento</h2>
+                    <p id="descricaoModalDetalhesAgendamento">Informações da reserva selecionada na agenda semanal.</p>
+                </div>
+                <button type="button" id="fecharModalDetalhesX" class="botaoFecharModalDetalhes"
+                    aria-label="Fechar detalhes do agendamento">&times;</button>
+            </header>
+
+            <div class="corpoModalDetalhes">
+                <div class="resumoModalDetalhes">
+                    <span class="statusModalDetalhes"><span class="pontoStatusModalDetalhes" aria-hidden="true"></span>Ocupado</span>
+                    <span id="dataModalDetalhes" class="dataModalDetalhes"></span>
+                </div>
+
+                <dl class="listaDetalhesModal">
+                    <div class="linhaDetalhesModal">
+                        <dt>Espaço reservado</dt>
+                        <dd id="espacoModalDetalhes"></dd>
+                    </div>
+                    <div class="linhaDetalhesModal">
+                        <dt>Horário</dt>
+                        <dd id="horarioModalDetalhes"></dd>
+                    </div>
+                    <div class="linhaDetalhesModal">
+                        <dt>Turma</dt>
+                        <dd id="turmaModalDetalhes"></dd>
+                    </div>
+                    <div class="linhaDetalhesModal">
+                        <dt>Professor(a) responsável</dt>
+                        <dd id="professorModalDetalhes"></dd>
+                    </div>
+                    <div class="linhaDetalhesModal">
+                        <dt>Finalidade</dt>
+                        <dd id="finalidadeModalDetalhes"></dd>
+                    </div>
+                    <div class="linhaDetalhesModal">
+                        <dt>Recursos pedagógicos</dt>
+                        <dd id="recursosModalDetalhes"></dd>
+                    </div>
+                </dl>
+            </div>
+
+            <footer class="rodapeModalDetalhes">
+                <button type="button" id="botaoFecharModalDetalhes" class="botaoConfirmarModalDetalhes">Fechar</button>
+            </footer>
+        </div>
+    </dialog>
 </body>
 
 </html>
