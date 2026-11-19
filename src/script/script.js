@@ -16,6 +16,7 @@ const chaveArmazenamento = "agendamentosEscolares";
 const listaRecursosAgendamento = document.querySelector("#listaRecursosAgendamento");
 let espacosSistema = [];
 let recursosAtivosAgendamento = [];
+let recursosSelecionadosAgendamento = new Set();
 let requisicaoDisponibilidadeRecursos = 0;
 const secaoAgendamento = document.querySelector("#novoAgendamento");
 const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
@@ -1089,10 +1090,7 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
       formularioAgendamento.elements.professorResponsavel.value.trim(),
     turma: formularioAgendamento.elements.turma.value.trim(),
     espacoEscolar: formularioAgendamento.elements.espacoEscolar.value,
-    recursosPedagogicos: Array.from(
-      formularioAgendamento.querySelectorAll('input[name="recursosPedagogicos"]:checked'),
-      (checkbox) => checkbox.value,
-    ),
+    recursosPedagogicos: Array.from(recursosSelecionadosAgendamento),
     dataAgendamento: campoDataAgendamento.value,
     horarioInicio: campoHorarioInicio.value,
     horarioFim: campoHorarioFim.value,
@@ -1346,6 +1344,7 @@ formularioAgendamento.addEventListener("reset", () => {
     campoHorarioFim.readOnly = true;
     campoHorarioInicio.value = "";
     campoHorarioFim.value = "";
+    recursosSelecionadosAgendamento.clear();
 
     const nomeUsuario = String(perfilNome.textContent || "").trim();
     if (nomeUsuario && nomeUsuario !== "Carregando..." && nomeUsuario !== "Não foi possível carregar") {
@@ -1491,13 +1490,6 @@ function renderizarOpcoesRecursosAgendamento(
     return;
   }
 
-  const selecionados = new Set(
-    Array.from(
-      listaRecursosAgendamento.querySelectorAll('input[name="recursosPedagogicos"]:checked'),
-      (checkbox) => checkbox.value,
-    ),
-  );
-
   const fragmento = document.createDocumentFragment();
 
   recursos.forEach((recurso) => {
@@ -1514,22 +1506,29 @@ function renderizarOpcoesRecursosAgendamento(
         : "outro";
     // A consulta listarEspacos() já retorna somente recursos ativos.
     checkbox.disabled = false;
-    checkbox.checked = selecionados.has(recurso.id);
+    checkbox.checked = recursosSelecionadosAgendamento.has(recurso.id);
 
     checkbox.addEventListener("change", () => {
-      if (!checkbox.checked || checkbox.dataset.recursoCategoria === "outro") return;
+      if (checkbox.checked) {
+        recursosSelecionadosAgendamento.add(recurso.id);
+      } else {
+        recursosSelecionadosAgendamento.delete(recurso.id);
+      }
 
-      const categoria = checkbox.dataset.recursoCategoria;
-      listaRecursosAgendamento
-        .querySelectorAll('input[name="recursosPedagogicos"]')
-        .forEach((outroCheckbox) => {
-          if (
-            outroCheckbox !== checkbox &&
-            outroCheckbox.dataset.recursoCategoria === categoria
-          ) {
-            outroCheckbox.checked = false;
-          }
-        });
+      if (checkbox.checked && checkbox.dataset.recursoCategoria !== "outro") {
+        const categoria = checkbox.dataset.recursoCategoria;
+        listaRecursosAgendamento
+          .querySelectorAll('input[name="recursosPedagogicos"]')
+          .forEach((outroCheckbox) => {
+            if (
+              outroCheckbox !== checkbox &&
+              outroCheckbox.dataset.recursoCategoria === categoria
+            ) {
+              outroCheckbox.checked = false;
+              recursosSelecionadosAgendamento.delete(outroCheckbox.value);
+            }
+          });
+      }
     });
 
     const nome = criarElementoAgenda("span", "nomeOpcaoRecurso", recurso.nome);
@@ -1588,6 +1587,10 @@ async function atualizarRecursosDisponiveis() {
     const disponiveis = recursosAtivosAgendamento.filter(
       (recurso) => !recursosOcupados.has(recurso.nome),
     );
+    const idsDisponiveis = new Set(disponiveis.map((recurso) => recurso.id));
+    recursosSelecionadosAgendamento = new Set(
+      Array.from(recursosSelecionadosAgendamento).filter((id) => idsDisponiveis.has(id)),
+    );
 
     renderizarOpcoesRecursosAgendamento(
       disponiveis,
@@ -1638,6 +1641,7 @@ async function carregarEspacosNosFiltros() {
       [],
       "Selecione a data e o horário para consultar os equipamentos disponíveis.",
     );
+    atualizarRecursosDisponiveis();
 
     preencherSelectComEspacos(
       espacoAgendaDiaria,
