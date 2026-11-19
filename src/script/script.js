@@ -18,6 +18,7 @@ let espacosSistema = [];
 let recursosAtivosAgendamento = [];
 let recursosSelecionadosAgendamento = new Set();
 let requisicaoDisponibilidadeRecursos = 0;
+let requisicaoAtualizacaoAgenda = 0;
 const secaoAgendamento = document.querySelector("#novoAgendamento");
 const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
 const botaoLimparFormulario = document.querySelector("#botaoLimparFormulario");
@@ -1150,7 +1151,9 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
         dadosFormulario,
       );
 
-    agendamentosEmMemoria.push(novoAgendamento);
+    // Reconsulta os dados completos, incluindo recursos vinculados, após salvar.
+    agendamentosEmMemoria =
+      await window.servicoAgendamentosSupabase.listarAgendamentos();
 
     formularioAgendamento.reset();
     definirDataMinima();
@@ -1974,19 +1977,52 @@ function renderizarAgendaDiaria() {
   );
 }
 
+// Atualiza os dados da agenda diretamente no Supabase antes de renderizar.
+async function atualizarAgendaDiariaDoBanco() {
+  const numeroRequisicao = ++requisicaoAtualizacaoAgenda;
+
+  if (!dataAgendaDiaria.value) {
+    renderizarAgendaDiaria();
+    return;
+  }
+
+  linhaTempoAgenda.replaceChildren(
+    criarElementoAgenda("p", "estadoCarregamento", "Atualizando agenda..."),
+  );
+
+  try {
+    const agendamentosAtuais =
+      await window.servicoAgendamentosSupabase.listarAgendamentos();
+
+    if (numeroRequisicao !== requisicaoAtualizacaoAgenda) return;
+
+    agendamentosEmMemoria = agendamentosAtuais;
+    renderizarAgendamentos();
+    atualizarRelatorios();
+    renderizarAgendaDiaria();
+  } catch (erro) {
+    if (numeroRequisicao !== requisicaoAtualizacaoAgenda) return;
+
+    console.error("Não foi possível atualizar a agenda diária:", erro);
+    exibirAgendaVazia(
+      "Não foi possível atualizar a agenda",
+      "Verifique sua conexão e tente novamente.",
+    );
+  }
+}
+
 // Atualiza a agenda ao enviar os filtros.
 formularioAgendaDiaria.addEventListener("submit", (evento) => {
   evento.preventDefault();
-
-  renderizarAgendaDiaria();
+  atualizarAgendaDiariaDoBanco();
 });
 
 dataAgendaDiaria.addEventListener("change", () => {
-  renderizarAgendaDiaria();
+  atualizarAgendaDiariaDoBanco();
 });
 
 espacoAgendaDiaria.addEventListener("change", () => {
-  renderizarAgendaDiaria();
+  atualizarAgendaDiariaDoBanco();
 });
 
 // ========================================
