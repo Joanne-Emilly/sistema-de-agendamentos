@@ -4853,3 +4853,18 @@ textarea {
   .tabelaAgendaSemanal tbody th { font-size: 12px; }
   .celulaAgendaSemanal { min-height: 52px; font-size: 12px; }
 }
+
+
+/* Logo institucional no lugar das iniciais NF. */
+.simboloSistema {
+  overflow: hidden;
+  padding: 0;
+  background: #00b55c;
+}
+.simboloSistema .logoEscolaCabecalho {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: inherit;
+}
