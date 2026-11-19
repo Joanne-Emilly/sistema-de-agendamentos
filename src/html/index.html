@@ -170,7 +170,14 @@
                             </div>
                             <div class="campoFiltroAgenda filtroItemSemanal">
                                 <label for="filtroItemAgendaSemanal">Selecione o espaço ou recurso</label>
-                                <select id="filtroItemAgendaSemanal" aria-describedby="ajudaFiltroAgendaSemanal">
+                                <div class="seletorPersonalizadoSemanal" id="seletorPersonalizadoSemanal">
+                                    <button type="button" id="botaoSeletorSemanal" class="botaoSeletorSemanal" aria-haspopup="listbox" aria-expanded="false" aria-controls="opcoesSeletorSemanal">
+                                        <span id="textoSeletorSemanal">Carregando espaços e recursos...</span>
+                                        <span class="setaSeletorSemanal" aria-hidden="true"></span>
+                                    </button>
+                                    <div id="opcoesSeletorSemanal" class="opcoesSeletorSemanal" role="listbox" aria-label="Espaços e recursos disponíveis" hidden></div>
+                                </div>
+                                <select id="filtroItemAgendaSemanal" class="selectNativoSemanal" tabindex="-1" aria-hidden="true">
                                     <option value="">Carregando espaços e recursos...</option>
                                 </select>
                                 <small id="ajudaFiltroAgendaSemanal" class="ajudaFiltroSemanal">Escolha um item para visualizar seus horários disponíveis e ocupados.</small>
