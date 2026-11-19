@@ -2160,16 +2160,86 @@ function abrirNovoAgendamentoPelaAgenda(data, periodo, itemSelecionado) {
   mostrarPagina("novoAgendamento");
 }
 
-function mostrarDetalhesOcupacaoAgenda(agendamento, item) {
-  const recurso = item;
-  const detalhes = [
-    `Item: ${recurso}`,
-    `Horário: ${agendamento.horarioInicio} às ${agendamento.horarioFim}`,
-    `Turma: ${agendamento.turma || "Não informada"}`,
-    `Professor(a): ${agendamento.professorResponsavel || "Não informado"}`,
-    `Finalidade: ${agendamento.finalidade || "Não informada"}`,
-  ];
-  window.alert(detalhes.join("\n"));
+// Um único diálogo atende às células ocupadas da agenda semanal.
+const modalDetalhesAgendamento = document.getElementById("modalDetalhesAgendamento");
+const botaoFecharModalDetalhes = document.getElementById("botaoFecharModalDetalhes");
+const botaoFecharModalDetalhesX = document.getElementById("fecharModalDetalhesX");
+let focoAnteriorModalDetalhes = null;
+let temporizadorFechamentoDetalhes = null;
+
+function definirTextoDetalhes(id, valor, padrao = "Não informado") {
+  const elemento = document.getElementById(id);
+  if (elemento) elemento.textContent = String(valor || "").trim() || padrao;
+}
+
+function finalizarFechamentoModalDetalhes() {
+  if (!modalDetalhesAgendamento?.open) return;
+  modalDetalhesAgendamento.close();
+}
+
+function fecharModalDetalhesAgendamento() {
+  if (!modalDetalhesAgendamento?.open || modalDetalhesAgendamento.classList.contains("fechando")) return;
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    finalizarFechamentoModalDetalhes();
+    return;
+  }
+
+  modalDetalhesAgendamento.classList.add("fechando");
+  temporizadorFechamentoDetalhes = window.setTimeout(finalizarFechamentoModalDetalhes, 190);
+}
+
+if (modalDetalhesAgendamento) {
+  botaoFecharModalDetalhesX?.addEventListener("click", fecharModalDetalhesAgendamento);
+  botaoFecharModalDetalhes?.addEventListener("click", fecharModalDetalhesAgendamento);
+
+  // Clicar no backdrop faz o evento atingir o próprio dialog.
+  modalDetalhesAgendamento.addEventListener("click", (evento) => {
+    if (evento.target === modalDetalhesAgendamento) fecharModalDetalhesAgendamento();
+  });
+
+  modalDetalhesAgendamento.addEventListener("cancel", (evento) => {
+    evento.preventDefault();
+    fecharModalDetalhesAgendamento();
+  });
+
+  modalDetalhesAgendamento.addEventListener("close", () => {
+    window.clearTimeout(temporizadorFechamentoDetalhes);
+    temporizadorFechamentoDetalhes = null;
+    modalDetalhesAgendamento.classList.remove("fechando");
+    document.body.classList.remove("modalDetalhesAberto");
+
+    const origem = focoAnteriorModalDetalhes;
+    focoAnteriorModalDetalhes = null;
+    if (origem?.isConnected) origem.focus({ preventScroll: true });
+  });
+}
+
+function mostrarDetalhesOcupacaoAgenda(agendamento) {
+  if (!modalDetalhesAgendamento || !agendamento) return;
+
+  // Sempre utilizar dados da reserva, inclusive quando o filtro exibe um recurso.
+  definirTextoDetalhes("dataModalDetalhes", formatarData(agendamento.dataAgendamento), "Data não informada");
+  definirTextoDetalhes("espacoModalDetalhes", agendamento.espacoEscolar);
+  const horario = agendamento.horarioInicio && agendamento.horarioFim
+    ? `${agendamento.horarioInicio} às ${agendamento.horarioFim}`
+    : "";
+  definirTextoDetalhes("horarioModalDetalhes", horario);
+  definirTextoDetalhes("turmaModalDetalhes", agendamento.turma);
+  definirTextoDetalhes("professorModalDetalhes", agendamento.professorResponsavel);
+  definirTextoDetalhes("finalidadeModalDetalhes", agendamento.finalidade);
+
+  const recursos = Array.isArray(agendamento.recursosPedagogicos)
+    ? agendamento.recursosPedagogicos.filter((recurso) => typeof recurso === "string" && recurso.trim())
+    : [];
+  definirTextoDetalhes("recursosModalDetalhes", recursos.join(", "), "Nenhum recurso reservado");
+
+  if (modalDetalhesAgendamento.open) return;
+  focoAnteriorModalDetalhes = document.activeElement;
+  modalDetalhesAgendamento.classList.remove("fechando");
+  modalDetalhesAgendamento.showModal();
+  document.body.classList.add("modalDetalhesAberto");
+  botaoFecharModalDetalhesX?.focus({ preventScroll: true });
 }
 
 function renderizarAgendaSemanal() {
@@ -2222,7 +2292,7 @@ function renderizarAgendaSemanal() {
         botao.textContent = `Ocupado\n${agendamento.horarioInicio}–${agendamento.horarioFim}`;
         botao.title = `Ocupado por ${agendamento.professorResponsavel || "usuário"} — clique para ver detalhes`;
         botao.setAttribute("aria-label", `${data}, ${periodo.numero}ª aula, ocupado`);
-        botao.addEventListener("click", () => mostrarDetalhesOcupacaoAgenda(agendamento, itemSelecionado));
+        botao.addEventListener("click", () => mostrarDetalhesOcupacaoAgenda(agendamento));
       } else {
         botao.textContent = "Disponível";
         botao.title = "Clique para iniciar um agendamento neste horário";
