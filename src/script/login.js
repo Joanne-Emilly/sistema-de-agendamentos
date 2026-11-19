@@ -33,6 +33,7 @@ function alternarVisibilidadeSenha() {
 }
 
 function definirEstadoCarregamento(carregando) {
+    botaoEntrar.classList.toggle("carregando", carregando);
     botaoEntrar.disabled = carregando;
     campoEmail.disabled = carregando;
     campoSenha.disabled = carregando;
