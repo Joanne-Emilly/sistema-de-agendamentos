@@ -3154,7 +3154,8 @@ inicializarNavegacao();
 inicializarNotificacoes();
 
 // Consulta os registros compartilhados no banco após inicializar os componentes.
-carregarAgendamentosDoBanco()
+carregarAgendamentosDoBanco();
+
 // Menus suspensos personalizados em todos os selects do sistema.
 // O select original continua responsável por validação, valores e eventos.
 (function configurarSelectsSistema() {
