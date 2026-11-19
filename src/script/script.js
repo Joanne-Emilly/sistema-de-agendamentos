@@ -2180,7 +2180,7 @@ function renderizarAgendaSemanal() {
   const corpo = document.createElement("tbody");
   periodosAgendaSemanal.forEach((periodo) => {
     const linha = document.createElement("tr");
-    const th = criarElementoAgenda("th", "", `${periodo.numero}ª aula\n${periodo.inicio}–${periodo.fim}`);
+    const th = criarElementoAgenda("th", "", `${periodo.numero}ª AULA`);
     th.scope = "row";
     linha.appendChild(th);
 
