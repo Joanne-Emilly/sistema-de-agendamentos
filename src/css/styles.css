@@ -146,7 +146,7 @@ textarea:focus-visible {
   min-height: var(--alturaCabecalho);
   padding: 12px 28px;
 
-  background-color: #16345c;
+  background-color: var(--corPrimaria);
   color: var(--corTextoBranco);
 }
 
