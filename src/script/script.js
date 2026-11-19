@@ -8,6 +8,7 @@ const mensagemFormulario = document.querySelector("#mensagemFormulario");
 const campoDataAgendamento = document.querySelector("#dataAgendamento");
 const campoHorarioInicio = document.querySelector("#horarioInicio");
 const campoHorarioFim = document.querySelector("#horarioFim");
+const campoPeriodoAula = document.querySelector("#periodoAula");
 const listaAgendamentos = document.querySelector("#listaAgendamentos");
 const estadoVazio = document.querySelector("#estadoVazio");
 const contadorAgendamentos = document.querySelector("#contadorAgendamentos");
@@ -984,6 +985,7 @@ function iniciarEdicao(id) {
   campoHorarioInicio.value = agendamento.horarioInicio;
 
   campoHorarioFim.value = agendamento.horarioFim;
+  selecionarPeriodoDoAgendamento(agendamento.horarioInicio, agendamento.horarioFim);
 
   formularioAgendamento.elements.finalidade.value = agendamento.finalidade;
 
@@ -1253,6 +1255,64 @@ listaAgendamentos.addEventListener("click", (evento) => {
 // EVENTOS AUXILIARES DO FORMULÁRIO
 // ========================================
 
+const horariosFixosAula = [
+  ["1", "07:30", "08:30"],
+  ["2", "08:30", "09:30"],
+  ["3", "09:50", "10:50"],
+  ["4", "10:50", "11:50"],
+  ["5", "12:50", "13:50"],
+  ["6", "13:50", "14:50"],
+  ["7", "15:10", "16:10"],
+  ["8", "16:10", "17:10"],
+];
+
+function aplicarPeriodoAula() {
+  const periodo = campoPeriodoAula.value;
+  const personalizado = periodo === "outros";
+
+  if (personalizado) {
+    campoHorarioInicio.readOnly = false;
+    campoHorarioFim.readOnly = false;
+    campoHorarioInicio.value = "";
+    campoHorarioFim.value = "";
+    campoHorarioInicio.focus();
+  } else if (periodo) {
+    const [, inicio, fim] = periodo.split("|");
+    campoHorarioInicio.value = inicio;
+    campoHorarioFim.value = fim;
+    campoHorarioInicio.readOnly = true;
+    campoHorarioFim.readOnly = true;
+  } else {
+    campoHorarioInicio.value = "";
+    campoHorarioFim.value = "";
+    campoHorarioInicio.readOnly = true;
+    campoHorarioFim.readOnly = true;
+  }
+
+  campoHorarioFim.setCustomValidity("");
+  limparMensagemFormulario();
+}
+
+function selecionarPeriodoDoAgendamento(inicio, fim) {
+  const periodo = horariosFixosAula.find(
+    ([, horarioInicio, horarioFim]) => horarioInicio === inicio && horarioFim === fim,
+  );
+
+  campoPeriodoAula.value = periodo
+    ? `${periodo[0]}|${periodo[1]}|${periodo[2]}`
+    : "outros";
+
+  if (!periodo) {
+    campoHorarioInicio.readOnly = false;
+    campoHorarioFim.readOnly = false;
+  } else {
+    campoHorarioInicio.readOnly = true;
+    campoHorarioFim.readOnly = true;
+  }
+}
+
+campoPeriodoAula.addEventListener("change", aplicarPeriodoAula);
+
 campoHorarioInicio.addEventListener("change", () => {
   campoHorarioFim.setCustomValidity("");
 
@@ -1272,6 +1332,11 @@ campoDataAgendamento.addEventListener("change", () => {
 formularioAgendamento.addEventListener("reset", () => {
   setTimeout(() => {
     campoHorarioFim.setCustomValidity("");
+    campoPeriodoAula.value = ""; 
+    campoHorarioInicio.readOnly = true;
+    campoHorarioFim.readOnly = true;
+    campoHorarioInicio.value = "";
+    campoHorarioFim.value = "";
 
     const nomeUsuario = String(perfilNome.textContent || "").trim();
     if (nomeUsuario && nomeUsuario !== "Carregando..." && nomeUsuario !== "Não foi possível carregar") {
