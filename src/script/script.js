@@ -1994,6 +1994,73 @@ espacoAgendaDiaria.addEventListener("change", () => {
 // ========================================
 const gradeAgendaSemanal = document.querySelector("#gradeAgendaSemanal");
 const filtroItemAgendaSemanal = document.querySelector("#filtroItemAgendaSemanal");
+const botaoSeletorSemanal = document.querySelector("#botaoSeletorSemanal");
+const textoSeletorSemanal = document.querySelector("#textoSeletorSemanal");
+const opcoesSeletorSemanal = document.querySelector("#opcoesSeletorSemanal");
+const seletorPersonalizadoSemanal = document.querySelector("#seletorPersonalizadoSemanal");
+
+function fecharSeletorSemanal() {
+  if (!botaoSeletorSemanal || !opcoesSeletorSemanal) return;
+  opcoesSeletorSemanal.hidden = true;
+  botaoSeletorSemanal.setAttribute("aria-expanded", "false");
+}
+
+function sincronizarSeletorSemanal() {
+  if (!filtroItemAgendaSemanal || !opcoesSeletorSemanal || !textoSeletorSemanal) return;
+  const selecionada = filtroItemAgendaSemanal.selectedOptions[0];
+  textoSeletorSemanal.textContent = selecionada?.textContent || "Selecione um espaço ou recurso";
+  opcoesSeletorSemanal.replaceChildren();
+  for (const opcao of filtroItemAgendaSemanal.options) {
+    if (!opcao.value) continue;
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "opcaoSeletorSemanal";
+    botao.setAttribute("role", "option");
+    botao.setAttribute("aria-selected", String(opcao.value === filtroItemAgendaSemanal.value));
+    botao.textContent = opcao.textContent;
+    botao.addEventListener("click", () => {
+      filtroItemAgendaSemanal.value = opcao.value;
+      fecharSeletorSemanal();
+      renderizarAgendaSemanal();
+      botaoSeletorSemanal.focus();
+    });
+    opcoesSeletorSemanal.appendChild(botao);
+  }
+}
+
+if (botaoSeletorSemanal) {
+  botaoSeletorSemanal.addEventListener("click", () => {
+    const abrir = opcoesSeletorSemanal.hidden;
+    fecharSeletorSemanal();
+    if (abrir) {
+      opcoesSeletorSemanal.hidden = false;
+      botaoSeletorSemanal.setAttribute("aria-expanded", "true");
+    }
+  });
+  botaoSeletorSemanal.addEventListener("keydown", (evento) => {
+    if (evento.key === "ArrowDown" || evento.key === "Enter" && opcoesSeletorSemanal.hidden) {
+      evento.preventDefault();
+      opcoesSeletorSemanal.hidden = false;
+      botaoSeletorSemanal.setAttribute("aria-expanded", "true");
+      (opcoesSeletorSemanal.querySelector('[aria-selected="true"]') || opcoesSeletorSemanal.querySelector("button"))?.focus();
+    }
+  });
+}
+if (opcoesSeletorSemanal) opcoesSeletorSemanal.addEventListener("keydown", (evento) => {
+  const opcoes = [...opcoesSeletorSemanal.querySelectorAll("button")];
+  const indice = opcoes.indexOf(document.activeElement);
+  if (evento.key === "Escape") {
+    fecharSeletorSemanal();
+    botaoSeletorSemanal.focus();
+  } else if (evento.key === "ArrowDown" || evento.key === "ArrowUp") {
+    evento.preventDefault();
+    opcoes[(indice + (evento.key === "ArrowDown" ? 1 : -1) + opcoes.length) % opcoes.length]?.focus();
+  }
+});
+document.addEventListener("click", (evento) => {
+  if (seletorPersonalizadoSemanal && !seletorPersonalizadoSemanal.contains(evento.target)) fecharSeletorSemanal();
+});
+
 const intervaloSemanaAgenda = document.querySelector("#intervaloSemanaAgenda");
 const botaoSemanaAnterior = document.querySelector("#semanaAnterior");
 const botaoSemanaProxima = document.querySelector("#semanaProxima");
@@ -2049,6 +2116,7 @@ function atualizarFiltroItensAgendaSemanal() {
   } else if (itensAtivos.length) {
     filtroItemAgendaSemanal.value = itensAtivos.find((item) => item.tipo === "espaco")?.nome || itensAtivos[0].nome;
   }
+  sincronizarSeletorSemanal();
 }
 
 function obterAgendamentoDoItemNoPeriodo(itemSelecionado, data, periodo) {
