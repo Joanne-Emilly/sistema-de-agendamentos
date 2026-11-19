@@ -219,6 +219,11 @@
 
   async function cancelarAgendamento(id) {
     const cliente = obterClienteSupabase();
+    const usuario = await obterUsuarioAutenticado(cliente);
+
+    if (!String(usuario.email || "").toLowerCase().endsWith("@professor.edu.pi.gov.br")) {
+      throw new Error("Somente professores podem cancelar seus próprios agendamentos.");
+    }
 
     const { data, error } = await cliente
       .from("agendamentos")
@@ -227,16 +232,18 @@
         atualizado_em: new Date().toISOString(),
       })
       .eq("id", id)
-      .select("id")
-      .single();
+      .eq("usuario_id", usuario.id)
+      .eq("status", "confirmado")
+      .select("id, status")
+      .maybeSingle();
 
-    if (error) {
-      throw error;
+    if (error) throw error;
+    if (!data) {
+      throw new Error("Não foi possível cancelar. Confira se a reserva pertence a você e continua confirmada.");
     }
 
     return data;
   }
-
 
   async function obterConfiguracoesSistema() {
     const cliente = obterClienteSupabase();
