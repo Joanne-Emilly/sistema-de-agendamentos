@@ -3229,3 +3229,111 @@ inicializarNotificacoes();
 
 // Consulta os registros compartilhados no banco após inicializar os componentes.
 carregarAgendamentosDoBanco();
+
+// Menus suspensos personalizados em todos os selects do sistema.
+// O select original continua responsável por validação, valores e eventos.
+(function configurarSelectsSistema() {
+  const controles = [];
+  let aberto = null;
+  function fechar() {
+    if (!aberto) return;
+    aberto.menu.hidden = true;
+    aberto.botao.setAttribute("aria-expanded", "false");
+    aberto = null;
+  }
+  function atualizar(controle) {
+    const { select, botao, texto, menu } = controle;
+    texto.textContent = select.selectedOptions[0]?.textContent || "Selecione uma opção";
+    botao.disabled = select.disabled;
+    menu.replaceChildren();
+    for (const opcao of select.options) {
+      if (opcao.hidden) continue;
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "opcaoSelectSistema";
+      item.setAttribute("role", "option");
+      item.setAttribute("aria-selected", String(opcao.selected));
+      item.textContent = opcao.textContent;
+      item.disabled = opcao.disabled || !!opcao.parentElement?.disabled;
+      item.addEventListener("click", () => {
+        if (item.disabled) return;
+        select.value = opcao.value;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+        fechar();
+        botao.focus();
+      });
+      menu.appendChild(item);
+    }
+  }
+  document.querySelectorAll("select:not(#filtroItemAgendaSemanal)").forEach((select) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "selectPersonalizadoSistema";
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "botaoSelectSistema";
+    botao.setAttribute("aria-haspopup", "listbox");
+    botao.setAttribute("aria-expanded", "false");
+    const texto = document.createElement("span");
+    const seta = document.createElement("span");
+    seta.className = "setaSelectSistema";
+    seta.setAttribute("aria-hidden", "true");
+    botao.append(texto, seta);
+    const menu = document.createElement("div");
+    menu.className = "menuSelectSistema";
+    menu.setAttribute("role", "listbox");
+    menu.setAttribute("aria-label", document.querySelector('label[for="' + select.id + '"]')?.textContent?.trim() || "Opções");
+    menu.hidden = true;
+    select.parentNode.insertBefore(wrapper, select);
+    wrapper.append(select, botao, menu);
+    select.classList.add("selectOriginalSistema");
+    select.tabIndex = -1;
+    const controle = { select, botao, texto, menu };
+    controles.push(controle);
+    atualizar(controle);
+    botao.addEventListener("click", () => {
+      const abrir = aberto !== controle;
+      fechar();
+      if (abrir) {
+        atualizar(controle);
+        menu.hidden = false;
+        botao.setAttribute("aria-expanded", "true");
+        aberto = controle;
+      }
+    });
+    botao.addEventListener("keydown", (evento) => {
+      if (evento.key === "ArrowDown") {
+        evento.preventDefault();
+        botao.click();
+        (menu.querySelector('[aria-selected="true"]') || menu.querySelector("button:not(:disabled)"))?.focus();
+      }
+    });
+    menu.addEventListener("keydown", (evento) => {
+      const itens = [...menu.querySelectorAll("button:not(:disabled)")];
+      const indice = itens.indexOf(document.activeElement);
+      if (evento.key === "Escape") {
+        fechar();
+        botao.focus();
+      } else if (evento.key === "ArrowDown" || evento.key === "ArrowUp") {
+        evento.preventDefault();
+        itens[(indice + (evento.key === "ArrowDown" ? 1 : -1) + itens.length) % itens.length]?.focus();
+      }
+    });
+    select.addEventListener("change", () => atualizar(controle));
+    new MutationObserver(() => atualizar(controle)).observe(select, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled", "hidden", "label"] });
+  });
+  document.addEventListener("click", (evento) => {
+    if (aberto && !aberto.botao.parentElement.contains(evento.target)) fechar();
+  });
+  document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape" && aberto) {
+      const botao = aberto.botao;
+      fechar();
+      botao.focus();
+    }
+  });
+  // Atualiza os rótulos quando scripts alterarem a seleção diretamente.
+  document.addEventListener("focusin", (evento) => {
+    const controle = controles.find((item) => item.botao === evento.target);
+    if (controle) atualizar(controle);
+  });
+})();
