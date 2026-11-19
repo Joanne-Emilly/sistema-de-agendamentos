@@ -4251,3 +4251,271 @@ textarea {
   .filtroItemSemanal { width: 100%; }
   .navegacaoSemana strong { flex-basis: 100%; margin: 4px 0 0; }
 }
+
+/* ============================================
+   REFINAMENTO RESPONSIVO — CELULARES
+   Navegação, cabeçalho e agenda semanal
+============================================ */
+
+@media (max-width: 600px) {
+  .cabecalhoPrincipal {
+    min-height: 64px;
+    gap: 8px;
+    padding: 9px 10px;
+  }
+
+  .simboloSistema {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .nomeSistema {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .acoesCabecalho {
+    gap: 6px;
+  }
+
+  .botaoNotificacoes,
+  .avatarUsuario {
+    width: 34px;
+    height: 34px;
+  }
+
+  .botaoMenuMobile {
+    position: relative;
+    min-height: 46px;
+    margin: 8px 10px;
+    width: calc(100% - 20px);
+    justify-content: flex-start;
+    border-color: #d5e4da;
+    box-shadow: 0 2px 5px rgba(22, 52, 92, 0.05);
+  }
+
+  .menuLateral:not(.menuFechado) {
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .navegacaoPrincipal {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .itemNavegacao {
+    min-height: 48px;
+    padding: 9px 8px;
+    gap: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .iconeNavegacao {
+    width: 19px;
+    height: 19px;
+  }
+
+  .areaSaida {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .areaPrincipal {
+    padding: 16px 10px 28px;
+  }
+
+  .controlesAgendaSemanal {
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .navegacaoSemana {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .botaoSemana {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 18px;
+  }
+
+  .botaoHoje {
+    grid-column: 1 / -1;
+    min-height: 42px;
+  }
+
+  .navegacaoSemana strong {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .filtroItemSemanal {
+    width: 100%;
+  }
+
+  .filtroItemSemanal select {
+    min-height: 46px;
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .legendaAgendaSemanal {
+    gap: 12px;
+    margin: 10px 0 12px;
+    font-size: 12px;
+  }
+
+  .gradeAgendaSemanal {
+    width: 100%;
+    overflow-x: hidden;
+    border-radius: 7px;
+  }
+
+  .tabelaAgendaSemanal {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .tabelaAgendaSemanal th,
+  .tabelaAgendaSemanal td {
+    padding: 3px 2px;
+    overflow-wrap: anywhere;
+  }
+
+  .tabelaAgendaSemanal th:first-child {
+    width: 58px;
+  }
+
+  .tabelaAgendaSemanal thead th {
+    padding: 8px 1px;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .tabelaAgendaSemanal tbody th {
+    padding: 5px 2px;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .celulaAgendaSemanal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 48px;
+    padding: 4px 1px;
+    border-radius: 5px;
+    font-size: 9px;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .cardFormulario,
+  .cardAgendaDiaria,
+  .painelAgendaInicio,
+  .cardRelatorios,
+  .cardConfiguracoes,
+  .cartaoPerfil {
+    padding: 12px;
+  }
+
+  .gradeFormulario,
+  .gradeFiltrosRelatorios,
+  .gradeConfiguracoes {
+    gap: 14px;
+  }
+
+  .acoesFormulario,
+  .acoesConfiguracoes,
+  .acoesRelatorios,
+  .acoesExportacao {
+    gap: 9px;
+  }
+
+  .botaoFormulario,
+  .botaoConfiguracao,
+  .botaoRelatorio,
+  .botaoNovoAgendamentoInicio,
+  .botaoFiltrarAgenda,
+  .botaoConsultar {
+    min-height: 46px;
+    white-space: normal;
+  }
+
+  .tabelaRelatoriosResponsiva {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 7px;
+  }
+
+  .tabelaRelatorios {
+    min-width: 760px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cabecalhoPrincipal {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .nomeSistema {
+    font-size: 10px;
+  }
+
+  .nomeEscola,
+  .descricaoSistema {
+    font-size: 8px;
+  }
+
+  .navegacaoPrincipal {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .itemNavegacao {
+    min-height: 46px;
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .tabelaAgendaSemanal th:first-child {
+    width: 51px;
+  }
+
+  .tabelaAgendaSemanal thead th,
+  .tabelaAgendaSemanal tbody th {
+    font-size: 8px;
+  }
+
+  .celulaAgendaSemanal {
+    min-height: 44px;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botaoMenuMobile,
+  .itemNavegacao,
+  .celulaAgendaSemanal {
+    transition: none;
+  }
+}
