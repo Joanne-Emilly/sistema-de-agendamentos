@@ -15,6 +15,8 @@ const contadorAgendamentos = document.querySelector("#contadorAgendamentos");
 const chaveArmazenamento = "agendamentosEscolares";
 const listaRecursosAgendamento = document.querySelector("#listaRecursosAgendamento");
 let espacosSistema = [];
+let recursosAtivosAgendamento = [];
+let requisicaoDisponibilidadeRecursos = 0;
 const secaoAgendamento = document.querySelector("#novoAgendamento");
 const botaoCancelarEdicao = document.querySelector("#botaoCancelarEdicao");
 const botaoLimparFormulario = document.querySelector("#botaoLimparFormulario");
@@ -986,6 +988,7 @@ function iniciarEdicao(id) {
 
   campoHorarioFim.value = agendamento.horarioFim;
   selecionarPeriodoDoAgendamento(agendamento.horarioInicio, agendamento.horarioFim);
+  atualizarRecursosDisponiveis();
 
   formularioAgendamento.elements.finalidade.value = agendamento.finalidade;
 
@@ -1311,22 +1314,28 @@ function selecionarPeriodoDoAgendamento(inicio, fim) {
   }
 }
 
-campoPeriodoAula.addEventListener("change", aplicarPeriodoAula);
+campoPeriodoAula.addEventListener("change", () => {
+  aplicarPeriodoAula();
+  atualizarRecursosDisponiveis();
+});
 
 campoHorarioInicio.addEventListener("change", () => {
   campoHorarioFim.setCustomValidity("");
 
   limparMensagemFormulario();
+  atualizarRecursosDisponiveis();
 });
 
 campoHorarioFim.addEventListener("change", () => {
   validarHorarios();
 
   limparMensagemFormulario();
+  atualizarRecursosDisponiveis();
 });
 
 campoDataAgendamento.addEventListener("change", () => {
   limparMensagemFormulario();
+  atualizarRecursosDisponiveis();
 });
 
 formularioAgendamento.addEventListener("reset", () => {
@@ -1346,6 +1355,7 @@ formularioAgendamento.addEventListener("reset", () => {
     limparMensagemFormulario();
 
     definirDataMinima();
+    atualizarRecursosDisponiveis();
   }, 0);
 });
 
@@ -1468,15 +1478,25 @@ function renderizarControlesEspacos(recursos) {
   });
 }
 
-function renderizarOpcoesRecursosAgendamento(recursos) {
+function renderizarOpcoesRecursosAgendamento(
+  recursos,
+  mensagemVazia = "Nenhum recurso pedagógico está disponível para reserva.",
+) {
   if (!listaRecursosAgendamento) return;
 
   if (recursos.length === 0) {
     listaRecursosAgendamento.replaceChildren(
-      criarElementoAgenda("p", "estadoRecursos", "Nenhum recurso pedagógico está disponível para reserva."),
+      criarElementoAgenda("p", "estadoRecursos", mensagemVazia),
     );
     return;
   }
+
+  const selecionados = new Set(
+    Array.from(
+      listaRecursosAgendamento.querySelectorAll('input[name="recursosPedagogicos"]:checked'),
+      (checkbox) => checkbox.value,
+    ),
+  );
 
   const fragmento = document.createDocumentFragment();
 
@@ -1494,6 +1514,7 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
         : "outro";
     // A consulta listarEspacos() já retorna somente recursos ativos.
     checkbox.disabled = false;
+    checkbox.checked = selecionados.has(recurso.id);
 
     checkbox.addEventListener("change", () => {
       if (!checkbox.checked || checkbox.dataset.recursoCategoria === "outro") return;
@@ -1518,6 +1539,69 @@ function renderizarOpcoesRecursosAgendamento(recursos) {
   });
 
   listaRecursosAgendamento.replaceChildren(fragmento);
+}
+
+async function atualizarRecursosDisponiveis() {
+  const numeroRequisicao = ++requisicaoDisponibilidadeRecursos;
+  const data = campoDataAgendamento.value;
+  const inicio = campoHorarioInicio.value;
+  const fim = campoHorarioFim.value;
+
+  if (!data || !inicio || !fim || fim <= inicio) {
+    renderizarOpcoesRecursosAgendamento(
+      [],
+      "Selecione a data e o horário para consultar os equipamentos disponíveis.",
+    );
+    return;
+  }
+
+  listaRecursosAgendamento.replaceChildren(
+    criarElementoAgenda("p", "estadoRecursos", "Verificando equipamentos disponíveis..."),
+  );
+
+  try {
+    const agendamentosAtuais =
+      await window.servicoAgendamentosSupabase.listarAgendamentos();
+
+    if (numeroRequisicao !== requisicaoDisponibilidadeRecursos) return;
+
+    agendamentosEmMemoria = agendamentosAtuais;
+
+    const recursosOcupados = new Set();
+
+    agendamentosAtuais.forEach((agendamento) => {
+      const mesmoDia = agendamento.dataAgendamento === data;
+      const confirmado = agendamento.status === "confirmado";
+      const outroAgendamento = String(agendamento.id) !== String(agendamentoEmEdicao);
+      const horariosSobrepostos =
+        inicio < agendamento.horarioFim && fim > agendamento.horarioInicio;
+
+      if (!mesmoDia || !confirmado || !outroAgendamento || !horariosSobrepostos) {
+        return;
+      }
+
+      (agendamento.recursosPedagogicos || []).forEach((nomeRecurso) => {
+        recursosOcupados.add(nomeRecurso);
+      });
+    });
+
+    const disponiveis = recursosAtivosAgendamento.filter(
+      (recurso) => !recursosOcupados.has(recurso.nome),
+    );
+
+    renderizarOpcoesRecursosAgendamento(
+      disponiveis,
+      "Todos os equipamentos estão reservados nesse horário. Escolha outro horário.",
+    );
+  } catch (erro) {
+    if (numeroRequisicao !== requisicaoDisponibilidadeRecursos) return;
+
+    console.error("Não foi possível verificar a disponibilidade dos recursos:", erro);
+    renderizarOpcoesRecursosAgendamento(
+      [],
+      "Não foi possível consultar a disponibilidade. Altere o horário ou tente novamente.",
+    );
+  }
 }
 
 async function carregarEspacosNosFiltros() {
@@ -1547,8 +1631,12 @@ async function carregarEspacosNosFiltros() {
       "Selecione um espaço físico",
     );
 
+    recursosAtivosAgendamento = espacos.filter(
+      (item) => item.tipo === "recurso",
+    );
     renderizarOpcoesRecursosAgendamento(
-      espacos.filter((item) => item.tipo === "recurso"),
+      [],
+      "Selecione a data e o horário para consultar os equipamentos disponíveis.",
     );
 
     preencherSelectComEspacos(
