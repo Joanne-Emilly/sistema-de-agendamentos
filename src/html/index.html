@@ -546,22 +546,33 @@
                                     <input type="date" id="dataAgendamento" name="dataAgendamento" required>
                                 </div>
 
-                                <!-- Horário de início -->
-                                <div class="campoFormulario">
-                                    <label for="horarioInicio">
-                                        Horário de início
-                                    </label>
-
-                                    <input type="time" id="horarioInicio" name="horarioInicio" required>
+                                <!-- Seleção do horário de aula ou horário personalizado -->
+                                <div class="campoFormulario campoCompleto">
+                                    <label for="periodoAula">Horário da aula</label>
+                                    <select id="periodoAula" name="periodoAula" required>
+                                        <option value="">Selecione o horário</option>
+                                        <option value="1|07:30|08:30">1ª aula — 07:30 às 08:30</option>
+                                        <option value="2|08:30|09:30">2ª aula — 08:30 às 09:30</option>
+                                        <option value="3|09:50|10:50">3ª aula — 09:50 às 10:50</option>
+                                        <option value="4|10:50|11:50">4ª aula — 10:50 às 11:50</option>
+                                        <option value="5|12:50|13:50">5ª aula — 12:50 às 13:50</option>
+                                        <option value="6|13:50|14:50">6ª aula — 13:50 às 14:50</option>
+                                        <option value="7|15:10|16:10">7ª aula — 15:10 às 16:10</option>
+                                        <option value="8|16:10|17:10">8ª aula — 16:10 às 17:10</option>
+                                        <option value="outros">Outros horários</option>
+                                    </select>
+                                    <small>Ao selecionar uma aula, os horários de início e término serão preenchidos automaticamente.</small>
                                 </div>
 
-                                <!-- Horário de término -->
+                                <!-- Horários preenchidos automaticamente ou informados manualmente -->
                                 <div class="campoFormulario">
-                                    <label for="horarioFim">
-                                        Horário de término
-                                    </label>
+                                    <label for="horarioInicio">Horário de início</label>
+                                    <input type="time" id="horarioInicio" name="horarioInicio" required readonly>
+                                </div>
 
-                                    <input type="time" id="horarioFim" name="horarioFim" required>
+                                <div class="campoFormulario">
+                                    <label for="horarioFim">Horário de término</label>
+                                    <input type="time" id="horarioFim" name="horarioFim" required readonly>
                                 </div>
 
                                 <!-- Finalidade -->
