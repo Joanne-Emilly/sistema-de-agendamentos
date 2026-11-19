@@ -151,8 +151,8 @@
 
                         <div class="cabecalhoPainelInicio">
                             <div>
-                                <h2>Agenda Diária</h2>
-                                <p>Confira os agendamentos programados para o dia.</p>
+                                <h2>Agenda Semanal</h2>
+                                <p>Consulte a disponibilidade dos espaços e recursos por dia e horário.</p>
                             </div>
 
                             <button type="button" class="botaoNovoAgendamentoInicio"
@@ -161,6 +161,29 @@
                             </button>
                         </div>
 
+                        <div class="controlesAgendaSemanal">
+                            <div class="navegacaoSemana">
+                                <button type="button" id="semanaAnterior" class="botaoSemana" aria-label="Semana anterior">&#8592;</button>
+                                <button type="button" id="semanaHoje" class="botaoHoje">Hoje</button>
+                                <button type="button" id="semanaProxima" class="botaoSemana" aria-label="Próxima semana">&#8594;</button>
+                                <strong id="intervaloSemanaAgenda" aria-live="polite">Carregando semana...</strong>
+                            </div>
+                            <div class="campoFiltroAgenda filtroItemSemanal">
+                                <label for="filtroItemAgendaSemanal">Consultar disponibilidade de</label>
+                                <select id="filtroItemAgendaSemanal">
+                                    <option value="">Carregando espaços e recursos...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="legendaAgendaSemanal" aria-label="Legenda de disponibilidade">
+                            <span><i class="indicadorDisponivel"></i> Disponível</span>
+                            <span><i class="indicadorOcupado"></i> Ocupado</span>
+                        </div>
+                        <div id="gradeAgendaSemanal" class="gradeAgendaSemanal" aria-live="polite">
+                            <p class="estadoCarregamento">Carregando agenda semanal...</p>
+                        </div>
+
+                        <div class="agendaDiariaLegada" hidden>
                         <form id="formularioAgendaDiaria" class="filtrosAgendaInicio">
 
                             <div class="campoFiltroAgenda">
@@ -218,6 +241,7 @@
 
                         <div id="linhaTempoAgenda" class="linhaTempoAgenda">
                             <!-- A agenda será preenchida pelo JavaScript. -->
+                        </div>
                         </div>
 
                     </div>
