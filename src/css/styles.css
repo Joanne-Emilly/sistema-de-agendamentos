@@ -4214,6 +4214,73 @@ textarea {
   outline: 3px solid rgba(33, 132, 67, 0.23);
   outline-offset: 2px;
 }
+/* Menu de seleção inspirado no exemplo: painel flutuante com opções destacadas. */
+.filtroItemSemanal { position: relative; }
+.filtroItemSemanal .selectNativoSemanal { display: none; }
+.seletorPersonalizadoSemanal { position: relative; }
+.botaoSeletorSemanal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 14px;
+  border: 1px solid #cbd7e5;
+  border-radius: 10px;
+  background: #fff;
+  color: #16345c;
+  font: inherit;
+  font-size: 0.97rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+.botaoSeletorSemanal:hover { border-color: #218443; background: #f8fbff; }
+.botaoSeletorSemanal:focus-visible { outline: 3px solid rgba(33,132,67,.24); outline-offset: 2px; }
+.setaSeletorSemanal {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-right: 2px solid #16345c;
+  border-bottom: 2px solid #16345c;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .18s ease;
+}
+.botaoSeletorSemanal[aria-expanded="true"] .setaSeletorSemanal { transform: rotate(225deg) translateY(-2px); }
+.opcoesSeletorSemanal {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: min(380px, 55vh);
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #e7edf5;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(22,52,92,.17);
+}
+.opcoesSeletorSemanal[hidden] { display: none; }
+.opcaoSeletorSemanal {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #263b55;
+  font: inherit;
+  font-size: .93rem;
+  text-align: left;
+  cursor: pointer;
+}
+.opcaoSeletorSemanal:hover,
+.opcaoSeletorSemanal:focus-visible { background: #edf4fd; color: #155bd6; outline: none; }
+.opcaoSeletorSemanal[aria-selected="true"] { background: #edf4fd; color: #155bd6; font-weight: 700; }
+
 .ajudaFiltroSemanal {
   display: block;
   margin-top: 9px;
