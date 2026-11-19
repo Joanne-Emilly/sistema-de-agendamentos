@@ -2003,6 +2003,7 @@ async function atualizarAgendaDiariaDoBanco() {
     renderizarAgendamentos();
     atualizarRelatorios();
     renderizarAgendaDiaria();
+    renderizarAgendaSemanal();
   } catch (erro) {
     if (numeroRequisicao !== requisicaoAtualizacaoAgenda) return;
 
@@ -2120,7 +2121,7 @@ function abrirNovoAgendamentoPelaAgenda(data, periodo, itemSelecionado) {
     }
   } else {
     const checkboxRecurso = Array.from(document.querySelectorAll("#listaRecursosAgendamento input[type='checkbox']"))
-      .find((checkbox) => checkbox.value === itemSelecionado || checkbox.dataset.nome === itemSelecionado);
+      .find((checkbox) => checkbox.dataset.recursoNome === itemSelecionado);
     if (checkboxRecurso) {
       checkboxRecurso.checked = true;
       checkboxRecurso.dispatchEvent(new Event("change", { bubbles: true }));
