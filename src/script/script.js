@@ -722,6 +722,32 @@ function tratarTeclaPopupSucesso(evento) {
   if (evento.key === "Escape") fecharPopupSucessoAgendamento();
 }
 
+let temporizadorToastIndisponivel = null;
+
+function mostrarToastIndisponibilidade() {
+  let toast = document.querySelector("#toastIndisponibilidadeAgendamento");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toastIndisponibilidadeAgendamento";
+    toast.className = "toastIndisponibilidadeAgendamento";
+    toast.setAttribute("role", "alert");
+    toast.setAttribute("aria-live", "assertive");
+    toast.textContent = "JÁ ESTÁ OCUPADO, TENTE OUTRO ESPAÇO OU OUTRO HORÁRIO";
+    document.body.appendChild(toast);
+  }
+
+  toast.classList.remove("visivel");
+  // Reinicia a animação caso o aviso seja acionado novamente.
+  void toast.offsetWidth;
+  toast.classList.add("visivel");
+
+  window.clearTimeout(temporizadorToastIndisponivel);
+  temporizadorToastIndisponivel = window.setTimeout(() => {
+    toast.classList.remove("visivel");
+  }, 4500);
+}
+
 // ========================================
 // CRIAÇÃO DE ELEMENTOS HTML
 // ========================================
@@ -1101,10 +1127,8 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
       `Não foi possível reservar ${dadosFormulario.espacoEscolar} em ${formatarData(dadosFormulario.dataAgendamento)}, das ${dadosFormulario.horarioInicio} às ${dadosFormulario.horarioFim}, pois já existe uma reserva nesse período.`,
       "aviso",
     );
-    exibirMensagemFormulario(
-      "Este espaço já possui um agendamento nesse período. Escolha outro horário ou outro espaço.",
-      "erro",
-    );
+    limparMensagemFormulario();
+    mostrarToastIndisponibilidade();
     return;
   }
 
@@ -1143,10 +1167,8 @@ formularioAgendamento.addEventListener("submit", async (evento) => {
         "Outra reserva ocupa esse espaço no período solicitado.",
         "aviso",
       );
-      exibirMensagemFormulario(
-        "Este espaço acabou de ser reservado por outra pessoa nesse período. Escolha outro horário ou outro espaço.",
-        "erro",
-      );
+      limparMensagemFormulario();
+      mostrarToastIndisponibilidade();
     } else {
       exibirMensagemFormulario(
         erro?.message?.includes("perfil cadastrado") || erro?.code === "23514"
