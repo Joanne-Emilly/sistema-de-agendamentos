@@ -1198,7 +1198,7 @@ listaAgendamentos.addEventListener("click", async (evento) => {
   botao.textContent = "Cancelando...";
 
   try {
-    await window.agendamentosSupabase.cancelarAgendamento(id);
+    await window.servicoAgendamentosSupabase.cancelarAgendamento(id);
     await atualizarAgendaDiariaDoBanco();
     adicionarNotificacao(
       "Agendamento cancelado",
