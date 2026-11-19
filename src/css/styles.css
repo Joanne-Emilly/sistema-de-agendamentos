@@ -4868,3 +4868,210 @@ textarea {
   object-fit: contain;
   border-radius: inherit;
 }
+
+
+/* ========================================
+   DETALHES DE RESERVA — DIALOG / BOTTOM SHEET
+   Identidade visual institucional
+======================================== */
+body.modalDetalhesAberto { overflow: hidden; }
+
+.modalDetalhesAgendamento {
+  position: fixed;
+  box-sizing: border-box;
+  width: min(440px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(680px, calc(100dvh - 32px));
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 16px;
+  background: #fff;
+  color: #16345c;
+  box-shadow: 0 18px 55px rgba(15, 34, 50, .25);
+}
+.modalDetalhesAgendamento::backdrop {
+  background: rgba(12, 28, 39, .56);
+}
+.modalDetalhesAgendamento .conteudoModalDetalhes {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: min(680px, calc(100dvh - 32px));
+}
+.cabecalhoModalDetalhes {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid #e3eae6;
+}
+.cabecalhoModalDetalhes h2 {
+  margin: 0;
+  font-size: 1.18rem;
+  line-height: 1.3;
+  color: #16345c;
+}
+.cabecalhoModalDetalhes p {
+  margin: 6px 0 0;
+  font-size: .84rem;
+  line-height: 1.4;
+  color: #526273;
+}
+.botaoFecharModalDetalhes {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #e0e7e2;
+  border-radius: 10px;
+  background: #f7faf8;
+  color: #16345c;
+  font: inherit;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.botaoFecharModalDetalhes:hover { background: #e9f5ed; }
+.botaoFecharModalDetalhes:focus-visible,
+.botaoConfirmarModalDetalhes:focus-visible {
+  outline: 3px solid rgba(33, 132, 67, .3);
+  outline-offset: 2px;
+}
+.corpoModalDetalhes {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 22px 22px;
+}
+.resumoModalDetalhes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.statusModalDetalhes {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border: 1px solid #f0c3c3;
+  border-radius: 999px;
+  background: #fdeaea;
+  color: #a52d2d;
+  font-weight: 700;
+  font-size: .83rem;
+}
+.pontoStatusModalDetalhes {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c83c3c;
+}
+.dataModalDetalhes {
+  color: #526273;
+  font-weight: 600;
+  font-size: .9rem;
+}
+.listaDetalhesModal { display: grid; gap: 0; margin: 0; }
+.linhaDetalhesModal {
+  padding: 12px 0;
+  border-bottom: 1px solid #e9eeea;
+}
+.linhaDetalhesModal:last-child { border-bottom: 0; }
+.linhaDetalhesModal dt {
+  margin-bottom: 5px;
+  color: #647386;
+  font-size: .82rem;
+  font-weight: 600;
+}
+.linhaDetalhesModal dd {
+  margin: 0;
+  color: #16345c;
+  font-size: .96rem;
+  line-height: 1.45;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.rodapeModalDetalhes {
+  flex-shrink: 0;
+  padding: 16px 22px;
+  border-top: 1px solid #e3eae6;
+  background: #fff;
+}
+.botaoConfirmarModalDetalhes {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #218443;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.botaoConfirmarModalDetalhes:hover { background: #176b35; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .modalDetalhesAgendamento[open] {
+    animation: aparecerDetalhesDesktop 220ms ease-out both;
+  }
+  .modalDetalhesAgendamento.fechando {
+    animation: fecharDetalhesDesktop 190ms ease-in both;
+  }
+  @keyframes aparecerDetalhesDesktop {
+    from { opacity: 0; transform: translateY(12px) scale(.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes fecharDetalhesDesktop {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(12px) scale(.985); }
+  }
+}
+
+@media (max-width: 600px) {
+  .modalDetalhesAgendamento {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    max-height: calc(100dvh - 12px);
+    margin: 0;
+    border-radius: 20px 20px 0 0;
+  }
+  .modalDetalhesAgendamento .conteudoModalDetalhes {
+    max-height: calc(100dvh - 12px);
+  }
+  .cabecalhoModalDetalhes { padding: 18px 18px 14px; }
+  .corpoModalDetalhes { padding: 16px 18px 20px; }
+  .rodapeModalDetalhes {
+    padding: 13px 18px calc(13px + env(safe-area-inset-bottom, 0px));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .modalDetalhesAgendamento[open] {
+      animation: aparecerDetalhesMobile 240ms ease-out both;
+    }
+    .modalDetalhesAgendamento.fechando {
+      animation: fecharDetalhesMobile 190ms ease-in both;
+    }
+    @keyframes aparecerDetalhesMobile {
+      from { opacity: .7; transform: translateY(100%); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fecharDetalhesMobile {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: .7; transform: translateY(100%); }
+    }
+  }
+}
