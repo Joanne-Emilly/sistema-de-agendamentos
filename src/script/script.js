@@ -2278,107 +2278,77 @@ if (menuLateral && botaoMenuMobile) {
       menuEstaAberto ? "Abrir menu de navegação" : "Fechar menu de navegação",
     );
   });
+  document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape" && !menuLateral.classList.contains("menuFechado")) {
+      fecharMenuMobile();
+      botaoMenuMobile.focus();
+    }
+  });
 }
 
 
 const secoesPrincipais = document.querySelectorAll(".areaPrincipal > section");
 
-function mostrarPagina(idPagina) {
-  if (idPagina === "configuracoes") {
-    if (papelUsuarioAutenticado === null) {
-      return;
-    }
+function mostrarPagina(idPagina, { historico = "push", focar = false } = {}) {
+  const secaoSolicitada = document.getElementById(idPagina);
+  const valida = secaoSolicitada?.matches(".areaPrincipal > section");
+  const permitida = idPagina !== "configuracoes" || papelUsuarioAutenticado === "coordenador";
+  const destinoId = valida && permitida ? idPagina : "inicio";
+  const secaoSelecionada = document.getElementById(destinoId);
+  const anterior = document.querySelector(".areaPrincipal > section.paginaAtiva")?.id;
 
-    if (papelUsuarioAutenticado !== "coordenador") {
-      mostrarPagina("inicio");
-      return;
-    }
-  }
-
-  const secaoSelecionada = document.getElementById(idPagina);
-
-  if (
-    !secaoSelecionada ||
-    !secaoSelecionada.matches(".areaPrincipal > section")
-  ) {
-    return;
-  }
-
-  // Oculta todas as páginas.
   secoesPrincipais.forEach((secao) => {
-    secao.classList.remove("paginaAtiva");
+    secao.classList.toggle("paginaAtiva", secao === secaoSelecionada);
   });
-
-  // Mostra somente a página selecionada.
-  secaoSelecionada.classList.add("paginaAtiva");
-
-  // Atualiza o menu lateral.
   linksNavegacao.forEach((link) => {
-    const estaAtivo = link.dataset.pagina === idPagina;
-
+    const estaAtivo = link.dataset.pagina === destinoId;
     link.classList.toggle("ativo", estaAtivo);
-
-    if (estaAtivo) {
-      link.setAttribute("aria-current", "page");
-    } else {
-      link.removeAttribute("aria-current");
-    }
+    if (estaAtivo) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
   });
 
-  // Atualiza o endereço sem recarregar o site.
-  if (window.location.hash !== `#${idPagina}`) {
-    history.replaceState(null, "", `#${idPagina}`);
+  if (window.location.hash !== `#${destinoId}`) {
+    if (historico === "push") history.pushState({ pagina: destinoId }, "", `#${destinoId}`);
+    else history.replaceState({ pagina: destinoId }, "", `#${destinoId}`);
   }
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+  if (window.matchMedia("(max-width: 900px)").matches) fecharMenuMobile();
+  if (focar) {
+    const titulo = secaoSelecionada.querySelector("h1, h2, h3");
+    if (titulo) {
+      titulo.setAttribute("tabindex", "-1");
+      titulo.focus({ preventScroll: true });
+    }
+  }
+  if (anterior !== destinoId) window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 // Navegação pelo menu lateral.
 linksNavegacao.forEach((link) => {
   link.addEventListener("click", (evento) => {
     evento.preventDefault();
-
-    mostrarPagina(link.dataset.pagina);
-
-    if (window.matchMedia("(max-width: 900px)").matches) {
-      fecharMenuMobile();
-    }
+    mostrarPagina(link.dataset.pagina, { historico: "push", focar: true });
   });
 });
 
-// Permite navegar por links internos que apontam diretamente
-// para uma das páginas principais.
+// Links internos que apontam para páginas do sistema.
 document.addEventListener("click", (evento) => {
   const linkInterno = evento.target.closest('a[href^="#"]:not([data-pagina])');
-
-  if (!linkInterno) {
-    return;
-  }
-
+  if (!linkInterno) return;
   const idDestino = linkInterno.getAttribute("href").slice(1);
-
-  const destino = document.getElementById(idDestino);
-
-  if (destino && destino.matches(".areaPrincipal > section")) {
+  if (document.getElementById(idDestino)?.matches(".areaPrincipal > section")) {
     evento.preventDefault();
-
-    mostrarPagina(idDestino);
+    mostrarPagina(idDestino, { historico: "push", focar: true });
   }
 });
 
-// Abre a página indicada no endereço, se ela existir.
 function inicializarNavegacao() {
-  const paginaSolicitada = window.location.hash.slice(1);
-
-  const paginaExiste = Array.from(secoesPrincipais).some(
-    (secao) => secao.id === paginaSolicitada,
-  );
-
-  mostrarPagina(paginaExiste ? paginaSolicitada : "inicio");
+  mostrarPagina(window.location.hash.slice(1) || "inicio", { historico: "replace" });
 }
+
+window.addEventListener("popstate", () => {
+  mostrarPagina(window.location.hash.slice(1) || "inicio", { historico: "replace", focar: true });
+});
 
 
 // ========================================
@@ -3185,51 +3155,6 @@ inicializarNotificacoes();
 
 // Consulta os registros compartilhados no banco após inicializar os componentes.
 carregarAgendamentosDoBanco()
-// ========================================
-// INICIALIZAÇÃO DO SISTEMA
-// ========================================
-
-function salvarAgendamentos(agendamentos) {
-  try {
-    localStorage.setItem(
-      chaveArmazenamento,
-      JSON.stringify(agendamentos),
-    );
-
-    return true;
-  } catch (erro) {
-    console.error("Não foi possível salvar os agendamentos:", erro);
-
-    exibirMensagemFormulario(
-      "Não foi possível salvar os dados no navegador. Verifique o espaço disponível e as configurações de armazenamento.",
-      "erro",
-    );
-
-    return false;
-  }
-}
-
-// Inicialização do sistema
-carregarPerfilUsuario();
-carregarEspacosNosFiltros();
-
-preencherFormularioConfiguracoes();
-
-atualizarRelatorios();
-
-definirDataMinima();
-
-renderizarAgendamentos();
-
-inicializarAgendaDiaria();
-
-inicializarNavegacao();
-
-inicializarNotificacoes();
-
-// Consulta os registros compartilhados no banco após inicializar os componentes.
-carregarAgendamentosDoBanco();
-
 // Menus suspensos personalizados em todos os selects do sistema.
 // O select original continua responsável por validação, valores e eventos.
 (function configurarSelectsSistema() {
