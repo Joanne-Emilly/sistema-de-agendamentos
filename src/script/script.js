@@ -1420,6 +1420,7 @@ async function carregarAgendamentosDoBanco() {
     renderizarAgendamentos();
     atualizarRelatorios();
     renderizarAgendaDiaria();
+    renderizarAgendaSemanal();
   } catch (erro) {
     console.error("Não foi possível carregar os agendamentos do Supabase:", erro);
 
@@ -1629,6 +1630,8 @@ async function carregarEspacosNosFiltros() {
     const espacos = await window.servicoAgendamentosSupabase.listarEspacos();
     espacosSistema = await window.servicoAgendamentosSupabase.listarTodosEspacos();
     renderizarCatalogoRecursos(espacosSistema);
+    atualizarFiltroItensAgendaSemanal();
+    renderizarAgendaSemanal();
     renderizarControlesEspacos(espacosSistema);
 
     preencherSelectComEspacos(
@@ -2024,6 +2027,198 @@ dataAgendaDiaria.addEventListener("change", () => {
 espacoAgendaDiaria.addEventListener("change", () => {
   atualizarAgendaDiariaDoBanco();
 });
+
+
+// ========================================
+// AGENDA SEMANAL — DISPONIBILIDADE
+// ========================================
+const gradeAgendaSemanal = document.querySelector("#gradeAgendaSemanal");
+const filtroItemAgendaSemanal = document.querySelector("#filtroItemAgendaSemanal");
+const intervaloSemanaAgenda = document.querySelector("#intervaloSemanaAgenda");
+const botaoSemanaAnterior = document.querySelector("#semanaAnterior");
+const botaoSemanaProxima = document.querySelector("#semanaProxima");
+const botaoSemanaHoje = document.querySelector("#semanaHoje");
+
+const periodosAgendaSemanal = [
+  { numero: 1, inicio: "07:30", fim: "08:30" },
+  { numero: 2, inicio: "08:30", fim: "09:30" },
+  { numero: 3, inicio: "09:50", fim: "10:50" },
+  { numero: 4, inicio: "10:50", fim: "11:50" },
+  { numero: 5, inicio: "12:50", fim: "13:50" },
+  { numero: 6, inicio: "13:50", fim: "14:50" },
+  { numero: 7, inicio: "15:10", fim: "16:10" },
+  { numero: 8, inicio: "16:10", fim: "17:10" },
+];
+let inicioSemanaAgenda = obterSegundaFeira(new Date());
+
+function obterSegundaFeira(data) {
+  const segunda = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+  const diaSemana = segunda.getDay();
+  segunda.setDate(segunda.getDate() + (diaSemana === 0 ? -6 : 1 - diaSemana));
+  return segunda;
+}
+
+function formatarDataISOAgenda(data) {
+  const ano = data.getFullYear();
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const dia = String(data.getDate()).padStart(2, "0");
+  return `${ano}-${mes}-${dia}`;
+}
+
+function formatarDiaSemanaAgenda(data) {
+  return data.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" })
+    .replace(".", "");
+}
+
+function atualizarFiltroItensAgendaSemanal() {
+  if (!filtroItemAgendaSemanal) return;
+  const itensAtivos = (espacosSistema || []).filter((item) => item.ativo);
+  const valorAnterior = filtroItemAgendaSemanal.value;
+  const opcoes = [
+    criarElementoAgenda("option", "", "Selecione um espaço ou recurso"),
+    ...itensAtivos.map((item) => {
+      const opcao = document.createElement("option");
+      opcao.value = item.nome;
+      opcao.textContent = item.tipo === "recurso" ? `${item.nome} — Recurso pedagógico` : item.nome;
+      return opcao;
+    }),
+  ];
+  filtroItemAgendaSemanal.replaceChildren(...opcoes);
+  if (itensAtivos.some((item) => item.nome === valorAnterior)) {
+    filtroItemAgendaSemanal.value = valorAnterior;
+  } else if (itensAtivos.length) {
+    filtroItemAgendaSemanal.value = itensAtivos.find((item) => item.tipo === "espaco")?.nome || itensAtivos[0].nome;
+  }
+}
+
+function obterAgendamentoDoItemNoPeriodo(itemSelecionado, data, periodo) {
+  return obterAgendamentos().find((agendamento) => {
+    if (agendamento.dataAgendamento !== data) return false;
+    if (String(agendamento.status || "").toLowerCase() === "cancelado") return false;
+    const sobrepoe = agendamento.horarioInicio < periodo.fim && agendamento.horarioFim > periodo.inicio;
+    if (!sobrepoe) return false;
+    const item = (espacosSistema || []).find((registro) => registro.nome === itemSelecionado);
+    if (item?.tipo === "recurso") {
+      return (agendamento.recursosPedagogicos || []).includes(itemSelecionado);
+    }
+    return agendamento.espacoEscolar === itemSelecionado;
+  });
+}
+
+function abrirNovoAgendamentoPelaAgenda(data, periodo, itemSelecionado) {
+  const item = (espacosSistema || []).find((registro) => registro.nome === itemSelecionado);
+  campoDataAgendamento.value = data;
+  const valorPeriodo = `${periodo.numero}|${periodo.inicio}|${periodo.fim}`;
+  campoPeriodoAula.value = valorPeriodo;
+  campoPeriodoAula.dispatchEvent(new Event("change", { bubbles: true }));
+
+  if (item?.tipo === "espaco") {
+    const seletorEspaco = formularioAgendamento?.elements.espacoEscolar;
+    if (seletorEspaco) {
+      seletorEspaco.value = itemSelecionado;
+      seletorEspaco.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  } else {
+    const checkboxRecurso = Array.from(document.querySelectorAll("#listaRecursosAgendamento input[type='checkbox']"))
+      .find((checkbox) => checkbox.value === itemSelecionado || checkbox.dataset.nome === itemSelecionado);
+    if (checkboxRecurso) {
+      checkboxRecurso.checked = true;
+      checkboxRecurso.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }
+  mostrarPagina("novoAgendamento");
+}
+
+function mostrarDetalhesOcupacaoAgenda(agendamento, item) {
+  const recurso = item;
+  const detalhes = [
+    `Item: ${recurso}`,
+    `Horário: ${agendamento.horarioInicio} às ${agendamento.horarioFim}`,
+    `Turma: ${agendamento.turma || "Não informada"}`,
+    `Professor(a): ${agendamento.professorResponsavel || "Não informado"}`,
+    `Finalidade: ${agendamento.finalidade || "Não informada"}`,
+  ];
+  window.alert(detalhes.join("\n"));
+}
+
+function renderizarAgendaSemanal() {
+  if (!gradeAgendaSemanal || !filtroItemAgendaSemanal) return;
+  atualizarFiltroItensAgendaSemanal();
+  const itemSelecionado = filtroItemAgendaSemanal.value;
+  if (!itemSelecionado) {
+    gradeAgendaSemanal.replaceChildren(criarElementoAgenda("p", "estadoAgendaVazia", "Nenhum espaço ou recurso ativo foi encontrado."));
+    return;
+  }
+
+  const dias = Array.from({ length: 5 }, (_, indice) => {
+    const data = new Date(inicioSemanaAgenda);
+    data.setDate(data.getDate() + indice);
+    return data;
+  });
+  const fimSemana = dias[4];
+  intervaloSemanaAgenda.textContent = `${formatarDataAgenda(formatarDataISOAgenda(dias[0]))} a ${formatarDataAgenda(formatarDataISOAgenda(fimSemana))}`;
+
+  const tabela = document.createElement("table");
+  tabela.className = "tabelaAgendaSemanal";
+  const cabecalho = document.createElement("thead");
+  const linhaCabecalho = document.createElement("tr");
+  const thHorario = criarElementoAgenda("th", "", "Aula / Horário");
+  thHorario.scope = "col";
+  linhaCabecalho.appendChild(thHorario);
+  dias.forEach((dia) => {
+    const th = criarElementoAgenda("th", "", formatarDiaSemanaAgenda(dia));
+    th.scope = "col";
+    linhaCabecalho.appendChild(th);
+  });
+  cabecalho.appendChild(linhaCabecalho);
+  tabela.appendChild(cabecalho);
+
+  const corpo = document.createElement("tbody");
+  periodosAgendaSemanal.forEach((periodo) => {
+    const linha = document.createElement("tr");
+    const th = criarElementoAgenda("th", "", `${periodo.numero}ª aula\n${periodo.inicio}–${periodo.fim}`);
+    th.scope = "row";
+    linha.appendChild(th);
+
+    dias.forEach((dia) => {
+      const data = formatarDataISOAgenda(dia);
+      const td = document.createElement("td");
+      const agendamento = obterAgendamentoDoItemNoPeriodo(itemSelecionado, data, periodo);
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = `celulaAgendaSemanal ${agendamento ? "ocupado" : "disponivel"}`;
+      if (agendamento) {
+        botao.textContent = `Ocupado\n${agendamento.horarioInicio}–${agendamento.horarioFim}`;
+        botao.title = `Ocupado por ${agendamento.professorResponsavel || "usuário"} — clique para ver detalhes`;
+        botao.setAttribute("aria-label", `${data}, ${periodo.numero}ª aula, ocupado`);
+        botao.addEventListener("click", () => mostrarDetalhesOcupacaoAgenda(agendamento, itemSelecionado));
+      } else {
+        botao.textContent = "Disponível";
+        botao.title = "Clique para iniciar um agendamento neste horário";
+        botao.setAttribute("aria-label", `${data}, ${periodo.numero}ª aula, disponível`);
+        botao.addEventListener("click", () => abrirNovoAgendamentoPelaAgenda(data, periodo, itemSelecionado));
+      }
+      td.appendChild(botao);
+      linha.appendChild(td);
+    });
+    corpo.appendChild(linha);
+  });
+  tabela.appendChild(corpo);
+  gradeAgendaSemanal.replaceChildren(tabela);
+}
+
+function alterarSemanaAgenda(dias) {
+  inicioSemanaAgenda.setDate(inicioSemanaAgenda.getDate() + dias);
+  renderizarAgendaSemanal();
+}
+
+if (botaoSemanaAnterior) botaoSemanaAnterior.addEventListener("click", () => alterarSemanaAgenda(-7));
+if (botaoSemanaProxima) botaoSemanaProxima.addEventListener("click", () => alterarSemanaAgenda(7));
+if (botaoSemanaHoje) botaoSemanaHoje.addEventListener("click", () => {
+  inicioSemanaAgenda = obterSegundaFeira(new Date());
+  renderizarAgendaSemanal();
+});
+if (filtroItemAgendaSemanal) filtroItemAgendaSemanal.addEventListener("change", renderizarAgendaSemanal);
 
 // ========================================
 // NAVEGAÇÃO ENTRE PÁGINAS
@@ -2951,6 +3146,7 @@ definirDataMinima();
 renderizarAgendamentos();
 
 inicializarAgendaDiaria();
+renderizarAgendaSemanal();
 
 inicializarNavegacao();
 
