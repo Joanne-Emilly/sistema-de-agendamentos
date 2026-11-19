@@ -90,6 +90,24 @@ input {
     overflow: hidden;
 }
 
+/* Entrada suave do cartão de login (sem dependências JavaScript) */
+@keyframes entradaSuaveLogin {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .containerLogin {
+        animation: entradaSuaveLogin 550ms ease-out both;
+    }
+}
+
 /* ========================================
    CABEÇALHO
    ======================================== */
