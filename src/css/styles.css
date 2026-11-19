@@ -3987,3 +3987,106 @@ textarea {
     padding: 13px;
   }
 }
+
+
+/* ============================================
+   POPUP DE CONFIRMAÇÃO DE AGENDAMENTO
+============================================ */
+
+.sobreposicaoPopupSucesso {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 35, 28, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.sobreposicaoPopupSucesso[hidden] {
+  display: none;
+}
+
+.cartaoPopupSucesso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 440px);
+  padding: 34px 30px;
+  border: 1px solid var(--corBorda);
+  border-radius: 14px;
+  background: var(--corFundoCard);
+  box-shadow: 0 18px 55px rgba(10, 35, 22, 0.2);
+  text-align: center;
+  animation: surgirPopupSucesso 0.22s ease-out;
+}
+
+.iconePopupSucesso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  background: #e8f7ee;
+  color: var(--corPrimaria);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.cartaoPopupSucesso h2 {
+  margin-bottom: 10px;
+  color: var(--corPrimariaEscura);
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.cartaoPopupSucesso p {
+  margin-bottom: 24px;
+  color: var(--corTextoSecundario);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.botaoPopupSucesso {
+  min-width: 130px;
+  min-height: 42px;
+  padding: 10px 22px;
+  border: 0;
+  border-radius: var(--raioBotao);
+  background: var(--corPrimaria);
+  color: var(--corTextoBranco);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.botaoPopupSucesso:hover {
+  background: var(--corPrimariaHover);
+}
+
+.botaoPopupSucesso:focus-visible {
+  outline: 3px solid rgba(33, 132, 67, 0.28);
+  outline-offset: 3px;
+}
+
+@keyframes surgirPopupSucesso {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartaoPopupSucesso {
+    animation: none;
+  }
+}
