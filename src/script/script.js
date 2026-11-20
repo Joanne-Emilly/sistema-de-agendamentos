@@ -2099,7 +2099,13 @@ function formatarDiaSemanaAgenda(data) {
 
 function atualizarFiltroItensAgendaSemanal() {
   if (!filtroItemAgendaSemanal) return;
-  const itensAtivos = (espacosSistema || []).filter((item) => item.ativo);
+  const itensAtivos = (espacosSistema || [])
+    .filter((item) => item.ativo)
+    .sort((a, b) => {
+      const prioridadeA = a.nome === "Laboratório de Informática" ? 0 : 1;
+      const prioridadeB = b.nome === "Laboratório de Informática" ? 0 : 1;
+      return prioridadeA - prioridadeB || a.nome.localeCompare(b.nome, "pt-BR");
+    });
   const valorAnterior = filtroItemAgendaSemanal.value;
   const opcoes = [
     criarElementoAgenda("option", "", "Selecione um espaço ou recurso"),
@@ -2114,7 +2120,7 @@ function atualizarFiltroItensAgendaSemanal() {
   if (itensAtivos.some((item) => item.nome === valorAnterior)) {
     filtroItemAgendaSemanal.value = valorAnterior;
   } else if (itensAtivos.length) {
-    filtroItemAgendaSemanal.value = itensAtivos.find((item) => item.tipo === "espaco")?.nome || itensAtivos[0].nome;
+    filtroItemAgendaSemanal.value = itensAtivos[0].nome;
   }
   sincronizarSeletorSemanal();
 }
